@@ -10,7 +10,7 @@ function createCharacter(type, x, y, player) {
 		character.range = 1;
 		character.movePoints = 5;
 		character.critChance = 0.05;
-		character.dodgeChacne = .07;
+		character.dodgeChance = .07;
 	} else if (type === "mage") {
 		character.toHit = 0.65;
 		character.damage = 4;

@@ -52,7 +52,6 @@ app.post("/createGame", function(req, res){
 
 /*game has two players, now initialize everything
 * and start the actual game! 
-*
 */
 app.post("/joinGame", function(req,res){ 
 	var gameID = req.body.gameID;
@@ -65,7 +64,7 @@ app.post("/joinGame", function(req,res){
 	} else {
 		alert("cannot join game");
 		res.send ( {success: false});
-	}
+		}
 });
 
 
@@ -74,13 +73,34 @@ app.post("/createCharacters", function(req,res) {
 	var charList = req.body.chars;
 	
 	res.send ( { success: true});
-}
+});
 
-app.get("/displayGames", function(req, res) {
+app.get("/displayOpenGames", function(req, res) {
 	//var data = JSON.parse(JSON.stringify(gameList)); //create deep copy
-	gameList.success = true;
+	var data = {};
+	for (var gameID in gameList) {
+		var game = gameList[gameID];
+		if (game.status === "not joined") {
+			data[gameID] = game;
+		}
+	}
+	data.success = true;
 	res.send(data);
-	delete gameList.success;
+});
+
+
+app.get("/displayCurrentGames/:playerID", function(req,res) {
+	var data = {};
+	var playerID = req.params.playerID;
+	for (var gameID in gameList) {
+		var game = gameList[gameID];
+		if ((game.player1 == playerID) ||
+			(game.player2 == playerID)) {
+				data[gameID] = game;
+			}
+	}
+	data.success = true;
+	res.send(data);
 });
 
 // taken from hw3
