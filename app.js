@@ -73,7 +73,7 @@ app.post("/createCharacters", function(req,res) {
 	var charList = req.body.chars;
 	
 	res.send ( { success: true});
-}
+});
 
 app.get("/displayOpenGames", function(req, res) {
 	//var data = JSON.parse(JSON.stringify(gameList)); //create deep copy
