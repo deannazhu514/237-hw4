@@ -15,7 +15,8 @@ function displayOpenGames() {
 	$.ajax({
 		type: "get",
 		url: "/displayOpenGames",
-		success: function() {
+		success: function(data) {
+			console.log(data);
 			refreshDOM();
 		}
 	});
