@@ -114,6 +114,10 @@ function initServer() {
 	});
 }
 
+// serves files in the static directory
+app.get("/static/:filename", function (request, response) {
+    response.sendfile("static/" + request.params.filename);
+});
 
 initServer();
 app.listen(8889);

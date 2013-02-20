@@ -52,3 +52,6 @@ function delAll() {
 		type: "delete"
 	});
 }
+
+$(document).ready(function() {
+});
