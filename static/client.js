@@ -1,7 +1,21 @@
-function refreshDOM() {
+function createPlayer() {
+	var playerID = $("playerID-input");
+	for (var i=0; i<playerList.length; i++) {
+		if (playerList[i] === playerID) {
+			playerID.val("");
+			return;
+		}
+	}
+	playerList.push(playerID.val());
+	playerID.val("");
+	refreshDOM();
 }
 
-function displayCurrentGames(playerID) {
+function refreshDOM() {	
+	console.log(playerList);
+}
+
+function getCurrentGames(playerID) {
 	$.ajax({
 		type: "get",
 		url: "/displayCurrentGames/:" + playerID,
@@ -11,7 +25,7 @@ function displayCurrentGames(playerID) {
 	});
 }
 
-function displayOpenGames() {
+function getOpenGames() {
 	$.ajax({
 		type: "get",
 		url: "/displayOpenGames",
@@ -33,7 +47,7 @@ function joinGame(playerID) {
 	});
 }
 
-function createGame(playerID) {
+function addGame(playerID) {
 	$.ajax({
 		type: "post",
 		url: "/createGame",
@@ -44,14 +58,11 @@ function createGame(playerID) {
 	});
 }
 
-function put() {
-}
-
-function delAll() {
+function deleteAll() {
 	$.ajax({
 		type: "delete"
 	});
 }
 
-$(document).ready(function() {
-});
+// $(document).ready(function() {
+// });
