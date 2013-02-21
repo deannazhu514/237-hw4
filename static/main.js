@@ -1,50 +1,31 @@
 var map;
-var length;
+var width;
 var height;
 var p1charList;
 var p2charList;
-var terrainDict;
-
-terrainDict.plain = { 
-	dodgeModifier = 0, //gives bonus to dodge (positive is better)
-	moveAmount = 1, //move points required to cross the tile
-	damageModifier = 0,
-	character = ""
-};
-terrainDict.mountain = {
-	dodgeModifier = 0, //dummy value
-	moveAmount = 1000, //effectively impassable terrain
-	damageModifier = 0, //dummy value
-	character = "";
-};
-
-terrainDict.forest = {
-	dodgeModifier = 15,
-	moveAmount = 2,
-	damageModifier = 1,
-	character = ""
-};
 
 function init() {
 	init_characters();
 	
 	init_map(mapNum);
 	
+	canvas.addEventListener('mousemove', onMouseMove, false);
+	
+	intervalId = setInterval(update, timerDelay);
+	cursor.x = 0;
+	cursor.y = 0;
+	playerAction = "";
 }
 
-function init_characters() { 
+function init_characters(list1,list2) { 
 	p1charList = [];
 	p2charlist = [];
-	var i = 0;
-	for (var i = 0; i < 5; i++) {
-		var character;
-		character.type = "w"; //warrior, placeholder for now
-		p1charList.push(character);
+	for (var i = 0; i < list1.length; i++) {
+		p1charList.push(createCharacter(list1[i]);
 	}
-	for (var i = 0; i < 5; i++) {
-		var character;
+	for (var i = 0; i < list1.length; i++) {
+		p2charList.push(createCharacter(list2[i]);
 	}
-	while 
 }
 
 function init_map(mapNum) {
@@ -87,6 +68,10 @@ function terrain_factory(type) {
 		tile.character = "";
 	}
 }*/
+
+function update() {
+	draw();
+}
 
 init();
 
