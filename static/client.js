@@ -1,4 +1,5 @@
 var playerName;
+var currentGame;
 
 function createPlayer() {
 	var playerID = $("playerID-input");
@@ -9,6 +10,7 @@ function createPlayer() {
 		}
 	}
 	playerList.push(playerID.val());
+	playerName = playerID.val();
 	playerID.val("");
 	refreshDOM();
 }
@@ -21,7 +23,8 @@ function getCurrentGames(playerID) {
 	$.ajax({
 		type: "get",
 		url: "/displayCurrentGames/:" + playerID,
-		success: function() {
+		success: function(data) {
+			
 			refreshDOM();
 		}
 	});
@@ -43,8 +46,16 @@ function joinGame(playerID) {
 		type: "post",
 		url: "/joinGame",
 		data: playerID,
-		success: function() {
+		success: function(data) {
+			currentGame = data.game;
 			refreshDOM();
+			var pNum;
+			if (currentGame.player1 === "playerName") {
+				pNum = 1;
+			} else {
+				pNum = 2;
+			}
+			init(currentGame, pNum);
 			//CALL INIT HERE WITH PROPER STUFF
 		}
 	});
