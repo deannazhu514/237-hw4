@@ -1,3 +1,39 @@
 body {
-	background-color: #000;
+  background-color: #000;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+
+h1 {
+  font-size: 64px;
+}
+
+#title {
+	display: block;
+	margin: 50px;
+	padding: 10px 20px 10px 20px;
+	color: #FFFFFF;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	 width:100%;
+	 height: 100%;
+}
+
+#menu {
+	position: relative;
+	margin: 20px 50px;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	padding: 20px;
+	color: #FFFFFF;
+	font-size: 17px;
+	line-height: 25px;
+}
+
+.menubut{
+	color: #000000;
+	background-color: #FFFFFF;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	border: none;
+}
+
