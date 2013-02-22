@@ -14,13 +14,13 @@
 //before we return (before we do the hit animation)
 function calculateHit(attacker, defender) {
 	var hitChance = attacker.toHit - defender.dodgeChance;
-	var tileType = map[defender.y][defender.x];
-	var tile = terrainDict[defenderTile];
-	hitChance -= tile.dodgeModifier;
+	var tile = map[defender.y][defender.x];
+	var terrain = terrainDict[tile.type];
+	hitChance -= terrain.dodgeModifier;
 	if (Math.random > hitChance) {
 		return false;
 	}
-	defender.health -= attacker.damage - tile.damageModifier;
+	defender.health -= attacker.damage - terrain.damageModifier;
 	return true;
 }
 
@@ -30,10 +30,5 @@ function isDead(character) {
 	}
 	return false;
 }
-
-function isTileReachable(movePoints, pathList) {
-	
-}
-
 
 

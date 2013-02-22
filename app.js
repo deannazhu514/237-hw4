@@ -35,16 +35,24 @@ function readFile(filename, defaultData, callbackFn) {
 }
 
 app.post("/createGame", function(req, res){
-	var gameID = req.body.gameID;
+	var time = new Date().getTime();
+	var name = req.body.name;
 	var player1ID = req.body.playerName;
+	var p1charList = req.body.charList;
 	var mapNum = req.body.map;
 	var game = {
+		"id" : time,
+		"name": name,
 		"player1": player1ID, 
 		"player2": "",
 		"map": mapNum,
-		"status": "not joined"
+		"status": "not joined",
+		"p1charList": p1charList,
+		"p2charList": {}, 
+		"p1points": 0,
+		"p2points": 0
 	}
-	gameList[gameID] = game;
+	gameList[time] = game;
 	writeFile("games.txt", JSON.stringify(gameList));
 	res.send( {success : true });
 });
@@ -56,24 +64,48 @@ app.post("/createGame", function(req, res){
 app.post("/joinGame", function(req,res){ 
 	var gameID = req.body.gameID;
 	var playerID = req.body.playerName;
+	var charList = req.body.charList;
 	var game = gameList[gameID];
 	if (game.player2 !== "") {
 		game.player2 = playerID;
 		game.status = "p2turn";
-		res.send( {success : true});
+		game.p2charList = charList;
+		gameList[gameID] = game; //is this line necessary?
+		writeFile("games.txt", JSON.stringify(gameList));
+		res.send( {
+			"game" : game,
+			success : true });
 	} else {
 		alert("cannot join game");
 		res.send ( {success: false});
-		}
+	}
 });
+
+
+app.post("/updateGame", function(req,res) {
+	var gameID = req.body.gameID;
+	var game = gameList[gameID];
+	game.p1charList = req.body.p1List;
+	game.p2charList = req.body.p2List;
+	game.p1points = req.body.p1points;
+	game.p2points = req.body.p2points;
+	if (game.status === "p1turn") {
+		game.status = "p2turn";
+	} else {
+		game.status = "p1turn";
+	}
+	writeFile("games.txt", JSON.stringify(gameList));
+}
 
 
 //joined a game now create your squadron of characters
-app.post("/createCharacters", function(req,res) {
+
+//going to combine this with create/join instead
+/*app.post("/createCharacters", function(req,res) {
 	var charList = req.body.chars;
 	
 	res.send ( { success: true});
-});
+}); */
 
 app.get("/displayOpenGames", function(req, res) {
 	//var data = JSON.parse(JSON.stringify(gameList)); //create deep copy

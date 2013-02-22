@@ -1,3 +1,5 @@
+var playerName;
+
 function createPlayer() {
 	var playerID = $("playerID-input");
 	for (var i=0; i<playerList.length; i++) {
@@ -43,6 +45,7 @@ function joinGame(playerID) {
 		data: playerID,
 		success: function() {
 			refreshDOM();
+			//CALL INIT HERE WITH PROPER STUFF
 		}
 	});
 }
@@ -61,6 +64,25 @@ function addGame(playerID) {
 function deleteAll() {
 	$.ajax({
 		type: "delete"
+	});
+}
+
+function endTurn() {
+	//send: gameID, character lists, player points
+	//see update game in app.js
+	$.ajax({
+		type: "post"
+	});
+}
+
+function isMyTurn() {
+	//function that is used that will constantly poll
+	//the server to see if the turn changes
+	//ask the server if its my turn
+	
+	//to be implemented
+	$.ajax({
+		type: "get"
 	});
 }
 

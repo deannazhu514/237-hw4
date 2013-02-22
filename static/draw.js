@@ -2,16 +2,17 @@ var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 
 
-function draw() {
-	ctx.clearRect(0,0,canvas.width,canvas.height);
-	//note: Assumes width & height = tileSize*map width & height
-	for (var i = 0; i < map.height; i++) {
-		for (var j = 0; j < map.width; j++) {
+function drawMap() {
+	//note: Assumes canvas width & height >= tileSize*map's width & height
+	for (var i = 0; i < height; i++) {
+		for (var j = 0; j < width; j++) {
 			var img = getTileImage(map[i][j]);
 			ctx.drawImage(img, j*tileSize, i*tileSize);
 		}
 	}
-	
+}
+
+function drawCharacters() {
 	for (var i = 0; i < p1charList.length; i++) {
 		var character = p1charList[i];
 		ctx.drawImage(character.img, character.x * tileSize, character.y * tileSize);
@@ -24,13 +25,38 @@ function draw() {
 		var character = p2charList[i];
 		ctx.drawImage(character.img, character.x * tileSize, character.y * tileSize);
 	}
+}
+
+function drawCursor() {
 	
 	//DRAW CURSOR IMAGE
-	ctx.drawImage(cursor.img, cursor.x, cursor.y); 
+	ctx.drawImage(cursor.img, cursor.x*tileSize, cursor.y*tileSize); 
 	
 	//POSSIBLY CHANGE CURSOR BASED ON CURRENT ACTIOn
 	//SUCH AS ATTACKING OR MOVING OR WHEN HOVERING
 	//OVER A CLICKABLE CHARACTER
+}
+
+function drawMenu() {
+	ctx.drawRect(width*tileSize, 0, canvas.width -(width * tileSize), canvas.height); //menu box
+	
+	for (var i = 0; i < menu.length; i++) {
+		//draw the menu item
+		//menu's items are strings (like "Move")
+		if (i === menuIndex) {
+			//draw something special for this item
+			//like an arrow pointing at it
+			//or highlight it or something
+		}
+	}
+}
+
+function draw() {
+	ctx.clearRect(0,0,canvas.width,canvas.height);
+	drawMap();
+	drawCharacters();
+	drawCursor();
+	drawMenu();
 	
 }
 

@@ -1,12 +1,23 @@
 var tileSize = 12;
 var timerDelay = 20;
+var key_pressed = {};
+var game;
 
-var playerAction;
+var playerNumber;
+
+var menu = [];
+var menuIndex;
+
+var pathList;
+
+var playerFocus;
+
+var animationFlag;
 /*
 * possible states include
 * -moving
 * -attacking
-* -currentTurn (your own turn, view map, can click on characters to control)
+* -viewing (your own turn, view map, can click on characters to control)
 * -notTurn (not your turn, view map)
 * -any other menu option
 */
