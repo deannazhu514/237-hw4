@@ -46,6 +46,61 @@ warriorImage.src = "";
 var cursor;
 cursor.img = new Image();
 cursor.img.src = "";
+/*END CURSOR*/
+
+/*BASE STAT DICTIONARY*/
+//ALL STATS ARE THE PRETTY MUCH THE SAME FOR NOW, WHO REALLY CARES ABOUT THIS
+var baseStats = {};
+
+baseStats["warrior"] = {
+	toHit: .80,
+	damage: 10,
+	health: 100,
+	range: 1,
+	defense: 0, 
+	movePoints: 5,
+	critChance: .05,
+	dodgeChance: .07,
+	mana: 0
+}
+
+baseStats["archer"] = {
+	toHit: .80,
+	damage: 10,
+	health: 100,
+	range: 3,
+	defense: 0, 
+	movePoints: 5,
+	critChance: .05,
+	dodgeChance: .07,
+	mana: 0
+}
+
+baseStats["mage"] = {
+	toHit: .80,
+	damage: 10,
+	health: 100,
+	range: 1,
+	defense: 0, 
+	movePoints: 5,
+	critChance: .05,
+	dodgeChance: .07,
+	mana: 100
+}
+
+/*END STAT DICTIONARY*/
+
+/*STAT COEFFICIENTS*/
+var strDmg = 1;
+var strCrit = .03;
+var dexHit = .08;
+var dexCrit = .03;
+var agilMov = .5;
+var agilDodge = .05;
+var endHP = 12;
+var endDef = 0; //NOT SURE YET IF WANT TO INCLUDE DEFENSE AS CORE STAT
+
+/*END COEFFICIENTS*/
 
 
 //ETC ETC

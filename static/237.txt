@@ -1,0 +1,21 @@
+<NotepadPlus>
+    <Session activeView="0">
+        <mainView activeIndex="13">
+            <File firstVisibleLine="24" xOffset="0" scrollWidth="584" startPos="1241" endPos="1241" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\CHEN\Documents\project2\237-hw4\app.js" />
+            <File firstVisibleLine="36" xOffset="0" scrollWidth="472" startPos="1543" endPos="1543" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\CHEN\Documents\project2\237-hw4\static\character.js" />
+            <File firstVisibleLine="6" xOffset="0" scrollWidth="440" startPos="533" endPos="533" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\CHEN\Documents\project2\237-hw4\static\client.js" />
+            <File firstVisibleLine="18" xOffset="0" scrollWidth="360" startPos="472" endPos="472" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\CHEN\Downloads\hw3-starter-files\hw3-starter-files\wolframbeta\handout\static\wolfram.js" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="944" startPos="300" endPos="300" selMode="0" lang="HTML" encoding="-1" filename="C:\Users\CHEN\Documents\project2\237-hw4\static\index.html" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="352" startPos="0" endPos="0" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\CHEN\Documents\project2\237-hw4\static\maps.js" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="648" startPos="42" endPos="42" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\CHEN\Documents\project2\237-hw4\static\main.js" />
+            <File firstVisibleLine="3" xOffset="0" scrollWidth="512" startPos="945" endPos="945" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\CHEN\Documents\project2\237-hw4\static\mechanics.js" />
+            <File firstVisibleLine="39" xOffset="0" scrollWidth="768" startPos="1524" endPos="1524" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\CHEN\Documents\project2\237-hw4\static\draw.js" />
+            <File firstVisibleLine="15" xOffset="0" scrollWidth="608" startPos="188" endPos="188" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\CHEN\Documents\project2\237-hw4\static\constants.js" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="984" startPos="493" endPos="493" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\CHEN\Documents\project2\237-hw4\static\eventHandlers.js" />
+            <File firstVisibleLine="209" xOffset="0" scrollWidth="2192" startPos="6353" endPos="6353" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\CHEN\Desktop\oldmain.js" />
+            <File firstVisibleLine="30" xOffset="0" scrollWidth="728" startPos="872" endPos="872" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\CHEN\Desktop\old_event_handlers.js" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="528" startPos="0" endPos="0" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\CHEN\Documents\project2\237-hw4\static\terrain.js" />
+        </mainView>
+        <subView activeIndex="0" />
+    </Session>
+</NotepadPlus>

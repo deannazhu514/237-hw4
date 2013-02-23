@@ -57,7 +57,17 @@ function draw() {
 	drawCharacters();
 	drawCursor();
 	drawMenu();
+	if (playerFocus === "view stats") {
+		displayStats();
+	}
 	
+}
+
+function displayStats() {
+	var character = currentChar;
+	//draw a rectangle over map
+	
+	//draw the character's stats
 }
 
 function getTileImage(type) {

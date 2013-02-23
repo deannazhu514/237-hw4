@@ -17,11 +17,65 @@ function onKeyDown(event) {
 		keyDownCharacterMenu(event.keyCode);
 	} else if (playerFocus = "attacking") {
 		keyDownAttack(event.keyCode);
+	} else if (playerFocus = "view stats") {
+		keyDownStats(event.keyCode);
+	}
+}
+
+function keyDownStats(e) {
+	if (e === 27) {
+		playerFocus = "characterMenu";
+		generateCharacterMenu();
 	}
 }
 
 function keyDownAttack(event.keyCode) {
-	
+	var x = cursor.x;
+	var y = cursor.y;
+	if (e === 65) { //a
+		key_pressed["left"] = true;
+		key_pressed.time = 0;
+		if (cursor.x > 0) {
+			cursor.x--;
+		} else { return; }
+	} else if (e === 68) { //d
+		key_pressed["right"] = true;
+		key_pressed.time = 0;
+		if (cursor.x < width - 1) {
+			cursor.x++;
+		} else { return; }
+	} else if (e === 87) { //w
+		key_pressed["up"] = true;
+		key_pressed.time = 0;
+		if (cursor.y < height - 1) {
+			cursor.y++;
+		} else { return; }
+	} else if (e === 83) { //s
+		key_pressed["down"] = true;
+		key_pressed.time = 0;
+		if (cursor.y > 0) {
+			cursor.y--;
+		} else { return; }
+	} else if (e === 32) {//spacebar: select button
+		var enemy_char = map[cursor.y][cursor.x].character;
+		if ((enemy_char !== null) && (enemy_char.player !== currentChar.player)){
+			if (calculateHit(currentChar, enemy_char)) {
+				if (isDead(enemy_char)) {
+					//display death animation
+				}
+			}
+		}
+		return;
+	} else if (e === 27) { //escape
+		playerFocus = "characterMenu";
+		generateCharacterMenu();
+		return;
+	} else { return; }
+	if ((Math.abs(cursor.x - currentChar.x) + Math.abs(cursor.y - currentChar.y)) > currentChar.range) {
+		//can't attack farther than your range!
+		cursor.x = x;
+		cursor.y = y;
+	}
 }
 
 function keyDownCharacterMenu(e) {
@@ -82,7 +136,7 @@ function processMenuSelection(item) {
 	} else if (item === "Attack") {
 		playerFocus = "attack";
 	} else if (item === "View Stats") {
-		
+		displayStats(currentChar);
 	} else if (item === "Magic") {
 		
 	}
@@ -98,6 +152,7 @@ function isValidMove(tile) {
 	}
 	return true;
 }
+
 
 function keyDownMove(e) {
 	var x = cursor.x;
@@ -141,13 +196,11 @@ function keyDownMove(e) {
 		character.x = cursor.x;
 		character.y = cursor.y;
 		//THIS IS JUST PLACEHOLDER: WE SHOULD PUT IN ANIMATIONS
-		character.movePoints = 0; //ALSO TEMPORARY: PREFERABLY ALLOW CHARACTER 
-								  //TO MOVE AGAIN IF HE HAS REMAINING MOVEPOINTS
-								  //BUT TOO DIFFICULT TO IMPLEMENT FOR NOW
 		
 		return;
 	} else if (e === 27) {
-		playerFocus = "viewing";
+		playerFocus = "characterMenu";
+		generateCharacterMenu();
 		return;
 	} else {
 		return;

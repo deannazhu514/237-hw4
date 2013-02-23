@@ -40,12 +40,12 @@ function init_characters(list1,list2) {
 	p2charlist = [];
 	var newchar;
 	for (var i = 0; i < list1.length; i++) {
-		newchar = createCharacter(list1[i]);
+		newchar = newCharacter(list1[i]);
 		newchar.index = i;
 		p1charList.push(newchar);
 	}
 	for (var i = 0; i < list1.length; i++) {
-		newchar = createCharacter(list2[i]);
+		newchar = newCharacter(list2[i]);
 		newchar.index = i;
 		p2charList.push(newchar);
 	}
@@ -103,6 +103,13 @@ function terrain_factory(type) {
 function update() {
 	draw();
 	//key_pressed.time++ % 10;
+	var cList;
+	if (playerNumber === 1) {
+		cList = p1charList;
+	} else { 
+		cList = p2charList;
+	|
+	for (var i = 0; i < 
 }
 
 function endTurn() {
