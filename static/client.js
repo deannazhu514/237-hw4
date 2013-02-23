@@ -4,29 +4,54 @@ var currentGame;
 var gameList;
 var playerList;
 
-var previousState;
+var pageState;
 
-function refreshDOM(pageState) {	
+function refreshDOM() {	
 // overarching refreshDOM function
-	var container = $("#rooms");
-	previousState = container;
-	container.html("");
+	if (pageState === undefined) 
+		pageState = "title";
+	else if (pageState === "title") {
+		loadTitleScreen();
+	}
 	if (pageState === "menu") {
 		refreshMenuScreen();
 	}
 	else if (pageState === "gameStart") {
+		refreshGameStartScreen()
 	}
-	console.log(gamestate);
+	else if (pageState === "gameInPlay") {
+		refreshGameScreen()
+	}
+	console.log(pageState);
 }
 
-function refreshTitleScreen() {	
-// refreshDOM while on title screen
+function loadTitleScreen() {	
+// show title screen
+	var submitButton = $("#submitButton");
+	submitButton.html("Submit");
+	// submitButton.attr("href", "menu.html");
+	submitButton.click(function() {
+		// var newPage = (this.attr("href"));
+		// window.open(newPage);
+		pageState = "menu";
+		refreshDOM();
+	});
 }
 
 function refreshMenuScreen() {	
 // refreshDOM while on menu screen
-	var container = $("#rooms");
-	console.log("menu");
+	var container = $("#titleContent");
+	container.html("");
+	var instructions = $("<div>");
+	instructions.html("[instructions]"); // load from text file on server?
+	var rooms = $("<div>").addClass("row");
+	var gamesAvailable = $("<ul>");
+	var game = $("<li>").html("game1");
+	gamesAvailable.append(game);
+	var joinButton = $("<a>").html("Join Game");
+	joinButton.addClass("menubut");
+	rooms.append(gamesAvailable, joinButton);
+	container.append(instructions, rooms);
 }
 
 function refreshGameStartScreen() {	
@@ -148,5 +173,6 @@ function deleteAll() {
 }
 */
 
-// $(document).ready(function() {
-// });
+$(document).ready(function() {
+	loadTitleScreen();
+});

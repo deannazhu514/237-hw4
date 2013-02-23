@@ -4,16 +4,14 @@
 	<link href="reset.css" rel="stylesheet" type="text/css">
   <link href="style.css" rel="stylesheet" type="text/css">
 	<title>Unit Project 1</title>
-	<script type='text/javascript' src='client.js'></script>
-	<script src="jquery-1.9.0.js"></script>
+
 </head>
 <body>
 	<div id="menu"> 
 		<div id="title">
           <h1> HUMANS VS. ELVES VS. ZOMBIES </h1>
 		</div>
-		
-		<div id = "rooms"> 
+		<!--<div id = "rooms"> 
 			<div class="row">
 				<input class="menubut" name="Join"  type="submit" value="Join Game"/>
 			</div>
@@ -23,13 +21,16 @@
 			<div class="row">
 				<input class="menubut" name="Current"  type="submit" value="Current Games"/>
 			</div>
-		</div>
-		<div>
+		</div> -->
+		<div id = "titleContent">
 			<label>Player ID</label>  <input id="playerID-input" name="PlayerID" type="text" placeholder="Type here"/>
 			<div>
-				<input class="menubut" name="Submit" type="submit" value="Submit"/>
+			<a id="submitButton" class="menubut" name="Submit" type="submit"/>
 			</div>
 		</div>
 	</div>
+
+	<script src="jquery-1.9.0.js"></script>
+	<script type='text/javascript' src='client.js'></script>
 </body>
 <html>
