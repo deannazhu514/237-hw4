@@ -108,17 +108,34 @@ function update() {
 		cList = p1charList;
 	} else { 
 		cList = p2charList;
-	|
-	for (var i = 0; i < 
+	}
+	
+	//check to see if any characters have movepoints left
+	for (var i = 0; i < cList.length; i++) {
+		if (cList[i].movePoints > 0) {
+			return;
+		}
+	}
+	endTurn();
 }
 
 function endTurn() {
 	//send info to server
-	$.ajax
+	//$.ajax
 }
 
 function beginTurn() {
-
+	var cList;
+	if (playerNumber === 1) {
+		cList = p1charList;
+	} else { 
+		cList = p2charList;
+	}
+	for (var i = 0; i < cList.length; i++) {
+		cList[i].movePoints = cList[i].maxMovePoints;
+	}
+	//should game.status be changed here or in the calling function of begin turn? 
+	//
 }
 
 
