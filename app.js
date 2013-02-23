@@ -95,7 +95,7 @@ app.post("/updateGame", function(req,res) {
 		game.status = "p1turn";
 	}
 	writeFile("games.txt", JSON.stringify(gameList));
-}
+});
 
 
 //joined a game now create your squadron of characters

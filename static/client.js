@@ -1,8 +1,48 @@
 var playerName;
 var currentGame;
 
+var gameList;
+var playerList;
+
+var previousState;
+
+function refreshDOM(pageState) {	
+// overarching refreshDOM function
+	var container = $("#rooms");
+	previousState = container;
+	container.html("");
+	if (pageState === "menu") {
+		refreshMenuScreen();
+	}
+	else if (pageState === "gameStart") {
+	}
+	console.log(gamestate);
+}
+
+function refreshTitleScreen() {	
+// refreshDOM while on title screen
+}
+
+function refreshMenuScreen() {	
+// refreshDOM while on menu screen
+	var container = $("#rooms");
+	console.log("menu");
+}
+
+function refreshGameStartScreen() {	
+// refreshDOM while on game start screen
+
+}
+
+function refreshGameScreen() {	
+// refreshDOM while on game screen
+
+}
+
+/* TITLE SCREEN functions */
+
 function createPlayer() {
-	var playerID = $("playerID-input");
+	var playerID = $("#playerID-input");
 	for (var i=0; i<playerList.length; i++) {
 		if (playerList[i] === playerID) {
 			playerID.val("");
@@ -12,12 +52,10 @@ function createPlayer() {
 	playerList.push(playerID.val());
 	playerName = playerID.val();
 	playerID.val("");
-	refreshDOM();
+	refreshDOM("menu");
 }
 
-function refreshDOM() {	
-	console.log(playerList);
-}
+/* MENU SCREEN functions */
 
 function getCurrentGames(playerID) {
 	$.ajax({
@@ -72,11 +110,16 @@ function addGame(playerID) {
 	});
 }
 
-function deleteAll() {
+/* GAME START SCREEN functions */
+
+function submitTeam() {
+	// submit the created team's stats and other new game data
 	$.ajax({
-		type: "delete"
+		type: "post"
 	});
 }
+
+/* GAME functions */
 
 function endTurn() {
 	//send: gameID, character lists, player points
@@ -96,6 +139,14 @@ function isMyTurn() {
 		type: "get"
 	});
 }
+
+/* don't need for now
+function deleteAll() {
+	$.ajax({
+		type: "delete"
+	});
+}
+*/
 
 // $(document).ready(function() {
 // });
