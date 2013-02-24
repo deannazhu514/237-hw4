@@ -5,7 +5,6 @@ body {
 #menu {
 	width: 700px;
 	margin: 70px auto 0;
-	position: relative;
 }
 
 #title {
@@ -22,7 +21,8 @@ h1 {
 	text-align: center;
 }
 
-#titleContent{
+#content {
+	position: relative;
 	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	width: 700px;
 	margin: 70px auto 0;
@@ -48,10 +48,10 @@ input, a {
 }
 
 .menubut{
- 	position: relative;
-	top: 40px;
+ 	position: absolute;
+/*	top: 40px;
  	bottom: 20px;
-	left: 30%;
+	left: 30%; */
 	color: #F00;
 	font-weight: bold;
 	background-color: #FFF;
@@ -62,8 +62,13 @@ input, a {
 }
 
 #submitButton{
+	position: absolute;
 	top: 0px;
 	left: 0%;
+}
+
+#joinButton {
+	left: 30%;
 }
 
 #instructions {
@@ -72,6 +77,7 @@ input, a {
 }
 
 .roombut{
+	position: absolute;
 	/* position: relative;
 	top: 20px;
 	bottom: 20px; */

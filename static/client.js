@@ -64,7 +64,7 @@ function createPlayer() {
 function refreshMenuScreen() {	
 // refreshDOM while on menu screen
 
-	var container = $("#titleContent");
+	var container = $("#content");
 	container.html("");
 	
 	var title = $("#title");
@@ -98,23 +98,29 @@ function refreshMenuScreen() {
 		refreshAllGames(gamesAvailable);
 	else if (pageState[1] === "myGames")
 		refreshMyGames(gamesAvailable);
-
 		
-	var joinButton = $("<a>").html("Join Game").addClass("menubut");
-	var createButton = $("<a>").html("Create Game").addClass("menubut");
-	joinButton.click(function(){
+	var joinButton = $("<a>")
+		.html("Join Game")
+		.addClass("menubut")
+		.attr("id", "joinButton");
+	var createButton = $("<a>")
+		.html("Create Game")
+		.addClass("menubut")
+		.attr("id", "createButton");
+	joinButton.click(function() {
 		pageState[0] = "gameStart";
 		pageState[1] = "";
 		refreshDOM();
 	});
-	createButton.click(function(){
+	createButton.click(function() {
 		pageState[0] = "gameStart";
 		pageState[1] = "";
 		refreshDOM();
 	});
-	
 	rooms.append(gamesAvailable);
-	container.append(instructions, availButton, currButton, rooms, joinButton, createButton);
+	container.append(instructions)
+		.append(availButton, currButton)
+		.append(rooms, joinButton, createButton);
 }
 
 function refreshAllGames(gamesAvailable) {
