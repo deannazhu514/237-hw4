@@ -1,0 +1,1 @@
+{"1361730025353":{"id":1361730025353,"name":"1","player1":"test","player2":"","map":"1","status":"not joined","p2charList":[],"p1points":0,"p2points":0}}

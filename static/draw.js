@@ -57,7 +57,7 @@ function draw() {
 	drawCursor();
 	drawMenu();
 	if (playerFocus === "view stats") {
-		displayStats();
+		displayStats(); //this will be an overlay over the whole map
 	}
 	
 }

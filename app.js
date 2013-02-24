@@ -81,19 +81,32 @@ app.post("/joinGame", function(req,res){
 	}
 });
 
+app.get("/isYourTurn/:info", function(req,res) {
+	var obj = JSON.parse(req.params.info);
+	var pname = obj.name;
+	var game = gameList[obj.game];
+	if (((game.player1 === pname) 
+		&& (game.status === "p1turn")) 
+	 || ((game.player2 === pname) 
+		&& (game.status === "p2turn"))){
+		res.send({ 
+			answer: 'true',
+			game: currentGame
+		});
+	} else {
+		res.send({
+			answer: false,
+			//game: {} //this should never be read if answer is false
+		});
+	}
+});
+
 
 app.post("/updateGame", function(req,res) {
-	var gameID = req.body.gameID;
-	var game = gameList[gameID];
-	game.p1charList = req.body.p1List;
-	game.p2charList = req.body.p2List;
-	game.p1points = req.body.p1points;
-	game.p2points = req.body.p2points;
-	if (game.status === "p1turn") {
-		game.status = "p2turn";
-	} else {
-		game.status = "p1turn";
-	}
+	var game = JSON.parse(req.body.gameObj);
+	var gameID = game.gameID;
+	gameList[gameID] = game;
+
 	writeFile("games.txt", JSON.stringify(gameList));
 });
 

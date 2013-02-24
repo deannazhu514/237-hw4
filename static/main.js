@@ -10,13 +10,6 @@ function init(gameData, player) {
 	init_map(game.map);
 	p1charList = game.p1charList;
 	p2charList = game.p2charList; 
-	
-	/* on second thought we should store the entire
-	 * character objects rather than recreating them
-	 * with just x/y coordinates
-	 * so we can maintain customizable stats
-	 */
-	//init_characters(game.p1charList, game.p2charList);
 	canvas.addEventListener('keyup', onKeyUp, false);
 	canvas.addEventListener('keydown', onKeyDown, false);
 	
@@ -35,20 +28,15 @@ function init(gameData, player) {
 * PLAYER (1 or 2)
 * x and y coordinates
 */
-function init_characters(list1,list2) { 
-	p1charList = [];
-	p2charlist = [];
+function init_characters(datalist) { 
+	var charlist = [];
 	var newchar;
-	for (var i = 0; i < list1.length; i++) {
-		newchar = newCharacter(list1[i]);
+	for (var i = 0; i < datalist.length; i++) {
+		newchar = newCharacter(datalist[i]);
 		newchar.index = i;
-		p1charList.push(newchar);
+		charlist.push(newchar);
 	}
-	for (var i = 0; i < list1.length; i++) {
-		newchar = newCharacter(list2[i]);
-		newchar.index = i;
-		p2charList.push(newchar);
-	}
+	return charlist;
 }
 
 
@@ -104,26 +92,35 @@ function update() {
 	draw();
 	//key_pressed.time++ % 10;
 	var cList;
-	if (playerNumber === 1) {
+	if ((playerNumber === 1) 
+	&& (game.status === "p1turn")) {
 		cList = p1charList;
-	} else { 
+	} else if (game.status === "p2turn") {
 		cList = p2charList;
+	} else { //it isn't your turn, whichever player you are...
+		isMyTurn();
+		return;
 	}
 	
+	//fall through: it is your turn, check to see if 
+	//any characters can still move
 	//check to see if any characters have movepoints left
 	for (var i = 0; i < cList.length; i++) {
-		if (cList[i].movePoints > 0) {
+		if (cList[i].hasMoved) {
 			return;
 		}
 	}
+	
+	//only reaches endturn if all characters have 0 movepoints
 	endTurn();
 }
 
-function endTurn() {
-	//send info to server
-	//$.ajax
-}
 
+//I don't think we need a separate function for this
+
+//we can do whatever needs doing in our update() check and 
+//endTurn function
+/*
 function beginTurn() {
 	var cList;
 	if (playerNumber === 1) {
@@ -137,5 +134,5 @@ function beginTurn() {
 	//should game.status be changed here or in the calling function of begin turn? 
 	//
 }
-
+*/
 

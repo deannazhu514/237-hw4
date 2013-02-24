@@ -29,7 +29,7 @@ function keyDownStats(e) {
 	}
 }
 
-function keyDownAttack(event.keyCode) {
+function keyDownAttack(e) {
 	var x = cursor.x;
 	var y = cursor.y;
 	if (e === 65) { //a
@@ -65,6 +65,8 @@ function keyDownAttack(event.keyCode) {
 				}
 			}
 		}
+		currentChar.hasMoved = true;
+		playerFocus = "viewing";
 		return;
 	} else if (e === 27) { //escape
 		playerFocus = "characterMenu";
@@ -113,16 +115,17 @@ function keyDownCharacterMenu(e) {
 }
 
 function generateCharacterMenu() {
-	if (playerNumber === currentChar.player) {
-		menu = [];
+	menu = [];
+	if ((playerNumber === currentChar.player) 
+	 && (currentChar.hasMoved ===false)) {
 		menu.push("Move");
 		menu.push("Attack");
 		if (currentChar.type === "mage") {
 			menu.push("Magic");
 		}
 		menu.push("View Stats");
+		menu.push("Wait");
 	} else {
-		menu = [];
 		menu.push("View Stats");
 	}
 	//pop up menu for move/attack/view stats?
@@ -139,6 +142,9 @@ function processMenuSelection(item) {
 		displayStats(currentChar);
 	} else if (item === "Magic") {
 		
+	} else if (item === "Wait") {
+		currentChar.hasMoved = true;
+		playerFocus = "viewing";
 	}
 }
 
@@ -201,6 +207,7 @@ function keyDownMove(e) {
 	} else if (e === 27) {
 		playerFocus = "characterMenu";
 		generateCharacterMenu();
+		listPath = [];
 		return;
 	} else {
 		return;

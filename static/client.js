@@ -1,15 +1,19 @@
 var playerName; //id for the player
-var currentGame; //which game the player is playing
+var currentGame; //which game the player is playing, is a game object
 var currentGameName; //which game the player is playing
+//is a property of currentGame, so this won't need to be used
 
 var gameList = [{"id": 1, "name": "game1"}, 
 				{"id": 2, "name": "game2"},
 				{"id": 3, "name": "game3"}]; //hard-coded for testing
+
+var openGameList;
+var currentGameList;
 								
 var myGameList = [{"id": 1, "name": "myGame1"}, //for testing only
 				{"id": 2, "name": "myGame2"}];
 var playerList = []; //probably won't need
-var pageState = []; //what screens to load on page, perhaps have a copy on server? 
+var pageState = []; //what screens to load on page 
 
 
 function refreshDOM() {	
@@ -39,14 +43,20 @@ function loadTitleScreen() {
 	var submitButton = $("#submitButton");
 	submitButton.html("Submit");
 	submitButton.click(function() {
-		createPlayer();
-		pageState[0] = "menu";
-		refreshDOM();
+		var playerID = $("#playerID-input");
+		if (playerID.val() !== "") {
+			createPlayer();
+			pageState[0] = "menu";
+			refreshDOM();
+		}
+		else {
+			$("#content").append("<p>Please input name.</p>");
+		}
 	});
 }
 
 function createPlayer() {
-// submit player's name
+// submit player's name to list of all players
 	var playerID = $("#playerID-input");
 	if (playerList === undefined) {
 		playerList = [];
@@ -129,10 +139,11 @@ function refreshMenuScreen() {
 
 function refreshAllGames(gamesAvailable) {
 // display all available games on menu screen
-	for (var key in gameList) {
+	getOpenGames();
+	for (var key in openGameList) {
 		var game = $("<li>")
-			.attr("id", gameList[key].id)
-			.html(gameList[key].id+": "+gameList[key].name)
+			.attr("id", openGameList[key].id)
+			.html(openGameList[key].id+": "+openGameList[key].name)
 			.click(function() {
 				if (currentGameName !== undefined) {
 					$("#"+currentGameName).removeClass("selected");
@@ -161,10 +172,10 @@ function refreshMyGames(gamesAvailable) {
 	}
 }
 
-function getCurrentGames(playerID) {
+function getCurrentGames() {
 	$.ajax({
 		type: "get",
-		url: "/displayCurrentGames/:" + playerID,
+		url: "/displayCurrentGames/:" + playerName,
 		success: function(data) {
 			refreshDOM();
 		}
@@ -174,8 +185,9 @@ function getCurrentGames(playerID) {
 function getOpenGames() {
 	$.ajax({
 		type: "get",
-		url: "/displayOpenGames",
+		url: "/displayOpenGames/:" + playerName,
 		success: function(data) {
+			openGameList = data;
 			console.log(data);
 			refreshDOM();
 		}
@@ -191,7 +203,7 @@ function joinGame(charList) {
 				"charList": charList},
 		success: function(data) {
 			console.log("game start");
-			currentGame = data.game;
+			currentGame = JSON.parse(data.game);
 			refreshDOM();
 			var playerNumber;
 			if (currentGame.player1 === "playerName") {
@@ -282,6 +294,8 @@ function submitTeam() {
 /* GAME FUNCTIONS */
 function refreshGameScreen() {	
 // refreshDOM while on game screen, might not need
+
+//yeah idt this is needed yo
 	var container = $("#content");
 	container.html("");
 	
@@ -292,10 +306,42 @@ function refreshGameScreen() {
 function endTurn() {
 	//send: gameID, character lists, player points
 	//see update game in app.js
+	
+	//from a design standpoint we should
+	//probably break this up into two functions
+	//one for end turn game updating something, 
+	//one for the actual post request
+	//oh well
+	//do that when we have time or anyone feels like it LOL
+	var cList;
+	if (playerNumber === 1) {
+		cList = p1charList;
+	} else { 
+		cList = p2charList;
+	}
+	for (var i = 0; i < cList.length; i++) {
+		cList[i].movePoints = cList[i].maxMovePoints;
+	}
+	//i'm assuming p1charlist etc are just references to
+	//game.p1charlist rather than modifying a different copy
+	//but i'm not sure thats the case so here's some possibly
+	//redundant code lool fml
+	
+	currentGame.p1charList = p1charList;
+	currentGame.p2charList = p2charList;
+	
+	if (currentGame.status === "p1turn") {
+		currentGame.status = "p2turn";
+	} else {
+		currentGame.status = "p1turn";
+	}
+	
+	//update points if we ever implement that victory condition
+	
 	$.ajax({
 		type: "post",
 		url: "/updateGame",
-		data: {"gameID" : currentGameName},
+		data: {"gameObj" : JSON.stringify(currentGame)},
 		success: function() {
 			refreshGameScreen();
 		}
@@ -308,12 +354,21 @@ function isMyTurn() {
 	//ask the server if its my turn
 	
 	//to be implemented
+	var namegame = {
+		name: playerName,
+		game: currentGame.id
+	}
+	
 	$.ajax({
 		type: "get",
-		url: "/updateGame",
+		url: "/isYourTurn/:"+ JSON.stringify(namegame),
 		success: function(data) {
-			var game = data.game;
-			currentGame.status = game.status;
+			if (data.answer === 'true') {
+				currentGame = JSON.parse(data.game);
+				//this should have a new status 
+				//which will cause ismyturn to not be
+				//called anymore in update
+			}
 			refreshGameScreen();
 		}
 	});

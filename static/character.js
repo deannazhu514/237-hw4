@@ -31,9 +31,11 @@ function newCharacter(data) {
 	var dexterity = data.dexterity;
 	var endurance = data.endurance;
 	var agility = data.agility;
+	
+	var hasMoved = false;
 	//note that we are not enforcing integral values for anything
 	//except movepoints. Fractional values of hp/damage are fine
-	//we can just 
+	//we can just round for display purposes
 	
 	character.toHit = baseStats[type].toHit + (dexterity * dexHit);
 	character.damage = baseStats[type].damage + (strength * strDmg);
