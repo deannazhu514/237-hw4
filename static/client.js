@@ -33,25 +33,52 @@ function loadTitleScreen() {
 	submitButton.click(function() {
 		// var newPage = (this.attr("href"));
 		// window.open(newPage);
+		createPlayer();
 		pageState = "menu";
 		refreshDOM();
 	});
 }
 
 function refreshMenuScreen() {	
-// refreshDOM while on menu screen
+// refresh menu screen
 	var container = $("#titleContent");
 	container.html("");
-	var instructions = $("<div>");
+	var title = $("#title");
+	title.html("<h1>"+playerName+", welcome to Norbert Wars</h1>");
+	title.css("font-size", "30px");
+	var instructions = $("<div id = 'instructions'>");
 	instructions.html("[instructions]"); // load from text file on server?
-	var rooms = $("<div>").addClass("row");
+	var availButton = $("<a>").html("Available Games");
+	availButton.addClass("roombut");
+	availButton.mousedown(
+				function(event) {
+					console.log("avail");
+				});
+	var currButton = $("<a>").html("Current Games");
+	currButton.addClass("roombut");
+	currButton.mousedown(
+				function(event) {
+					console.log("current");
+				});
+	var rooms = $("<div>").addClass("rooms");
 	var gamesAvailable = $("<ul>");
 	var game = $("<li>").html("game1");
 	gamesAvailable.append(game);
 	var joinButton = $("<a>").html("Join Game");
 	joinButton.addClass("menubut");
-	rooms.append(gamesAvailable, joinButton);
-	container.append(instructions, rooms);
+	joinButton.mousedown(
+				function(event) {
+					console.log("join");
+				});
+	var createButton = $("<a>").html("Create Game");
+	createButton.addClass("menubut");
+	createButton.mousedown(
+				function(event) {
+					console.log("create");
+				});
+	rooms.append(gamesAvailable);
+	container.append(instructions, availButton, currButton,
+					rooms, createButton, joinButton);
 }
 
 function refreshGameStartScreen() {	
@@ -68,16 +95,21 @@ function refreshGameScreen() {
 
 function createPlayer() {
 	var playerID = $("#playerID-input");
-	for (var i=0; i<playerList.length; i++) {
-		if (playerList[i] === playerID) {
-			playerID.val("");
-			return;
+	if (playerList === undefined) {
+		playerList = [];
+	}
+	else {
+		for (var player in playerList) {
+			if (player === playerID.value) {
+				playerID.val("");
+				return;
+			}
 		}
 	}
 	playerList.push(playerID.val());
 	playerName = playerID.val();
 	playerID.val("");
-	refreshDOM("menu");
+	refreshDOM();
 }
 
 /* MENU SCREEN functions */
