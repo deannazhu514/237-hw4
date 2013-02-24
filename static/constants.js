@@ -18,9 +18,10 @@ var menuIndex;
 
 var pathList;
 
+var pointGain = 20;
+
 
 var playerFocus;
-
 /*
 * possible states include
 * -moving

@@ -79,6 +79,7 @@ function keyDownAttack(e) {
 		&& (!isDead(enemy_char))){
 			if (calculateHit(currentChar, enemy_char)) {
 				if (isDead(enemy_char)) {
+					map[enemy_char.y][enemy_char.x].character = null;
 					//display death animation
 					
 					
@@ -239,8 +240,10 @@ function keyDownMove(e) {
 			return;
 		}
 	} else if (e === 32) {
-		character.x = cursor.x;
-		character.y = cursor.y;
+		map[currentChar.y][currentChar.x].character = null;
+		currentChar.x = cursor.x;
+		currentChar.y = cursor.y;
+		map[currentChar.y][currentChar.x].character = currentChar;
 		//THIS IS JUST PLACEHOLDER: WE SHOULD PUT IN ANIMATIONS
 		
 		return;
@@ -256,25 +259,25 @@ function keyDownMove(e) {
 	i = pathList.indexOf(tuple);
 	if (i !== -1) {
 		pathList.splice(i+1,(pathList.length - i+1));
-		character.movePoints = character.maxMovePoints;
+		currentChar.movePoints = currentChar.maxMovePoints;
 		for (var i = 1; i < pathList.length; i++) {
 			var arrayTuple = pathList[i].split(",");
 			tile = map[(arrayTuple[0] - 0)][(arrayTuple[1] - 0)]; // the - 0 just casts it to a number
 			terrain = terrainDict[tile.type];
-			character.movePoints -= terrain.moveCost;
+			currentChar.movePoints -= terrain.moveCost;
 		}
 	} else {
 		tile = map[cursor.y][cursor.x];
 		if (isValidMove(tile)) {
 			pathList.push("" + cursor.y + "," + cursor.x);
-			character.movePoints -= terrainDict[tile.type].moveCost;
+			currentChar.movePoints -= terrainDict[tile.type].moveCost;
 		} else {
 			cursor.x = x;
 			cursor.y = y;
 		}
 	}
 }
-
+	
 function keyDownView(e) {
 	if (!endGameFlag) {
 	if (e === 65) { //a

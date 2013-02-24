@@ -48,7 +48,7 @@ function init_characters(datalist) {
 
 //for now just one map 
 function init_map(mapNum) {
-	if (mapNum === '1') {
+	if (mapNum == '1') {
 		width = 20;
 		height = 20;
 		map = new Array(height);
@@ -61,14 +61,19 @@ function init_map(mapNum) {
 				var tile = {};
 				tile.type = "plain";
 				tile.character = null;
-				tile.special = "";
+				if (((i === height/2) || (i === ((height/2) - 1)))
+				&& ((j === width/2) || (j === ((width/2) - 1)))) {
+					tile.special = "scorespot";
+				} else { 
+					tile.special = "";
+				}
 				map[i][j] = tile;
 			}
 		}
 		return map;
-	} else if (mapNum === '2') {
+	} else if (mapNum == '2') {
 		//second map type
-	} else if (mapNum === '3') {
+	} else if (mapNum == '3') {
 		//third map type etc
 	}
 }
@@ -199,6 +204,49 @@ function update() {
 	
 	//only reaches endturn if all characters have moved or are dead
 	endTurn();
+}
+
+function endTurn() {
+	var pList; //player's list
+	var opList; //opponent's list
+	if (playerNumber === 1) {
+		pList = p1charList;
+	} else { 
+		pList = p2charList;
+	}
+	for (var i = 0; i < pList.length; i++) {
+		pList[i].movePoints = pList[i].maxMovePoints;
+	}
+	
+	//so you only get points after one full turn: that is,
+	//after your opponent finishes his turn. 
+	//Technically i guess it should be awarded at the 
+	//*start* of your turn but this is pretty much the same
+	for (var i = 0; i < opList.length; i++) {
+		var x = opList[i].x;
+		var y = opList[i].y;
+		var tile = map[x][y];
+		if (tile.special === "scorespot") {
+			if (playerNumber === 1) {
+				currentGame.p2points = currentGame.p2points + pointGain;
+			} else {
+				currentGame.p1points = currentGame.p1points + pointGain;
+			}
+		}
+	}
+	//i'm assuming p1charlist etc are just references to
+	//game.p1charlist rather than modifying a different copy
+	//but i'm not sure thats the case so here's some possibly
+	//redundant code lool fml
+	
+	currentGame.p1charList = p1charList;
+	currentGame.p2charList = p2charList;
+	
+	if (currentGame.status === "p1turn") {
+		currentGame.status = "p2turn";
+	} else {
+		currentGame.status = "p1turn";
+	}
 }
 
 

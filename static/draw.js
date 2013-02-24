@@ -5,8 +5,12 @@ function drawMap() {
 	//note: Assumes canvas width & height >= tileSize*map's width & height
 	for (var i = 0; i < height; i++) {
 		for (var j = 0; j < width; j++) {
-			var img = getTileImage(map[i][j]);
+			var tile = map[i][j];
+			var img = getTileImage(tile.type);
 			ctx.drawImage(img, j*tileSize, i*tileSize);
+			if (tile.special === "scorespot") {
+				//i dunno can we make the square tinted and glow red or something?
+			}
 		}
 	}
 }
