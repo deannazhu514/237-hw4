@@ -247,6 +247,8 @@ function endTurn() {
 	} else {
 		currentGame.status = "p1turn";
 	}
+	
+	updateGame();
 }
 
 
