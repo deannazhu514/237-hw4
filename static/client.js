@@ -64,7 +64,7 @@ function createPlayer() {
 function refreshMenuScreen() {	
 // refreshDOM while on menu screen
 
-	var container = $("#titleContent");
+	var container = $("#content");
 	container.html("");
 	
 	var title = $("#title");
@@ -99,22 +99,29 @@ function refreshMenuScreen() {
 	else if (pageState[1] === "myGames")
 		refreshMyGames(gamesAvailable);
 		
-	var joinButton = $("<a>").html("Join Game").addClass("menubut");
-	var createButton = $("<a>").html("Create Game").addClass("menubut");
-	joinButton.click(function(){
+	var joinButton = $("<a>")
+		.html("Join Game")
+		.addClass("menubut")
+		.attr("id", "joinButton");
+	var createButton = $("<a>")
+		.html("Create Game")
+		.addClass("menubut")
+		.attr("id", "createButton");
+	joinButton.click(function() {
 		pageState[0] = "gameStart";
-		pageState[1] = "joinGame";
+		pageState[1] = "";
 		refreshDOM();
 	});
-	
-	createButton.click(function(){
+
+	createButton.click(function() {
 		pageState[0] = "gameStart";
-		pageState[1] = "createGame";
+		pageState[1] = "";
 		refreshDOM();
 	});
-	
 	rooms.append(gamesAvailable);
-	container.append(instructions, availButton, currButton, rooms, joinButton, createButton);
+	container.append(instructions)
+		.append(availButton, currButton)
+		.append(rooms, createButton, joinButton);
 }
 
 function refreshAllGames(gamesAvailable) {
@@ -122,11 +129,11 @@ function refreshAllGames(gamesAvailable) {
 	for (var key in gameList) {
 		var game = $("<li id="+key+">")
 			.html(gameList[key].id)
+			.attr("id", gameList[key].id)
 			.append(": "+gameList[key].name)
-			.mousedown(function(event){
-				
-				$("#"+this.id).addClass("selected");
-			});		
+			.click(function() {
+				currentGame = $(this).attr("id");
+			});
 		gamesAvailable.append(game);
 	}
 }
@@ -137,8 +144,9 @@ function refreshMyGames(gamesAvailable) {
 		var game = $("<li id="+key+">")
 			.html(myGameList[key].id)
 			.append(": "+myGameList[key].name)
-			.mousedown(function(event){
-				$("#"+this.id).addClass("selected");
+			.attr("id", gameList[key].id)
+			.click(function() {
+				currentGame = $(this).attr("id");
 			});
 		gamesAvailable.append(game);
 	}
@@ -165,33 +173,40 @@ function getOpenGames() {
 	});
 }
 
-function joinGame(playerID) {
+function joinGame(charList) {
 	$.ajax({
 		type: "post",
 		url: "/joinGame",
-		data: playerID,
+		data: { "playerName": playerName, 
+					  "gameID": currentGame,
+						"charList": charList},
 		success: function(data) {
+				console.log("game start");
 			currentGame = data.game;
 			refreshDOM();
-			var pNum;
+			var playerNumber;
 			if (currentGame.player1 === "playerName") {
-				pNum = 1;
+				playerNumber = 1;
 			} else {
-				pNum = 2;
+				playerNumber = 2;
 			}
-			init(currentGame, pNum);
+			console.log("joined game");
+			refreshGameScreen();
 			//CALL INIT HERE WITH PROPER STUFF
 		}
 	});
 }
 
-function addGame(playerID) {
+function createGame(charList) {
 	$.ajax({
 		type: "post",
 		url: "/createGame",
-		data: playerID,
+		data: { "name": currentGame.name,
+						"playerName": playerName,
+						"charList": {},
+						"map": 1},		
 		success: function() {
-			refreshDOM();
+			refreshGameScreen();
 		}
 	});
 }
@@ -201,7 +216,15 @@ function refreshGameStartScreen() {
 // refreshDOM while on game start screen
 	var container = $("#content");
 	container.html("");
-	
+
+	var startButton = $("<a>").html("Start Game").addClass("menubut");
+	startButton.click(function(){
+		pageState[0] = "gameInPlay";
+		pageState[1] = "";
+		joinGame({});
+
+	});
+	container.append(startButton);
 }
 
 function submitTeam() {
@@ -214,14 +237,23 @@ function submitTeam() {
 /* GAME FUNCTIONS */
 function refreshGameScreen() {	
 // refreshDOM while on game screen, might not need
-	draw();
+	var container = $("#content");
+	container.html("");
+	
+	var canvas = $("<canvas width='800' height='600'>");
+	container.append(canvas);
 }
 
 function endTurn() {
 	//send: gameID, character lists, player points
 	//see update game in app.js
 	$.ajax({
-		type: "post"
+		type: "post",
+		url: "/updateGame",
+		data: {"gameID" : currentGame},
+		success: function() {
+			refreshGameScreen();
+		}
 	});
 }
 
@@ -232,7 +264,13 @@ function isMyTurn() {
 	
 	//to be implemented
 	$.ajax({
-		type: "get"
+		type: "get",
+		url: "/updateGame",
+		success: function(data) {
+			var game = data.game;
+			currentGame.status = game.status;
+			refreshGameScreen();
+		}
 	});
 }
 

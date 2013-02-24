@@ -17,14 +17,25 @@ Background as a chess-like grid terrain (different terrain squares can boost or 
 
 Title: 
 
+(images in /images)
 
-terrain:
+mountain:
+http://scratch.mit.edu/static/projects/Eeveecario/1827300_med.png
+
+plain: 
+http://farm2.static.flickr.com/1364/1344500293_fd1e040ab9_o.jpg
+
+terrain (water, forest):
 http://fc08.deviantart.net/fs71/f/2012/181/f/0/pokemon_pp___pallet_town_by_demise_hawk-d54g9bg.png
+
 elf_female + elf_male:
 http://www.hbgames.org/forums/viewtopic.php?f=10&t=58209
+
 sprite generator (human_male + human_female):
 http://www.famitsu.com/freegame/tool/chibi/index2.html
+
 zombie_female:
 http://www.rpgmakervx.net/lofiversion/index.php/t34543.html
+
 zombie_male:
 http://s562.beta.photobucket.com/user/ChipGaming/media/BlodyZombie.png.html?fromLegacy=true

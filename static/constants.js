@@ -30,11 +30,13 @@ var isDrawingPathFlag;
 
 /*TILE IMAGES HERE*/
 var plainImage = new Image();
-plainImage.src = ""; //IMAGE SOURCE HERE
+plainImage.src = "plain.png"; //IMAGE SOURCE HERE
 var mountainImage = new Image();
-mountainImage.src = ""; //IMAGE SOURCE HERE
+mountainImage.src = "mountain.png"; //IMAGE SOURCE HERE
 var forestImage = new Image();
-forestImage.src = ""; //IMAGE SOURCE HERE
+forestImage.src = "forest.png"; //IMAGE SOURCE HERE
+var waterImage = new Image();
+waterImage.src = "water.png";
 /*END TILE IMAGES*/
 
 /*CHARACTER IMAGES HERE*/
