@@ -282,6 +282,8 @@ function submitTeam() {
 /* GAME FUNCTIONS */
 function refreshGameScreen() {	
 // refreshDOM while on game screen, might not need
+
+//yeah idt this is needed yo
 	var container = $("#content");
 	container.html("");
 	
@@ -292,10 +294,42 @@ function refreshGameScreen() {
 function endTurn() {
 	//send: gameID, character lists, player points
 	//see update game in app.js
+	
+	//from a design standpoint we should
+	//probably break this up into two functions
+	//one for end turn game updating something, 
+	//one for the actual post request
+	//oh well
+	//do that when we have time or anyone feels like it LOL
+	var cList;
+	if (playerNumber === 1) {
+		cList = p1charList;
+	} else { 
+		cList = p2charList;
+	}
+	for (var i = 0; i < cList.length; i++) {
+		cList[i].movePoints = cList[i].maxMovePoints;
+	}
+	//i'm assuming p1charlist etc are just references to
+	//game.p1charlist rather than modifying a different copy
+	//but i'm not sure thats the case so here's some possibly
+	//redundant code lool fml
+	
+	currentGame.p1charList = p1charList;
+	currentGame.p2charList = p2charList;
+	
+	if (currentGame.status === "p1turn") {
+		currentGame.status = "p2turn";
+	} else {
+		currentGame.status = "p1turn";
+	}
+	
+	//update points if we ever implement that victory condition
+	
 	$.ajax({
 		type: "post",
 		url: "/updateGame",
-		data: {"gameID" : currentGameName},
+		data: {"gameObj" : JSON.stringify(currentGame)},
 		success: function() {
 			refreshGameScreen();
 		}
@@ -308,12 +342,21 @@ function isMyTurn() {
 	//ask the server if its my turn
 	
 	//to be implemented
+	var namegame = {
+		name: playerName,
+		game: currentGame.id
+	}
+	
 	$.ajax({
 		type: "get",
-		url: "/updateGame",
+		url: "/isYourTurn/:"+ JSON.stringify(namegame),
 		success: function(data) {
-			var game = data.game;
-			currentGame.status = game.status;
+			if (data.answer === true) {
+				currentGame = data.game;
+				//this should have a new status 
+				//which will cause ismyturn to not be
+				//called anymore in update
+			}
 			refreshGameScreen();
 		}
 	});

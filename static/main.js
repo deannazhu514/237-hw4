@@ -104,26 +104,35 @@ function update() {
 	draw();
 	//key_pressed.time++ % 10;
 	var cList;
-	if (playerNumber === 1) {
+	if ((playerNumber === 1) 
+	&& (game.status === "p1turn")) {
 		cList = p1charList;
-	} else { 
+	} else if (game.status === "p2turn") {
 		cList = p2charList;
+	} else { //it isn't your turn, whichever player you are...
+		isMyTurn();
+		return;
 	}
 	
+	//fall through: it is your turn, check to see if 
+	//any characters can still move
 	//check to see if any characters have movepoints left
 	for (var i = 0; i < cList.length; i++) {
-		if (cList[i].movePoints > 0) {
+		if (cList[i].hasMoved) {
 			return;
 		}
 	}
+	
+	//only reaches endturn if all characters have 0 movepoints
 	endTurn();
 }
 
-function endTurn() {
-	//send info to server
-	//$.ajax
-}
 
+//I don't think we need a separate function for this
+
+//we can do whatever needs doing in our update() check and 
+//endTurn function
+/*
 function beginTurn() {
 	var cList;
 	if (playerNumber === 1) {
@@ -137,5 +146,5 @@ function beginTurn() {
 	//should game.status be changed here or in the calling function of begin turn? 
 	//
 }
-
+*/
 
