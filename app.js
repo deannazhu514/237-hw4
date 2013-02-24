@@ -90,7 +90,7 @@ app.get("/isYourTurn/:info", function(req,res) {
 	 || ((game.player2 === pname) 
 		&& (game.status === "p2turn"))){
 		res.send({ 
-			answer: true,
+			answer: 'true',
 			game: currentGame
 		});
 	} else {

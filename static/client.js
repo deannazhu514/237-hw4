@@ -191,7 +191,7 @@ function joinGame(charList) {
 				"charList": charList},
 		success: function(data) {
 			console.log("game start");
-			currentGame = data.game;
+			currentGame = JSON.parse(data.game);
 			refreshDOM();
 			var playerNumber;
 			if (currentGame.player1 === "playerName") {
@@ -351,8 +351,8 @@ function isMyTurn() {
 		type: "get",
 		url: "/isYourTurn/:"+ JSON.stringify(namegame),
 		success: function(data) {
-			if (data.answer === true) {
-				currentGame = data.game;
+			if (data.answer === 'true') {
+				currentGame = JSON.parse(data.game);
 				//this should have a new status 
 				//which will cause ismyturn to not be
 				//called anymore in update
