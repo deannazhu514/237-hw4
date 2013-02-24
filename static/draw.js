@@ -1,7 +1,6 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 
-
 function drawMap() {
 	//note: Assumes canvas width & height >= tileSize*map's width & height
 	for (var i = 0; i < height; i++) {

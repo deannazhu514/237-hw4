@@ -106,6 +106,7 @@ function refreshMenuScreen() {
 		pageState[1] = "joinGame";
 		refreshDOM();
 	});
+	
 	createButton.click(function(){
 		pageState[0] = "gameStart";
 		pageState[1] = "createGame";
@@ -148,7 +149,6 @@ function getCurrentGames(playerID) {
 		type: "get",
 		url: "/displayCurrentGames/:" + playerID,
 		success: function(data) {
-			
 			refreshDOM();
 		}
 	});
@@ -201,6 +201,7 @@ function refreshGameStartScreen() {
 // refreshDOM while on game start screen
 	var container = $("#content");
 	container.html("");
+	
 }
 
 function submitTeam() {
@@ -213,6 +214,7 @@ function submitTeam() {
 /* GAME FUNCTIONS */
 function refreshGameScreen() {	
 // refreshDOM while on game screen, might not need
+	draw();
 }
 
 function endTurn() {
