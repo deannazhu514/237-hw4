@@ -30,18 +30,28 @@ var isDrawingPathFlag;
 
 /*TILE IMAGES HERE*/
 var plainImage = new Image();
-plainImage.src = "plain.png"; //IMAGE SOURCE HERE
+plainImage.src = "images/plain.png"; //IMAGE SOURCE HERE
 var mountainImage = new Image();
-mountainImage.src = "mountain.png"; //IMAGE SOURCE HERE
+mountainImage.src = "images/mountain.png"; //IMAGE SOURCE HERE
 var forestImage = new Image();
-forestImage.src = "forest.png"; //IMAGE SOURCE HERE
+forestImage.src = "images/forest.png"; //IMAGE SOURCE HERE
 var waterImage = new Image();
-waterImage.src = "water.png";
+waterImage.src = "images/water.png";
 /*END TILE IMAGES*/
 
 /*CHARACTER IMAGES HERE*/
-var warriorImage = new Image();
-warriorImage.src = "";
+var warriorImageM = new Image();
+warriorImageM.src = "images/human_male.png";
+var warriorImageF = new Image();
+warriorImageF.src = "images/human_female.png";
+var elfImageM = new Image();
+elfImageM.src = "images/elf_male.png";
+var elfImageF = new Image();
+elfImageF.src = "images/elf_female.png";
+var zombieImageM = new Image();
+zombieImageM.src = "images/zombie_male.png";
+var zombieImageF = new Image();
+zombieImageF.src = "images/zombie_female.png";
 /* END CHARACTER IMAGES*/
 
 /*CURSOR IMAGE*/

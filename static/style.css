@@ -22,10 +22,11 @@ h1 {
 }
 
 #content {
+	background-color: #000;
 	position: relative;
 	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	width: 700px;
-	margin: 70px auto 0;
+	margin: 70px auto;
 	color: #FFF;
 }
 
@@ -105,6 +106,10 @@ li {
 
 #joinButton {
 	right: -63%;
+}
+
+#warriorM{
+	background-image:url(images/human_male.png);
 }
 
 

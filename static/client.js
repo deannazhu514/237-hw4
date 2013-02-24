@@ -1,12 +1,13 @@
 var playerName; //id for the player
 var currentGame; //which game the player is playing
+var currentGameName; //which game the player is playing
 
 var gameList = [{"id": 1, "name": "game1"}, 
 				{"id": 2, "name": "game2"},
 				{"id": 3, "name": "game3"}]; //hard-coded for testing
 								
 var myGameList = [{"id": 1, "name": "myGame1"}, //for testing only
-								{"id": 2, "name": "myGame2"}];
+				{"id": 2, "name": "myGame2"}];
 var playerList = []; //probably won't need
 var pageState = []; //what screens to load on page, perhaps have a copy on server? 
 
@@ -21,8 +22,11 @@ function refreshDOM() {
 	else if (pageState[0] === "menu") {
 		refreshMenuScreen();
 	}
-	else if (pageState[0] === "gameStart") {
-		refreshGameStartScreen();
+	else if (pageState[0] === "createGame") {
+		refreshCreateGameScreen();
+	}	
+	else if (pageState[0] === "joinGame") {
+		refreshJoinGameScreen();
 	}
 	else if (pageState[0] === "gameInPlay") {
 		refreshGameScreen();
@@ -63,7 +67,6 @@ function createPlayer() {
 /* MENU SCREEN FUNCTIONS */
 function refreshMenuScreen() {	
 // refreshDOM while on menu screen
-
 	var container = $("#content");
 	container.html("");
 	
@@ -85,8 +88,8 @@ function refreshMenuScreen() {
 	currButton.addClass("roombut");
 	currButton.mousedown(
 				function(event) {
-						pageState[1] = "myGames";
-						refreshDOM();
+					pageState[1] = "myGames";
+					refreshDOM();
 				});
 
 	var rooms = $("<div>").addClass("rooms");
@@ -102,26 +105,26 @@ function refreshMenuScreen() {
 	var joinButton = $("<a>")
 		.html("Join Game")
 		.addClass("menubut")
-		.attr("id", "joinButton");
+		.attr("id", "joinButton")
+		.click(function() {
+			pageState[0] = "joinGame";
+			pageState[1] = "";
+			refreshDOM();
+		});
 	var createButton = $("<a>")
 		.html("Create Game")
 		.addClass("menubut")
-		.attr("id", "createButton");
-	joinButton.click(function() {
-		pageState[0] = "gameStart";
-		pageState[1] = "";
-		refreshDOM();
-	});
-
-	createButton.click(function() {
-		pageState[0] = "gameStart";
-		pageState[1] = "";
-		refreshDOM();
-	});
+		.attr("id", "createButton")
+		.click(function() {
+			pageState[0] = "createGame";
+			pageState[1] = "";
+			refreshDOM();
+		});
+		
 	rooms.append(gamesAvailable);
-	container.append(instructions)
-		.append(availButton, currButton)
-		.append(rooms, createButton, joinButton);
+	container.append(instructions,
+				availButton, currButton,
+				rooms, createButton, joinButton);
 }
 
 function refreshAllGames(gamesAvailable) {
@@ -131,10 +134,10 @@ function refreshAllGames(gamesAvailable) {
 			.attr("id", gameList[key].id)
 			.html(gameList[key].id+": "+gameList[key].name)
 			.click(function() {
-				if (currentGame !== undefined) {
-					$("#"+currentGame).removeClass("selected");
+				if (currentGameName !== undefined) {
+					$("#"+currentGameName).removeClass("selected");
 				}
-				currentGame = $(this).attr("id");
+				currentGameName = $(this).attr("id");
 				$(this).addClass("selected");	
 			});
 		gamesAvailable.append(game);
@@ -148,10 +151,10 @@ function refreshMyGames(gamesAvailable) {
 			.attr("id", gameList[key].id)
 			.html(myGameList[key].id +": "+myGameList[key].name)
 			.click(function() {
-				if (currentGame !== undefined) {
-					$("#"+currentGame).removeClass("selected");
+				if (currentGameName !== undefined) {
+					$("#"+currentGameName).removeClass("selected");
 				}
-				currentGame = $(this).attr("id");
+				currentGameName = $(this).attr("id");
 				$(this).addClass("selected");		
 			});
 		gamesAvailable.append(game);
@@ -184,10 +187,10 @@ function joinGame(charList) {
 		type: "post",
 		url: "/joinGame",
 		data: { "playerName": playerName, 
-					  "gameID": currentGame,
-						"charList": charList},
+				"gameID": currentGameName,
+				"charList": charList},
 		success: function(data) {
-				console.log("game start");
+			console.log("game start");
 			currentGame = data.game;
 			refreshDOM();
 			var playerNumber;
@@ -196,7 +199,6 @@ function joinGame(charList) {
 			} else {
 				playerNumber = 2;
 			}
-			console.log("joined game");
 			refreshGameScreen();
 			//CALL INIT HERE WITH PROPER STUFF
 		}
@@ -207,10 +209,10 @@ function createGame(charList) {
 	$.ajax({
 		type: "post",
 		url: "/createGame",
-		data: { "name": currentGame.name,
-						"playerName": playerName,
-						"charList": {},
-						"map": 1},		
+		data: { "name": currentGameName,
+				"playerName": playerName,
+				"charList": charList,
+				"map": 1},		
 		success: function() {
 			refreshGameScreen();
 		}
@@ -218,19 +220,56 @@ function createGame(charList) {
 }
 
 /* GAME START SCREEN FUNCTIONS */
-function refreshGameStartScreen() {	
+function refreshCreateGameScreen() {	
+// refreshDOM while on game start screen
+	var container = $("#content");
+	container.html("");
+	
+	var charList = [];
+	
+	var label = $("<label>").html("Enter a game name:");
+	var gameName = $("<input id=gameName>")
+				.attr("name", "gameName")
+				.attr("type", "text");
+				
+	var warriorM = $("<img>")
+					.attr("src", "images/human_male.png");
+	
+	var startButton = $("<a>").html("Create Game").addClass("menubut");
+	startButton.click(function(){
+		pageState[0] = "gameInPlay";
+		pageState[1] = "";
+		createGame(charList);
+	});
+	
+	var backButton = $("<a>").html("Go Back").addClass("menubut");
+	backButton.click(function(){
+		pageState[0] = "menu";
+		pageState[1] = "allGames";
+		refreshMenuScreen();
+	});
+	container.append(label, gameName, warriorM, 
+		startButton, backButton);
+}
+
+function refreshJoinGameScreen() {	
 // refreshDOM while on game start screen
 	var container = $("#content");
 	container.html("");
 
-	var startButton = $("<a>").html("Start Game").addClass("menubut");
+	var startButton = $("<a>").html("Join Game").addClass("menubut");
 	startButton.click(function(){
 		pageState[0] = "gameInPlay";
 		pageState[1] = "";
-		joinGame({});
-
+		joinGame(charList);
 	});
-	container.append(startButton);
+	var backButton = $("<a>").html("Go Back").addClass("menubut");
+	backButton.click(function(){
+		pageState[0] = "menu";
+		pageState[1] = "allGames";
+		refreshMenuScreen();
+	});
+	container.append(startButton, backButton);
 }
 
 function submitTeam() {
@@ -256,7 +295,7 @@ function endTurn() {
 	$.ajax({
 		type: "post",
 		url: "/updateGame",
-		data: {"gameID" : currentGame},
+		data: {"gameID" : currentGameName},
 		success: function() {
 			refreshGameScreen();
 		}
