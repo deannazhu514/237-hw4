@@ -127,12 +127,15 @@ function refreshMenuScreen() {
 function refreshAllGames(gamesAvailable) {
 // display all available games on menu screen
 	for (var key in gameList) {
-		var game = $("<li id="+key+">")
-			.html(gameList[key].id)
+		var game = $("<li>")
 			.attr("id", gameList[key].id)
-			.append(": "+gameList[key].name)
+			.html(gameList[key].id+": "+gameList[key].name)
 			.click(function() {
+				if (currentGame !== undefined) {
+					$("#"+currentGame).removeClass("selected");
+				}
 				currentGame = $(this).attr("id");
+				$(this).addClass("selected");	
 			});
 		gamesAvailable.append(game);
 	}
@@ -141,12 +144,15 @@ function refreshAllGames(gamesAvailable) {
 function refreshMyGames(gamesAvailable) {
 // display player's games on menu screen
 	for (var key in myGameList) {
-		var game = $("<li id="+key+">")
-			.html(myGameList[key].id)
-			.append(": "+myGameList[key].name)
+		var game = $("<li>")
 			.attr("id", gameList[key].id)
+			.html(myGameList[key].id +": "+myGameList[key].name)
 			.click(function() {
+				if (currentGame !== undefined) {
+					$("#"+currentGame).removeClass("selected");
+				}
 				currentGame = $(this).attr("id");
+				$(this).addClass("selected");		
 			});
 		gamesAvailable.append(game);
 	}
