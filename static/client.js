@@ -1,15 +1,19 @@
 var playerName; //id for the player
-var currentGame; //which game the player is playing
+var currentGame; //which game the player is playing, is a game object
 var currentGameName; //which game the player is playing
+//is a property of currentGame, so this won't need to be used
 
 var gameList = [{"id": 1, "name": "game1"}, 
 				{"id": 2, "name": "game2"},
 				{"id": 3, "name": "game3"}]; //hard-coded for testing
+
+var openGameList;
+var currentGameList;
 								
 var myGameList = [{"id": 1, "name": "myGame1"}, //for testing only
 				{"id": 2, "name": "myGame2"}];
 var playerList = []; //probably won't need
-var pageState = []; //what screens to load on page, perhaps have a copy on server? 
+var pageState = []; //what screens to load on page 
 
 
 function refreshDOM() {	
@@ -39,14 +43,20 @@ function loadTitleScreen() {
 	var submitButton = $("#submitButton");
 	submitButton.html("Submit");
 	submitButton.click(function() {
-		createPlayer();
-		pageState[0] = "menu";
-		refreshDOM();
+		var playerID = $("#playerID-input");
+		if (playerID.val() !== "") {
+			createPlayer();
+			pageState[0] = "menu";
+			refreshDOM();
+		}
+		else {
+			$("#content").append("<p>Please input name.</p>");
+		}
 	});
 }
 
 function createPlayer() {
-// submit player's name
+// submit player's name to list of all players
 	var playerID = $("#playerID-input");
 	if (playerList === undefined) {
 		playerList = [];
@@ -129,10 +139,11 @@ function refreshMenuScreen() {
 
 function refreshAllGames(gamesAvailable) {
 // display all available games on menu screen
-	for (var key in gameList) {
+	getOpenGames();
+	for (var key in openGameList) {
 		var game = $("<li>")
-			.attr("id", gameList[key].id)
-			.html(gameList[key].id+": "+gameList[key].name)
+			.attr("id", openGameList[key].id)
+			.html(openGameList[key].id+": "+openGameList[key].name)
 			.click(function() {
 				if (currentGameName !== undefined) {
 					$("#"+currentGameName).removeClass("selected");
@@ -161,10 +172,10 @@ function refreshMyGames(gamesAvailable) {
 	}
 }
 
-function getCurrentGames(playerID) {
+function getCurrentGames() {
 	$.ajax({
 		type: "get",
-		url: "/displayCurrentGames/:" + playerID,
+		url: "/displayCurrentGames/:" + playerName,
 		success: function(data) {
 			refreshDOM();
 		}
@@ -174,8 +185,9 @@ function getCurrentGames(playerID) {
 function getOpenGames() {
 	$.ajax({
 		type: "get",
-		url: "/displayOpenGames",
+		url: "/displayOpenGames/:" + playerName,
 		success: function(data) {
+			openGameList = data;
 			console.log(data);
 			refreshDOM();
 		}
