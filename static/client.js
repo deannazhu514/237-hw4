@@ -2,8 +2,8 @@ var playerName; //id for the player
 var currentGame; //which game the player is playing
 
 var gameList = [{"id": 1, "name": "game1"}, 
-								{"id": 2, "name": "game2"},
-								{"id": 3, "name": "game3"}]; //hard-coded for testing
+				{"id": 2, "name": "game2"},
+				{"id": 3, "name": "game3"}]; //hard-coded for testing
 								
 var myGameList = [{"id": 1, "name": "myGame1"}, //for testing only
 								{"id": 2, "name": "myGame2"}];
@@ -98,7 +98,6 @@ function refreshMenuScreen() {
 		refreshAllGames(gamesAvailable);
 	else if (pageState[1] === "myGames")
 		refreshMyGames(gamesAvailable);
-
 		
 	var joinButton = $("<a>").html("Join Game").addClass("menubut");
 	var createButton = $("<a>").html("Create Game").addClass("menubut");
@@ -120,9 +119,13 @@ function refreshMenuScreen() {
 function refreshAllGames(gamesAvailable) {
 // display all available games on menu screen
 	for (var key in gameList) {
-		var game = $("<li>")
+		var game = $("<li id="+key+">")
 			.html(gameList[key].id)
-			.append(": "+gameList[key].name);
+			.append(": "+gameList[key].name)
+			.mousedown(function(event){
+				
+				$("#"+this.id).addClass("selected");
+			});		
 		gamesAvailable.append(game);
 	}
 }
@@ -130,9 +133,12 @@ function refreshAllGames(gamesAvailable) {
 function refreshMyGames(gamesAvailable) {
 // display player's games on menu screen
 	for (var key in myGameList) {
-		var game = $("<li>")
+		var game = $("<li id="+key+">")
 			.html(myGameList[key].id)
-			.append(": "+myGameList[key].name);
+			.append(": "+myGameList[key].name)
+			.mousedown(function(event){
+				$("#"+this.id).addClass("selected");
+			});
 		gamesAvailable.append(game);
 	}
 }
