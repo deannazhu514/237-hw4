@@ -108,8 +108,16 @@ li {
 	right: -63%;
 }
 
+.images{
+	top: 10px;
+	bottom: 10px;
+	padding: 40px 40px;
+}
 #warriorM{
+	width: 10px;
+	height: 10px;
 	background-image:url(images/human_male.png);
+	
 }
 
 

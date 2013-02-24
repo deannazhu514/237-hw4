@@ -232,8 +232,8 @@ function refreshCreateGameScreen() {
 				.attr("name", "gameName")
 				.attr("type", "text");
 				
-	var warriorM = $("<img>")
-					.attr("src", "images/human_male.png");
+	 var warriorM = $("<div id = warriorM>").addClass("images");
+
 	
 	var startButton = $("<a>").html("Create Game").addClass("menubut");
 	startButton.click(function(){

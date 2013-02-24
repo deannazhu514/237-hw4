@@ -56,8 +56,8 @@ zombieImageF.src = "images/zombie_female.png";
 
 /*CURSOR IMAGE*/
 var cursor;
-cursor.img = new Image();
-cursor.img.src = "";
+//cursor.img = new Image();
+//cursor.img.src = "";
 /*END CURSOR*/
 
 /*BASE STAT DICTIONARY*/
