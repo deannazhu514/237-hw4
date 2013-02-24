@@ -3,7 +3,7 @@ var app = express();
 var fs = require("fs");
 
 var gameList;
-var playerList;
+//var playerList; not used for now
 
 app.use(express.bodyParser());
 
@@ -156,9 +156,10 @@ function initServer() {
 	readFile("games.txt", defaultList, function(err, data) {
 		gameList = JSON.parse(data);
 	});
+	/*
 	readFile("players.txt", defaultList, function(err, data) {
 		playerList = JSON.parse(data);
-	});
+	});*/
 }
 
 // serves files in the static directory

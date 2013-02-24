@@ -14,7 +14,9 @@ function drawMap() {
 function drawCharacters() {
 	for (var i = 0; i < p1charList.length; i++) {
 		var character = p1charList[i];
-		ctx.drawImage(character.img, character.x * tileSize, character.y * tileSize);
+		if (!isDead(character)) {
+			ctx.drawImage(character.img, character.x * tileSize, character.y * tileSize);
+		}
 	}
 	
 	//a bit redundant code but in case we ever have asymmetry between
@@ -51,6 +53,10 @@ function drawMenu() {
 }
 
 function draw() {
+	if (gameEndFlag) {
+		//draw victory banner for p1 or p2
+		return; //stop drawing the rest of the crap
+	}
 	ctx.clearRect(0,0,canvas.width,canvas.height);
 	drawMap();
 	drawCharacters();
@@ -58,6 +64,7 @@ function draw() {
 	drawMenu();
 	if (playerFocus === "view stats") {
 		displayStats(); //this will be an overlay over the whole map
+		//maybe? 
 	}
 	
 }

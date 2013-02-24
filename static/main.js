@@ -1,15 +1,11 @@
-var map;
-var width;
-var height;
-var p1charList;
-var p2charList;
+
 
 function init(gameData, player) {
-	game = gameData;
+	//currentGame = gameData;
 	playerNumber = player;
-	init_map(game.map);
-	p1charList = game.p1charList;
-	p2charList = game.p2charList; 
+	init_map(currentGame.map);
+	p1charList = currentGame.p1charList;
+	p2charList = currentGame.p2charList; 
 	canvas.addEventListener('keyup', onKeyUp, false);
 	canvas.addEventListener('keydown', onKeyDown, false);
 	
@@ -18,8 +14,18 @@ function init(gameData, player) {
 	intervalId = setInterval(update, timerDelay);
 	cursor.x = 0;
 	cursor.y = 0;
-	playerFocus = "";
-	key_pressed.time = 0;
+	playerFocus = viewing;
+	
+	//i hope the inconsistency in style doesnt bug anyone
+	key_pressed.timeleft = 0;
+	key_pressed.timeright = 0;
+	key_pressed.timeup = 0;
+	key_pressed.timedown = 0;
+	key_pressed["right"] = false;
+	key_pressed["left"] = false;
+	key_pressed["up"] = false;
+	key_pressed["down"] = false;
+	gameEndFlag = false;
 }
 
 //ASSUMING GIVEN TWO LISTS WITH DATA OBJECTS
@@ -88,14 +94,94 @@ function terrain_factory(type) {
 	}
 }*/
 
+
+function checkVictory() {
+	//god this function should be split into 
+	//multiple helper functions but im so tired
+	//so inelegant sigh
+	var i = 0;
+	if (playerNumber === 1) {
+		while (i < p2charList.length) {
+			if (!isDead(p2charList[i])) {
+				break;
+			}
+			i++;
+		}
+		if (i === p2charList.length) { //never broke out of the loop
+			currentGame.status = "p1Victory"; //have not yet implemented anything server side to deal with victories and ending games
+											  //this is a placeholder
+			//display victory animation
+			gameEndFlag = true;
+			endTurn();
+		}
+		if (currentGame.p1points >= 100) {
+			currentGame.status = "p1Victory";
+			gameEndFlag = true;
+			endTurn();
+		}
+	} else {
+		while (i < p1charList.length) {
+			if (!isDead(p1charList[i])) {
+				break;
+			}
+			i++;
+		}
+		if (i === p2charList.length) { //never broke out of the loop
+			currentGame.status = "p2Victory"; 
+			//display victory animation
+			gameEndFlag = true;
+			endTurn();
+		}
+		if (currentGame.p2points >= pointGoal) {
+			currentGame.status = "p2Victory";
+			gameEndFlag = true;
+			endTurn();
+		}
+	}
+}
+
+/* this function doesn't really offer any core functionality 
+ * BUT WHY NOT
+ * if a direction key is pressed, move once as handled in eventhandlers
+ * if keyup isn't detected for a certain amount of time, then the movement
+ * is repeated automatically and rapidly as calculated below
+ * as of now support only exists for one key being held down at a time
+ * pressing multiple will override and reset the timer
+ * god why did i spend any time on this
+ */
+function checkKeyPressed() {
+	key_pressed.time++; //yeah this will keep incrementing 
+						//after you release the key
+						//but its okay because it only gets checked
+						//when any keypress becomes true, and that will
+						//reset the counter
+	if ((key_pressed.time > keyPressThreshhold) && (key_pressed.time%keyPressThreshhold === 0)) {
+		if (key_pressed["left"]) {
+			onKeyDownParser(65);
+		} else if (key_pressed["right"]) {
+			onKeyDownParser(68);
+		} else if (key_pressed["up"]) {
+			onKeyDownParser(87);
+		} else if (key_pressed["down"]) {
+			onKeyDownParser(83);
+		}
+	}
+}
+
 function update() {
 	draw();
-	//key_pressed.time++ % 10;
+	checkKeyPressed();
+	
+	if (checkVictory()) {
+		endTurn();
+		return;
+	}
+	
 	var cList;
 	if ((playerNumber === 1) 
-	&& (game.status === "p1turn")) {
+	&& (currentGame.status === "p1turn")) {
 		cList = p1charList;
-	} else if (game.status === "p2turn") {
+	} else if (currentGame.status === "p2turn") {
 		cList = p2charList;
 	} else { //it isn't your turn, whichever player you are...
 		isMyTurn();
@@ -104,35 +190,16 @@ function update() {
 	
 	//fall through: it is your turn, check to see if 
 	//any characters can still move
-	//check to see if any characters have movepoints left
+	//check to see if any living characters have movepoints left
 	for (var i = 0; i < cList.length; i++) {
-		if (cList[i].hasMoved) {
+		if (cList[i].hasMoved && !isDead(cList[i])) {
 			return;
 		}
 	}
 	
-	//only reaches endturn if all characters have 0 movepoints
+	//only reaches endturn if all characters have moved or are dead
 	endTurn();
 }
 
 
-//I don't think we need a separate function for this
-
-//we can do whatever needs doing in our update() check and 
-//endTurn function
-/*
-function beginTurn() {
-	var cList;
-	if (playerNumber === 1) {
-		cList = p1charList;
-	} else { 
-		cList = p2charList;
-	}
-	for (var i = 0; i < cList.length; i++) {
-		cList[i].movePoints = cList[i].maxMovePoints;
-	}
-	//should game.status be changed here or in the calling function of begin turn? 
-	//
-}
-*/
 

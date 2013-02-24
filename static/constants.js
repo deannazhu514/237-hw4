@@ -1,7 +1,15 @@
 var tileSize = 12;
 var timerDelay = 20;
 var key_pressed = {};
-var game;
+var keyPressThreshhold = 5;
+var keyPressTickMod = 2;
+
+var map;
+var width;
+var height;
+var p1charList;
+var p2charList;
+var pointGoal = 100;
 
 var playerNumber;
 
@@ -10,9 +18,9 @@ var menuIndex;
 
 var pathList;
 
+
 var playerFocus;
 
-var animationFlag;
 /*
 * possible states include
 * -moving
@@ -25,6 +33,8 @@ var animationFlag;
 var currentChar;
 /*FLAGS HERE */
 var isDrawingPathFlag;
+var animationFlag;
+var gameEndFlag;
 
 /*END FLAGS*/
 

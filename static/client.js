@@ -212,6 +212,7 @@ function joinGame(charList) {
 				playerNumber = 2;
 			}
 			refreshGameScreen();
+			init(currentGame, playerNumber);
 			//CALL INIT HERE WITH PROPER STUFF
 		}
 	});

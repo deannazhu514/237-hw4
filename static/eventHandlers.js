@@ -1,27 +1,32 @@
 
 
-//key_pressed.time to be used later for holding
-//down the key and moving multiple spaces
-//(short initial pause and then repeated movements)
-//will be implemented later
+
 
 function onKeyDown(event) {
+	onKeyDownParser(event.keyCode);
+	//why do i have a wrapper function? 
+	//so that it easier facilitates holding down
+	//keys for multiple key presses!
+	//I can simply pass in the relevant int again
+	//rather than copying over my logic. 
+}
+
+function onKeyDownParser(e) {
 	if (animationFlag) { //don't allow player to input commands while animations are playing
 		return;
 	}
 	if (playerFocus = "viewing") {
-		keyDownView(event.keyCode);
+		keyDownView(e);
 	} else if (playerFocus = "moving") {
-		keyDownMove(event.keyCode);
+		keyDownMove(e);
 	} else if (playerFocus = "characterMenu") {
-		keyDownCharacterMenu(event.keyCode);
+		keyDownCharacterMenu(e);
 	} else if (playerFocus = "attacking") {
-		keyDownAttack(event.keyCode);
+		keyDownAttack(e);
 	} else if (playerFocus = "view stats") {
-		keyDownStats(event.keyCode);
+		keyDownStats(e);
 	}
 }
-
 function keyDownStats(e) {
 	if (e === 27) {
 		playerFocus = "characterMenu";
@@ -29,28 +34,39 @@ function keyDownStats(e) {
 	}
 }
 
+function falsifyKeyPress() {
+	key_pressed["left"] = false;
+	key_pressed["right"] = false;
+	key_pressed["up"] = false;
+	key_pressed["down"] = false;
+}
+
 function keyDownAttack(e) {
 	var x = cursor.x;
 	var y = cursor.y;
 	if (e === 65) { //a
+		falsifyKeyPress();
 		key_pressed["left"] = true;
 		key_pressed.time = 0;
 		if (cursor.x > 0) {
 			cursor.x--;
 		} else { return; }
 	} else if (e === 68) { //d
+		falsifyKeyPress();
 		key_pressed["right"] = true;
 		key_pressed.time = 0;
 		if (cursor.x < width - 1) {
 			cursor.x++;
 		} else { return; }
 	} else if (e === 87) { //w
+		falsifyKeyPress();
 		key_pressed["up"] = true;
 		key_pressed.time = 0;
 		if (cursor.y < height - 1) {
 			cursor.y++;
 		} else { return; }
 	} else if (e === 83) { //s
+		falsifyKeyPress();
 		key_pressed["down"] = true;
 		key_pressed.time = 0;
 		if (cursor.y > 0) {
@@ -58,10 +74,26 @@ function keyDownAttack(e) {
 		} else { return; }
 	} else if (e === 32) {//spacebar: select button
 		var enemy_char = map[cursor.y][cursor.x].character;
-		if ((enemy_char !== null) && (enemy_char.player !== currentChar.player)){
+		if ((enemy_char !== null) 
+		&& (enemy_char.player !== currentChar.player)
+		&& (!isDead(enemy_char))){
 			if (calculateHit(currentChar, enemy_char)) {
 				if (isDead(enemy_char)) {
 					//display death animation
+					
+					
+					//currently just removing dead character from the player list
+					//commented out because i realize modifying the list
+					//can mess other things up
+					//just test isDead rather than length
+					//a little code bloating in a few places but 
+					//eliminates the need for entirely new logic in some places
+					/*
+					if (enemy_char.player === 2) {
+						p2charList.splice(enemy_char.index, 1);
+					} else {
+						p1charList.splice(enemy_char.index, 1);
+					} */
 				}
 			}
 		}
@@ -90,20 +122,24 @@ function keyDownCharacterMenu(e) {
 		charList = p2charList;
 	}
 	if (e === 65) { //a
+		falsifyKeyPress();
 		key_pressed["left"] = true;
 		key_pressed.time = 0;
 		currentChar = charList[(currentChar.index - 1)%charList.length];
 		generateCharacterMenu();
 	} else if (e === 68) { //d
+		falsifyKeyPress();
 		key_pressed["right"] = true;
 		key_pressed.time = 0;
 		currentChar = charList[(currentChar.index + 1)%charList.length];
 		generateCharacterMenu();
 	} else if (e === 87) { //w
+		falsifyKeyPress();
 		key_pressed["up"] = true;
 		key_pressed.time = 0;
 		menuIndex = (menuIndex - 1) %menu.length;
 	} else if (e === 83) { //s
+		falsifyKeyPress();
 		key_pressed["down"] = true;
 		key_pressed.time = 0;
 		menuIndex = (menuIndex +1)%menu.length;
@@ -167,6 +203,7 @@ function keyDownMove(e) {
 	var tuple;
 	var i;
 	if (e === 65) { //a
+		falsifyKeyPress();
 		key_pressed["left"] = true;
 		key_pressed.time = 0;
 		if (cursor.x > 0) {
@@ -175,6 +212,7 @@ function keyDownMove(e) {
 			return;
 		}
 	} else if (e === 68) { //d
+		falsifyKeyPress();
 		key_pressed["right"] = true;
 		key_pressed.time = 0;
 		if (cursor.x < width - 1) {
@@ -183,6 +221,7 @@ function keyDownMove(e) {
 			return;
 		}
 	} else if (e === 87) { //w
+		falsifyKeyPress();
 		key_pressed["up"] = true;
 		key_pressed.time = 0;
 		if (cursor.y < height - 1) {
@@ -191,6 +230,7 @@ function keyDownMove(e) {
 			return;
 		}
 	} else if (e === 83) { //s
+		falsifyKeyPress();
 		key_pressed["down"] = true;
 		key_pressed.time = 0;
 		if (cursor.y > 0) {
@@ -236,25 +276,30 @@ function keyDownMove(e) {
 }
 
 function keyDownView(e) {
+	if (!endGameFlag) {
 	if (e === 65) { //a
+		falsifyKeyPress();
 		key_pressed["left"] = true;
 		key_pressed.time = 0;
 		if (cursor.x > 0) {
 			cursor.x--;
 		}
 	} else if (e === 68) { //d
+		falsifyKeyPress();
 		key_pressed["right"] = true;
 		key_pressed.time = 0;
 		if (cursor.x < width - 1) {
 			cursor.x++;
 		}
 	} else if (e === 87) { //w
+		falsifyKeyPress();
 		key_pressed["up"] = true;
 		key_pressed.time = 0;
 		if (cursor.y < height - 1) {
 			cursor.y++;
 		}
 	} else if (e === 83) { //s
+		falsifyKeyPress();
 		key_pressed["down"] = true;
 		key_pressed.time = 0;
 		if (cursor.y > 0) {
@@ -267,12 +312,16 @@ function keyDownView(e) {
 			playerFocus = "characterMenu";
 			generateCharacterMenu();
 		}
-	} else if (e === 27) { //escape: go to settings menu (quit/forfeit/end all turn)
+	} 
+	} if (e === 27) { //escape: go to settings menu (quit/forfeit/end all turn)
+					  //THE ONLY THING YOU CAN DO WHEN GAME IS OVER IS QUIT
 		//TO BE IMPLEMENTED
+		playerFocus = "playerMenu";
+		generatePlayerMenu();
 	}
 }
 
-function onKeyUp(event) {
+function onKeyUp(e) {
 	if (e === 65) { //a
 		key_pressed["left"] = false;
 	} else if (e === 68) { //d
@@ -281,7 +330,18 @@ function onKeyUp(event) {
 		key_pressed["up"] = false;
 	} else if (e === 83) { //s
 		key_pressed["down"] = false;
+	}
 }
+
+function keyDownPlayerMenu(e) {
+	if (e === 32) {
+	
+	} else if (e === 27) { 
+		playerFocus = "viewing";
+	}
+
+}
+
 
 
 /* //FOR NOW NOT USING MOUSE EVENTS
