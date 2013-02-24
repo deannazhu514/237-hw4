@@ -3,15 +3,9 @@ var currentGame; //which game the player is playing, is a game object
 var currentGameName; //which game the player is playing
 //is a property of currentGame, so this won't need to be used
 
-var gameList = [{"id": 1, "name": "game1"}, 
-				{"id": 2, "name": "game2"},
-				{"id": 3, "name": "game3"}]; //hard-coded for testing
+var openGameList;	//array of objects, containing joinable games			
+var myGameList; //array of objects, containing games player is currently in	
 
-var openGameList;
-var currentGameList;
-								
-var myGameList = [{"id": 1, "name": "myGame1"}, //for testing only
-				{"id": 2, "name": "myGame2"}];
 var playerList = []; //probably won't need
 var pageState = []; //what screens to load on page 
 
@@ -86,31 +80,34 @@ function refreshMenuScreen() {
 	
 	var instructions = $("<div id = 'instructions'>");
 	instructions.html("[instructions]"); // load from text file on server?
-
+	
+	if (pageState.length === 1) 
+		pageState.push("openGames");
 	var availButton = $("<a>").html("Available Games");
 	availButton.addClass("roombut");
 	availButton.mousedown(
 				function(event) {
-					pageState[1] = "allGames";
-					refreshDOM();
+					pageState[1] = "openGames";
+					refreshMenuScreen();
 				});
 	var currButton = $("<a>").html("Current Games");
 	currButton.addClass("roombut");
 	currButton.mousedown(
 				function(event) {
 					pageState[1] = "myGames";
-					refreshDOM();
+					refreshMenuScreen();
 				});
 
 	var rooms = $("<div>").addClass("rooms");
-	var gamesAvailable = $("<ul>");
-	if (pageState.length === 1) 
-		pageState.push("allGames");
-		
-	if (pageState[1] === "allGames")
+	var gamesAvailable = $("<ul>");		
+	if (pageState[1] === "openGames") {
+		getOpenGames();
 		refreshAllGames(gamesAvailable);
-	else if (pageState[1] === "myGames")
+	}
+	else if (pageState[1] === "myGames") {
+		getCurrentGames();
 		refreshMyGames(gamesAvailable);
+	}
 		
 	var joinButton = $("<a>")
 		.html("Join Game")
@@ -139,19 +136,19 @@ function refreshMenuScreen() {
 
 function refreshAllGames(gamesAvailable) {
 // display all available games on menu screen
-	getOpenGames();
 	for (var key in openGameList) {
-		var game = $("<li>")
-			.attr("id", openGameList[key].id)
-			.html(openGameList[key].id+": "+openGameList[key].name)
+		var game = openGameList[key];
+		var listing = $("<li>")
+			.attr("id", game.id)
+			.html(game.id+": "+game.name+" creator: "+game.player1)
 			.click(function() {
-				if (currentGameName !== undefined) {
-					$("#"+currentGameName).removeClass("selected");
+				if ((currentGame !== undefined) && (currentGame !== game)) {
+					$("#"+currentGame.id).removeClass("selected");
 				}
-				currentGameName = $(this).attr("id");
+				currentGame = game;
 				$(this).addClass("selected");	
 			});
-		gamesAvailable.append(game);
+		gamesAvailable.append(listing);
 	}
 }
 
@@ -159,7 +156,7 @@ function refreshMyGames(gamesAvailable) {
 // display player's games on menu screen
 	for (var key in myGameList) {
 		var game = $("<li>")
-			.attr("id", gameList[key].id)
+			.attr("id", myGameList[key].id)
 			.html(myGameList[key].id +": "+myGameList[key].name)
 			.click(function() {
 				if (currentGameName !== undefined) {
@@ -177,7 +174,8 @@ function getCurrentGames() {
 		type: "get",
 		url: "/displayCurrentGames/:" + playerName,
 		success: function(data) {
-			refreshDOM();
+			myGameList = data;
+			// refreshDOM();
 		}
 	});
 }
@@ -188,8 +186,7 @@ function getOpenGames() {
 		url: "/displayOpenGames/:" + playerName,
 		success: function(data) {
 			openGameList = data;
-			console.log(data);
-			refreshDOM();
+			// refreshDOM();
 		}
 	});
 }
@@ -258,7 +255,7 @@ function refreshCreateGameScreen() {
 	var backButton = $("<a>").html("Go Back").addClass("menubut");
 	backButton.click(function(){
 		pageState[0] = "menu";
-		pageState[1] = "allGames";
+		pageState[1] = "openGames";
 		refreshMenuScreen();
 	});
 	container.append(label, gameName, warriorM, 
@@ -279,7 +276,7 @@ function refreshJoinGameScreen() {
 	var backButton = $("<a>").html("Go Back").addClass("menubut");
 	backButton.click(function(){
 		pageState[0] = "menu";
-		pageState[1] = "allGames";
+		pageState[1] = "openGames";
 		refreshMenuScreen();
 	});
 	container.append(startButton, backButton);
