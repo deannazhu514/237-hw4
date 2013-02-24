@@ -48,7 +48,7 @@ app.post("/createGame", function(req, res){
 		"map": mapNum,
 		"status": "not joined",
 		"p1charList": p1charList,
-		"p2charList": {}, 
+		"p2charList": [], 
 		"p1points": 0,
 		"p2points": 0
 	}
@@ -107,12 +107,14 @@ app.post("/updateGame", function(req,res) {
 	res.send ( { success: true});
 }); */
 
-app.get("/displayOpenGames", function(req, res) {
+app.get("/displayOpenGames/:playerID", function(req, res) {
 	//var data = JSON.parse(JSON.stringify(gameList)); //create deep copy
+	var playerID = req.params.playerID;
 	var data = {};
 	for (var gameID in gameList) {
 		var game = gameList[gameID];
-		if (game.status === "not joined") {
+		if ((game.status === "not joined")
+			&& (playerID !== game.player1)) {
 			data[gameID] = game;
 		}
 	}
