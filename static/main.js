@@ -10,13 +10,6 @@ function init(gameData, player) {
 	init_map(game.map);
 	p1charList = game.p1charList;
 	p2charList = game.p2charList; 
-	
-	/* on second thought we should store the entire
-	 * character objects rather than recreating them
-	 * with just x/y coordinates
-	 * so we can maintain customizable stats
-	 */
-	//init_characters(game.p1charList, game.p2charList);
 	canvas.addEventListener('keyup', onKeyUp, false);
 	canvas.addEventListener('keydown', onKeyDown, false);
 	
@@ -35,20 +28,15 @@ function init(gameData, player) {
 * PLAYER (1 or 2)
 * x and y coordinates
 */
-function init_characters(list1,list2) { 
-	p1charList = [];
-	p2charlist = [];
+function init_characters(datalist) { 
+	var charlist = [];
 	var newchar;
-	for (var i = 0; i < list1.length; i++) {
-		newchar = newCharacter(list1[i]);
+	for (var i = 0; i < datalist.length; i++) {
+		newchar = newCharacter(datalist[i]);
 		newchar.index = i;
-		p1charList.push(newchar);
+		charlist.push(newchar);
 	}
-	for (var i = 0; i < list1.length; i++) {
-		newchar = newCharacter(list2[i]);
-		newchar.index = i;
-		p2charList.push(newchar);
-	}
+	return charlist;
 }
 
 

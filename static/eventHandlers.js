@@ -29,7 +29,7 @@ function keyDownStats(e) {
 	}
 }
 
-function keyDownAttack(event.keyCode) {
+function keyDownAttack(e) {
 	var x = cursor.x;
 	var y = cursor.y;
 	if (e === 65) { //a
