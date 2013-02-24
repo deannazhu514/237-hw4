@@ -131,7 +131,7 @@ function checkVictory() {
 			}
 			i++;
 		}
-		if (i === p2charList.length) { //never broke out of the loop
+		if (i === p1charList.length) { //never broke out of the loop
 			currentGame.status = "p2Victory"; 
 			//display victory animation
 			gameEndFlag = true;

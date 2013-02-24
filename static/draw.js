@@ -68,16 +68,13 @@ function draw() {
 	drawMenu();
 	if (playerFocus === "view stats") {
 		displayStats(); //this will be an overlay over the whole map
-		//maybe? 
+		//maybe? //or display it anywhere just implement it
 	}
 	
 }
 
 function displayStats() {
-	var character = currentChar;
-	//draw a rectangle over map
-	
-	//draw the character's stats
+	// blank lawls
 }
 
 function getTileImage(type) {

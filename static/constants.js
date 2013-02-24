@@ -13,7 +13,8 @@ var pointGoal = 100;
 
 var playerNumber;
 
-var menu = [];
+var characterMenu = [];
+var playerMenu = [];
 var menuIndex;
 
 var pathList;

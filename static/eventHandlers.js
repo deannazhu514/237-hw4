@@ -25,6 +25,10 @@ function onKeyDownParser(e) {
 		keyDownAttack(e);
 	} else if (playerFocus = "view stats") {
 		keyDownStats(e);
+	} else if (playerFocus = "playerMenu") {
+		keyDownPlayerMenu(e);
+	} else if (playerFocus = "magicMenu") {
+	
 	}
 }
 function keyDownStats(e) {
@@ -152,7 +156,7 @@ function keyDownCharacterMenu(e) {
 }
 
 function generateCharacterMenu() {
-	menu = [];
+	characterMenu = [];
 	if ((playerNumber === currentChar.player) 
 	 && (currentChar.hasMoved ===false)) {
 		menu.push("Move");
@@ -165,7 +169,7 @@ function generateCharacterMenu() {
 	} else {
 		menu.push("View Stats");
 	}
-	//pop up menu for move/attack/view stats?
+	//pop up characterMenu for move/attack/view stats?
 	menuIndex = 0;
 }
 
@@ -176,9 +180,9 @@ function processMenuSelection(item) {
 	} else if (item === "Attack") {
 		playerFocus = "attack";
 	} else if (item === "View Stats") {
-		displayStats(currentChar);
+		playerFocus = "view stats";
 	} else if (item === "Magic") {
-		
+		playerFocus = "menuMagic";
 	} else if (item === "Wait") {
 		currentChar.hasMoved = true;
 		playerFocus = "viewing";
@@ -316,7 +320,7 @@ function keyDownView(e) {
 			generateCharacterMenu();
 		}
 	} 
-	} if (e === 27) { //escape: go to settings menu (quit/forfeit/end all turn)
+	} if (e === 27) { //escape: go to settings characterMenu (quit/forfeit/end all turn)
 					  //THE ONLY THING YOU CAN DO WHEN GAME IS OVER IS QUIT
 		//TO BE IMPLEMENTED
 		playerFocus = "playerMenu";
@@ -336,13 +340,49 @@ function onKeyUp(e) {
 	}
 }
 
+function generatePlayerMenu() {
+	playerMenu = [];
+	if (!endGameFlag) {
+		playerMenu.push("End Turn");
+		playerMenu.push("Surrender");
+	}
+	playerMenu.push("Main Menu"); 
+	menuIndex = 0;
+}
+
 function keyDownPlayerMenu(e) {
 	if (e === 32) {
-	
-	} else if (e === 27) { 
+		processPlayerMenuSelection();
+		playerMenu = [];
 		playerFocus = "viewing";
+	} else if (e === 27) { 
+		playerMenu = [];
+		playerFocus = "viewing";
+	} else if (e === 83) {
+		falsifyKeyPress();
+		key_pressed["down"] = true;
+		key_pressed.time = 0;
+		menuIndex = (menuIndex + 1) % playerMenu.length;
+	} else if (e === 87) {
+		falsifyKeyPress();
+		key_pressed["up"] = true;
+		key_pressed.time = 0;
+		menuIndex = (menuIndex - 1) % playerMenu.length;
 	}
 
+}
+
+function processPlayerMenuSelection() {
+	var item = playerMenu[menuIndex];
+	if (item === "End Turn") {
+		endTurn();
+	} else if (item === "Surrender") {
+		currentGame.status = "p"+playerNumber+"Victory"; //lol this is so hacky
+		gameEndFlag = true;
+		endTurn();
+	} else if (item === "Main Menu") {
+		// return to main menu some how
+	}
 }
 
 
