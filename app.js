@@ -131,7 +131,6 @@ app.get("/displayOpenGames/:playerID", function(req, res) {
 			data[gameID] = game;
 		}
 	}
-	data.success = true;
 	res.send(data);
 });
 
@@ -146,7 +145,6 @@ app.get("/displayCurrentGames/:playerID", function(req,res) {
 				data[gameID] = game;
 			}
 	}
-	data.success = true;
 	res.send(data);
 });
 
