@@ -1,99 +1,48 @@
-var playerName;
-var currentGame;
+var playerName; //id for the player
+var currentGame; //which game the player is playing
 
-var gameList;
-var playerList;
+var gameList = [{"id": 1, "name": "game1"}, 
+								{"id": 2, "name": "game2"},
+								{"id": 3, "name": "game3"}]; //hard-coded for testing
+								
+var myGameList = [{"id": 1, "name": "myGame1"}, //for testing only
+								{"id": 2, "name": "myGame2"}];
+var playerList = []; //probably won't need
+var pageState = []; //what screens to load on page, perhaps have a copy on server? 
 
-var pageState;
 
 function refreshDOM() {	
 // overarching refreshDOM function
-	if (pageState === undefined) 
-		pageState = "title";
-	else if (pageState === "title") {
+	if (pageState.length === 0) 
+		pageState.push("title");
+	if (pageState[0] === "title") {
 		loadTitleScreen();
 	}
-	if (pageState === "menu") {
+	else if (pageState[0] === "menu") {
 		refreshMenuScreen();
 	}
-	else if (pageState === "gameStart") {
-		refreshGameStartScreen()
+	else if (pageState[0] === "gameStart") {
+		refreshGameStartScreen();
 	}
-	else if (pageState === "gameInPlay") {
-		refreshGameScreen()
+	else if (pageState[0] === "gameInPlay") {
+		refreshGameScreen();
 	}
-	console.log(pageState);
 }
 
+/* TITLE SCREEN FUNCTIONS */
 function loadTitleScreen() {	
 // show title screen
 	var submitButton = $("#submitButton");
 	submitButton.html("Submit");
-	// submitButton.attr("href", "menu.html");
 	submitButton.click(function() {
-		// var newPage = (this.attr("href"));
-		// window.open(newPage);
 		createPlayer();
-		pageState = "menu";
+		pageState[0] = "menu";
 		refreshDOM();
 	});
 }
 
-function refreshMenuScreen() {	
-// refresh menu screen
-	var container = $("#titleContent");
-	container.html("");
-	var title = $("#title");
-	title.html("<h1>"+playerName+", welcome to Norbert Wars</h1>");
-	title.css("font-size", "30px");
-	var instructions = $("<div id = 'instructions'>");
-	instructions.html("[instructions]"); // load from text file on server?
-	var availButton = $("<a>").html("Available Games");
-	availButton.addClass("roombut");
-	availButton.mousedown(
-				function(event) {
-					console.log("avail");
-				});
-	var currButton = $("<a>").html("Current Games");
-	currButton.addClass("roombut");
-	currButton.mousedown(
-				function(event) {
-					console.log("current");
-				});
-	var rooms = $("<div>").addClass("rooms");
-	var gamesAvailable = $("<ul>");
-	var game = $("<li>").html("game1");
-	gamesAvailable.append(game);
-	var joinButton = $("<a>").html("Join Game");
-	joinButton.addClass("menubut");
-	joinButton.mousedown(
-				function(event) {
-					console.log("join");
-				});
-	var createButton = $("<a>").html("Create Game");
-	createButton.addClass("menubut");
-	createButton.mousedown(
-				function(event) {
-					console.log("create");
-				});
-	rooms.append(gamesAvailable);
-	container.append(instructions, availButton, currButton,
-					rooms, createButton, joinButton);
-}
-
-function refreshGameStartScreen() {	
-// refreshDOM while on game start screen
-
-}
-
-function refreshGameScreen() {	
-// refreshDOM while on game screen
-
-}
-
-/* TITLE SCREEN functions */
-
 function createPlayer() {
+// submit player's name
 	var playerID = $("#playerID-input");
 	if (playerList === undefined) {
 		playerList = [];
@@ -109,10 +58,84 @@ function createPlayer() {
 	playerList.push(playerID.val());
 	playerName = playerID.val();
 	playerID.val("");
-	refreshDOM();
 }
 
-/* MENU SCREEN functions */
+/* MENU SCREEN FUNCTIONS */
+function refreshMenuScreen() {	
+// refreshDOM while on menu screen
+
+	var container = $("#titleContent");
+	container.html("");
+	
+	var title = $("#title");
+	title.html("<h1>"+playerName+", welcome to Norbert Wars</h1>");
+	title.css("font-size", "30px");
+	
+	var instructions = $("<div id = 'instructions'>");
+	instructions.html("[instructions]"); // load from text file on server?
+
+	var availButton = $("<a>").html("Available Games");
+	availButton.addClass("roombut");
+	availButton.mousedown(
+				function(event) {
+					pageState[1] = "allGames";
+					refreshDOM();
+				});
+	var currButton = $("<a>").html("Current Games");
+	currButton.addClass("roombut");
+	currButton.mousedown(
+				function(event) {
+						pageState[1] = "myGames";
+						refreshDOM();
+				});
+
+	var rooms = $("<div>").addClass("rooms");
+	var gamesAvailable = $("<ul>");
+	if (pageState.length === 1) 
+		pageState.push("allGames");
+		
+	if (pageState[1] === "allGames")
+		refreshAllGames(gamesAvailable);
+	else if (pageState[1] === "myGames")
+		refreshMyGames(gamesAvailable);
+
+		
+	var joinButton = $("<a>").html("Join Game").addClass("menubut");
+	var createButton = $("<a>").html("Create Game").addClass("menubut");
+	joinButton.click(function(){
+		pageState[0] = "gameStart";
+		pageState[1] = "joinGame";
+		refreshDOM();
+	});
+	createButton.click(function(){
+		pageState[0] = "gameStart";
+		pageState[1] = "createGame";
+		refreshDOM();
+	});
+	
+	rooms.append(gamesAvailable);
+	container.append(instructions, availButton, currButton, rooms, joinButton, createButton);
+}
+
+function refreshAllGames(gamesAvailable) {
+// display all available games on menu screen
+	for (var key in gameList) {
+		var game = $("<li>")
+			.html(gameList[key].id)
+			.append(": "+gameList[key].name);
+		gamesAvailable.append(game);
+	}
+}
+
+function refreshMyGames(gamesAvailable) {
+// display player's games on menu screen
+	for (var key in myGameList) {
+		var game = $("<li>")
+			.html(myGameList[key].id)
+			.append(": "+myGameList[key].name);
+		gamesAvailable.append(game);
+	}
+}
 
 function getCurrentGames(playerID) {
 	$.ajax({
@@ -167,7 +190,12 @@ function addGame(playerID) {
 	});
 }
 
-/* GAME START SCREEN functions */
+/* GAME START SCREEN FUNCTIONS */
+function refreshGameStartScreen() {	
+// refreshDOM while on game start screen
+	var container = $("#content");
+	container.html("");
+}
 
 function submitTeam() {
 	// submit the created team's stats and other new game data
@@ -176,7 +204,10 @@ function submitTeam() {
 	});
 }
 
-/* GAME functions */
+/* GAME FUNCTIONS */
+function refreshGameScreen() {	
+// refreshDOM while on game screen, might not need
+}
 
 function endTurn() {
 	//send: gameID, character lists, player points
