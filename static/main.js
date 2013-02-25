@@ -47,10 +47,12 @@ function init_characters(datalist) {
 
 
 //for now just one map 
-function init_map(mapNum) {
+function init_map (mapNum) {
 	if (mapNum == '1') {
-		width = 20;
-		height = 20;
+		// width = 20;
+		// height = 20;
+		
+		//initialize a widthxheight 2D array for the map tiles
 		map = new Array(height);
 		for (var i = 0; i < height; i++) {
 			map[i] = new Array(width);
@@ -59,10 +61,10 @@ function init_map(mapNum) {
 		for (var i = 0; i < height; i++) {
 			for (var j = 0; j < width; j++) {
 				var tile = {};
-				tile.type = "plain";
+				tile.type = tileType[Math.floor(Math.random()*3)];
 				tile.character = null;
 				if (((i === height/2) || (i === ((height/2) - 1)))
-				&& ((j === width/2) || (j === ((width/2) - 1)))) {
+					&& ((j === width/2) || (j === ((width/2) - 1)))) {
 					tile.special = "scorespot";
 				} else { 
 					tile.special = "";
@@ -177,11 +179,11 @@ function update() {
 	draw();
 	checkKeyPressed();
 	
-	if (checkVictory()) {
+	/*if (checkVictory()) {
 		endTurn();
 		return;
 	}
-	
+	*/
 	var cList;
 	if ((playerNumber === 1) 
 	&& (currentGame.status === "p1turn")) {
@@ -189,7 +191,7 @@ function update() {
 	} else if (currentGame.status === "p2turn") {
 		cList = p2charList;
 	} else { //it isn't your turn, whichever player you are...
-		isMyTurn();
+		//isMyTurn();
 		return;
 	}
 	

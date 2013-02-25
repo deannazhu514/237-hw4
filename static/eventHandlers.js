@@ -12,19 +12,19 @@ function onKeyDownParser(e) {
 	if (animationFlag) { //don't allow player to input commands while animations are playing
 		return;
 	}
-	if (playerFocus = "viewing") {
+	if (playerFocus == "viewing") {
 		keyDownView(e);
-	} else if (playerFocus = "moving") {
+	} else if (playerFocus == "moving") {
 		keyDownMove(e);
-	} else if (playerFocus = "characterMenu") {
+	} else if (playerFocus == "characterMenu") {
 		keyDownCharacterMenu(e);
-	} else if (playerFocus = "attacking") {
+	} else if (playerFocus == "attacking") {
 		keyDownAttack(e);
-	} else if (playerFocus = "view stats") {
+	} else if (playerFocus == "view stats") {
 		keyDownStats(e);
-	} else if (playerFocus = "playerMenu") {
+	} else if (playerFocus == "playerMenu") {
 		keyDownPlayerMenu(e);
-	} else if (playerFocus = "magicMenu") {
+	} else if (playerFocus == "magicMenu") {
 	
 	}
 }
@@ -196,7 +196,6 @@ function isValidMove(tile) {
 	}
 	return true;
 }
-
 
 function keyDownMove(e) {
 	var x = cursor.x;
