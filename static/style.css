@@ -64,7 +64,7 @@ input, a {
 	left: 0%;
 }
 
-#instructions {
+.instructions {
 	color: #FF0;
 	padding: 20px;
 }

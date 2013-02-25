@@ -21,10 +21,10 @@ function refreshDOM() {
 		refreshMenuScreen();
 	}
 	else if (pageState[0] === "createGame") {
-		refreshCreateGameScreen();
+		refreshCreateTeamScreen();
 	}	
 	else if (pageState[0] === "joinGame") {
-		refreshJoinGameScreen();
+		refreshCreateTeamScreen();
 	}
 	else if (pageState[0] === "gameInPlay") {
 		refreshGameScreen();
@@ -78,7 +78,7 @@ function refreshMenuScreen() {
 	title.html("<h1>"+playerName+", welcome to Norbert Wars</h1>");
 	title.css("font-size", "30px");
 	
-	var instructions = $("<div id = 'instructions'>");
+	var instructions = $("<div class = 'instructions'>");
 	instructions.html("[instructions]"); // load from text file on server?
 	
 	if (pageState.length === 1) 
@@ -230,36 +230,109 @@ function createGame(charList) {
 }
 
 /* GAME START SCREEN FUNCTIONS */
-function refreshCreateGameScreen() {	
+function refreshCreateTeamScreen() {	
 // refreshDOM while on game start screen
+// create a team to join/create a game
+// if creating a new game, can choose map type
 	var container = $("#content");
 	container.html("");
+	var charList = new Array(5);
 	
-	var charList = [];
+	var instructions = $("<div>").addClass("instructions");
+	instructions.html("Create Team [insert better description]");
+	container.append(instructions);
 	
-	var label = $("<label>").html("Enter a game name:");
-	var gameName = $("<input id=gameName>")
-				.attr("name", "gameName")
-				.attr("type", "text");
-				
-	 var warriorM = $("<div id = warriorM>").addClass("images");
-
+	if (pageState[0] === "createGame") {
+		var nameLabel = $("<label>").html("Enter a game name: ");
+		var gameName = $("<input id=gameName>")
+					.attr("name", "gameName")
+					.attr("type", "text");
+		var mapLabel = $("<label>").html("Choose your map: ");
+		var mapNumber = $("<input id=mapNumber>")
+					.attr("name", "mapNumber")
+					.attr("type", "number");
+	container.append(nameLabel, gameName, mapLabel, mapNumber);
+	}
 	
-	var startButton = $("<a>").html("Create Game").addClass("menubut");
-	startButton.click(function(){
-		pageState[0] = "gameInPlay";
-		pageState[1] = "";
-		createGame(charList);
-	});
+	var createTeam = $("<div>").addClass("rooms");
+	// show all characters on your team
+	for (var i=0; i<charList.length; i++) {
+		var currCharacter = $("<ul>").addClass("charStats");
+		// displays and sets stats of each character on team
+		// for now, user types it in, might make buttons/scrollbar later
+		var charXPos = $("<li>").append(
+			$("<label>").html("X Position: "),
+			$("<input>").addClass("charInput")
+				.attr("name", "charXPos")
+				.attr("type", "number")
+		);
+		var charYPos = $("<li>").append(
+			$("<label>").html("Y Position: "),
+			$("<input>").addClass("charInput")
+				.attr("name", "charYPos")
+				.attr("type", "number")
+		);
+		var charType = $("<li>").append(
+			$("<label>").html("Class: "),
+			$("<input>").addClass("charInput")
+				.attr("name", "charType")
+				.attr("type", "text")
+		);
+		var charStrength = $("<li>").append(
+			$("<label>").html("Strength: "),
+			$("<input>").addClass("charInput")
+				.attr("name", "charStrength")
+				.attr("type", "number")
+		);
+		var charDexterity = $("<li>").append(
+			$("<label>").html("Dexterity: "),
+			$("<input>").addClass("charInput")
+				.attr("name", "charDexterity")
+				.attr("type", "number")
+		);
+		var charEndurance = $("<li>").append(
+			$("<label>").html("Endurance: "),
+			$("<input>").addClass("charInput")
+				.attr("name", "charEndurance")
+				.attr("type", "number")
+		);
+		var charAgility = $("<li>").append(
+			$("<label>").html("Agility: "),
+			$("<input>").addClass("charInput")
+				.attr("name", "charAgility")
+				.attr("type", "number")
+		);
+		currCharacter.append(charXPos, charYPos, charType)
+			.append(charStrength, charDexterity, charEndurance, charAgility);
+		// character.player = playerName;
+		createTeam.append(currCharacter);
+	}
+	container.append(createTeam);
 	
+	var startButton = $("<a>").addClass("menubut");
+	if (pageState[0] === "createGame") {		
+		startButton.html("Create Game");
+		startButton.click(function(){
+			pageState[0] = "gameInPlay";
+			pageState[1] = "";
+			createGame(charList);
+		});
+	}
+	else if (pageState[0] === "joinGame") {
+		startButton.html("Join Game");
+		startButton.click(function(){
+			pageState[0] = "gameInPlay";
+			pageState[1] = "";
+			joinGame(charList);
+		});
+	}
 	var backButton = $("<a>").html("Go Back").addClass("menubut");
 	backButton.click(function(){
 		pageState[0] = "menu";
 		pageState[1] = "openGames";
 		refreshMenuScreen();
 	});
-	container.append(label, gameName, warriorM, 
-		startButton, backButton);
+	container.append(startButton, backButton);
 }
 
 function refreshJoinGameScreen() {	
@@ -267,12 +340,7 @@ function refreshJoinGameScreen() {
 	var container = $("#content");
 	container.html("");
 
-	var startButton = $("<a>").html("Join Game").addClass("menubut");
-	startButton.click(function(){
-		pageState[0] = "gameInPlay";
-		pageState[1] = "";
-		joinGame(charList);
-	});
+
 	var backButton = $("<a>").html("Go Back").addClass("menubut");
 	backButton.click(function(){
 		pageState[0] = "menu";
