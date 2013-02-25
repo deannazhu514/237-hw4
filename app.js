@@ -54,7 +54,8 @@ app.post("/createGame", function(req, res){
 	}
 	gameList[time] = game;
 	writeFile("games.txt", JSON.stringify(gameList));
-	res.send( {success : true });
+	res.send( {success : true ,
+				game: game});
 });
 
 

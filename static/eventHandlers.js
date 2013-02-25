@@ -1,7 +1,4 @@
 
-
-
-
 function onKeyDown(event) {
 	onKeyDownParser(event.keyCode);
 	//why do i have a wrapper function? 

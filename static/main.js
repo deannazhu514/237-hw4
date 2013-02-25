@@ -211,8 +211,10 @@ function endTurn() {
 	var opList; //opponent's list
 	if (playerNumber === 1) {
 		pList = p1charList;
+		opList = p2charList;
 	} else { 
 		pList = p2charList;
+		opList = p1charList;
 	}
 	for (var i = 0; i < pList.length; i++) {
 		pList[i].movePoints = pList[i].maxMovePoints;
@@ -248,7 +250,7 @@ function endTurn() {
 		currentGame.status = "p1turn";
 	}
 	
-	updateGame();
+	update();
 }
 
 

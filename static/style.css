@@ -30,6 +30,11 @@ h1 {
 	color: #FFF;
 }
 
+li
+{
+	list-style-type: none;
+}
+
 label {
 	display: inline-block;
 	font-weight: bold;
@@ -89,13 +94,13 @@ input, a {
 	height: 200px;
 }
 
+.rooms li {
+	margin-bottom: 5px;
+}
+
 .selected{
 	color: #F00;
 	background-color: 
-}
-
-li {
-	margin-bottom: 5px;
 }
 
 #createButton {
@@ -113,11 +118,23 @@ li {
 	bottom: 10px;
 	padding: 40px 40px;
 }
+
 #warriorM{
 	width: 10px;
 	height: 10px;
 	background-image:url(images/human_male.png);
 	
 }
+
+.charStats {
+	margin-top: 10px;
+	border: 2px solid #00F;
+}
+#teampick label {
+	font-size: 16px;
+	color: #0AF;
+}
+
+
 
 

@@ -41,14 +41,15 @@ function loadTitleScreen() {
 			refreshDOM();
 		}
 		else {
-			$("#content").append("<p>Please input name.</p>");
+			alert("Please input a username");
 		}
 	});
 }
 
 
 /* MENU SCREEN FUNCTIONS */
-function refreshMenuScreen() {	
+function refreshMenuScreen() {
+
 // refreshDOM while on menu screen
 	var container = $("#content");
 	container.html("");
@@ -83,7 +84,7 @@ function refreshMenuScreen() {
 		getOpenGames();
 		refreshAllGames(gamesAvailable);
 	}
-	else if (pageState[1] === "myGames") {
+	if (pageState[1] === "myGames") {
 		getCurrentGames();
 		refreshMyGames(gamesAvailable);
 	}
@@ -178,30 +179,44 @@ function refreshCreateTeamScreen() {
 // if creating a new game, can choose map type
 	var container = $("#content");
 	container.html("");
-	var charList = new Array(5);
+	
+	var charList = new Array(3);
 	
 	var instructions = $("<div>").addClass("instructions");
 	instructions.html("Create Team [insert better description]");
 	container.append(instructions);
 	
 	if (pageState[0] === "createGame") {
-		var nameLabel = $("<label>").html("Enter a game name: ");
-		var gameName = $("<input id=gameName>")
+		var gameName = $("<li>").append(
+				$("<label>").html("Enter a game name: "),
+				$("<input id=gameName>")
 					.attr("name", "gameName")
-					.attr("type", "text");
-		var mapLabel = $("<label>").html("Choose your map: ");
-		var mapNumber = $("<input id=mapNumber>")
+					.attr("type", "text")
+			);
+		var mapNumber = $("<li>").append(
+				$("<label>").html("Choose your map: "),
+				$("<input id=mapNumber>")
 					.attr("name", "mapNumber")
-					.attr("type", "number");
-	container.append(nameLabel, gameName, mapLabel, mapNumber);
+					.attr("type", "number")
+			);
+			
+		container.append(gameName, mapNumber);
 	}
 	
-	var createTeam = $("<div>").addClass("rooms");
+	var createTeam = $("<div>")
+				.attr("id", "teampick");//.addClass("rooms");
 	// show all characters on your team
 	for (var i=0; i<charList.length; i++) {
 		var currCharacter = $("<ul>").addClass("charStats");
 		// displays and sets stats of each character on team
 		// for now, user types it in, might make buttons/scrollbar later
+		var charType = $("<li>").append(
+			$("<label>").html("Class: "),
+			$("<input>").addClass("charInput")
+				.attr("name", "charType")
+				.attr("type", "text")
+		);
+		
 		var charXPos = $("<li>").append(
 			$("<label>").html("X Position: "),
 			$("<input>").addClass("charInput")
@@ -214,12 +229,7 @@ function refreshCreateTeamScreen() {
 				.attr("name", "charYPos")
 				.attr("type", "number")
 		);
-		var charType = $("<li>").append(
-			$("<label>").html("Class: "),
-			$("<input>").addClass("charInput")
-				.attr("name", "charType")
-				.attr("type", "text")
-		);
+
 		var charStrength = $("<li>").append(
 			$("<label>").html("Strength: "),
 			$("<input>").addClass("charInput")
@@ -244,20 +254,22 @@ function refreshCreateTeamScreen() {
 				.attr("name", "charAgility")
 				.attr("type", "number")
 		);
-		currCharacter.append(charXPos, charYPos, charType)
-			.append(charStrength, charDexterity, charEndurance, charAgility);
+		currCharacter.append(charType, charXPos, charYPos,
+							charStrength, charDexterity, 
+							charEndurance, charAgility);
 		// character.player = playerName;
 		createTeam.append(currCharacter);
 	}
 	container.append(createTeam);
 	
-	var startButton = $("<a>").addClass("menubut");
+	var startButton = $("<a id=createButton>").addClass("menubut");
 	if (pageState[0] === "createGame") {		
 		startButton.html("Create Game");
 		startButton.click(function(){
 			pageState[0] = "gameInPlay";
 			pageState[1] = "";
 			createGame(charList);
+			refreshDOM();
 		});
 	}
 	else if (pageState[0] === "joinGame") {
@@ -266,28 +278,32 @@ function refreshCreateTeamScreen() {
 			pageState[0] = "gameInPlay";
 			pageState[1] = "";
 			joinGame(charList);
+			refreshDOM();
 		});
 	}
-	var backButton = $("<a>").html("Go Back").addClass("menubut");
+	var backButton = $("<a id=joinButton>").html("Go Back").addClass("menubut");
 	backButton.click(function(){
 		pageState[0] = "menu";
 		pageState[1] = "openGames";
 		refreshMenuScreen();
 	});
-	container.append(startButton, backButton);
+	container.append(backButton, startButton);
 }
 
 function createGame(charList) {
 	$.ajax({
 		type: "post",
 		url: "/createGame",
-		data: { "name": currentGame.name,
+		data: { "name": $("#gameName").val(),
 				"playerName": playerName,
 				"charList": charList,
 				"map": 1},		
-		success: function() {
-			refreshGameScreen();
-			init(currentGame, 1);
+		success: function(data) {
+			if (data.success) {
+				currentGame = data.game;
+				refreshGameScreen();
+				init(currentGame, 1);
+			}
 		}
 	});
 }
@@ -310,7 +326,6 @@ function joinGame(charList) {
 			}
 			refreshGameScreen();
 			init(currentGame, playerNumber);
-			//CALL INIT HERE WITH PROPER STUFF
 		}
 	});
 }
@@ -331,6 +346,9 @@ function refreshGameScreen() {
 	var container = $("#content");
 	container.html("");
 
+	var canvas = $("<canvas width='800' height='600' id='myCanvas'>");
+	container.append(canvas);
+	
 	var main = $("<script src = 'main.js'>");
 	var character = $("<script src = 'character.js'>");
 	var constants = $("<script src = 'constants.js'>");
@@ -339,11 +357,10 @@ function refreshGameScreen() {
 	var maps = $("<script src = 'maps.js'>");
 	var mechanics = $("<script src = 'mechanics.js'>");
 	var terrain = $("<script src = 'terrain.js'>");
-	container.append(main, character, constants, draw)
-		.append(eventHandlers, mechanics); //implement maps and terrain later
+	container.append(main, character, constants, draw,
+				eventHandlers, mechanics); //implement maps and terrain later
 	
-	var canvas = $("<canvas width='800' height='600'>");
-	container.append(canvas);
+	
 }
 
 function updateGame() {
