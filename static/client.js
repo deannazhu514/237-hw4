@@ -1,12 +1,7 @@
 var playerName; //id for the player
 var currentGame; //which game the player is playing, is a game object
-var currentGameName; //which game the player is playing
-//is a property of currentGame, so this won't need to be used
-
 var openGameList;	//array of objects, containing joinable games			
 var myGameList; //array of objects, containing games player is currently in	
-
-var playerList = []; //probably won't need
 var pageState = []; //what screens to load on page 
 
 
@@ -31,6 +26,7 @@ function refreshDOM() {
 	}
 }
 
+
 /* TITLE SCREEN FUNCTIONS */
 function loadTitleScreen() {	
 // show title screen
@@ -39,7 +35,8 @@ function loadTitleScreen() {
 	submitButton.click(function() {
 		var playerID = $("#playerID-input");
 		if (playerID.val() !== "") {
-			createPlayer();
+			playerName = playerID.val();
+			playerID.val("");
 			pageState[0] = "menu";
 			refreshDOM();
 		}
@@ -49,24 +46,6 @@ function loadTitleScreen() {
 	});
 }
 
-function createPlayer() {
-// submit player's name to list of all players
-	var playerID = $("#playerID-input");
-	if (playerList === undefined) {
-		playerList = [];
-	}
-	else {
-		for (var player in playerList) {
-			if (player === playerID.value) {
-				playerID.val("");
-				return;
-			}
-		}
-	}
-	playerList.push(playerID.val());
-	playerName = playerID.val();
-	playerID.val("");
-}
 
 /* MENU SCREEN FUNCTIONS */
 function refreshMenuScreen() {	
@@ -191,43 +170,6 @@ function getOpenGames() {
 	});
 }
 
-function joinGame(charList) {
-	$.ajax({
-		type: "post",
-		url: "/joinGame",
-		data: { "playerName": playerName, 
-				"gameID": currentGameName,
-				"charList": charList},
-		success: function(data) {
-			console.log("game start");
-			currentGame = JSON.parse(data.game);
-			refreshDOM();
-			var playerNumber;
-			if (currentGame.player1 === "playerName") {
-				playerNumber = 1;
-			} else {
-				playerNumber = 2;
-			}
-			refreshGameScreen();
-			init(currentGame, playerNumber);
-			//CALL INIT HERE WITH PROPER STUFF
-		}
-	});
-}
-
-function createGame(charList) {
-	$.ajax({
-		type: "post",
-		url: "/createGame",
-		data: { "name": currentGameName,
-				"playerName": playerName,
-				"charList": charList,
-				"map": 1},		
-		success: function() {
-			refreshGameScreen();
-		}
-	});
-}
 
 /* GAME START SCREEN FUNCTIONS */
 function refreshCreateTeamScreen() {	
@@ -335,23 +277,47 @@ function refreshCreateTeamScreen() {
 	container.append(startButton, backButton);
 }
 
-function refreshJoinGameScreen() {	
-// refreshDOM while on game start screen
-	var container = $("#content");
-	container.html("");
-
-
-	var backButton = $("<a>").html("Go Back").addClass("menubut");
-	backButton.click(function(){
-		pageState[0] = "menu";
-		pageState[1] = "openGames";
-		refreshMenuScreen();
+function createGame(charList) {
+	$.ajax({
+		type: "post",
+		url: "/createGame",
+		data: { "name": currentGame.name,
+				"playerName": playerName,
+				"charList": charList,
+				"map": 1},		
+		success: function() {
+			refreshGameScreen();
+			init(currentGame, 1);
+		}
 	});
-	container.append(startButton, backButton);
+}
+function joinGame(charList) {
+	$.ajax({
+		type: "post",
+		url: "/joinGame",
+		data: { "playerName": playerName, 
+				"gameID": currentGame.name,
+				"charList": charList},
+		success: function(data) {
+			console.log("game start");
+			currentGame = JSON.parse(data.game);
+			refreshDOM();
+			var playerNumber;
+			if (currentGame.player1 === "playerName") {
+				playerNumber = 1;
+			} else {
+				playerNumber = 2;
+			}
+			refreshGameScreen();
+			init(currentGame, playerNumber);
+			//CALL INIT HERE WITH PROPER STUFF
+		}
+	});
 }
 
 function submitTeam() {
 	// submit the created team's stats and other new game data
+	// might just consolidate with join/createGame
 	$.ajax({
 		type: "post"
 	});
@@ -359,11 +325,22 @@ function submitTeam() {
 
 /* GAME FUNCTIONS */
 function refreshGameScreen() {	
-// refreshDOM while on game screen, might not need
-
-//yeah idt this is needed yo
+// load canvas for the game
+	var title = $("#title");
+	title.html("Norbert Wars");
 	var container = $("#content");
 	container.html("");
+
+	var main = $("<script src = 'main.js'>");
+	var character = $("<script src = 'character.js'>");
+	var constants = $("<script src = 'constants.js'>");
+	var draw = $("<script src = 'draw.js'>");
+	var eventHandlers = $("<script src = 'eventHandlers.js'>");
+	var maps = $("<script src = 'maps.js'>");
+	var mechanics = $("<script src = 'mechanics.js'>");
+	var terrain = $("<script src = 'terrain.js'>");
+	container.append(main, character, constants, draw)
+		.append(eventHandlers, maps, mechanics, terrain);
 	
 	var canvas = $("<canvas width='800' height='600'>");
 	container.append(canvas);
