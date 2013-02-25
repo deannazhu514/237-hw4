@@ -35,7 +35,7 @@ function drawCharacters() {
 function drawCursor() {
 	
 	//DRAW CURSOR IMAGE
-	ctx.drawImage(cursor.img, cursor.x*tileSize, cursor.y*tileSize); 
+	ctx.drawImage(cursor, cursor.x*tileSize, cursor.y*tileSize); 
 	
 	//POSSIBLY CHANGE CURSOR BASED ON CURRENT ACTIOn
 	//SUCH AS ATTACKING OR MOVING OR WHEN HOVERING
@@ -43,7 +43,7 @@ function drawCursor() {
 }
 
 function drawMenu() {
-	ctx.drawRect(width*tileSize, 0, canvas.width -(width * tileSize), canvas.height); //menu box
+	ctx.fillRect(width*tileSize, 0, canvas.width -(width * tileSize), canvas.height); //menu box
 	
 	for (var i = 0; i < menu.length; i++) {
 		//draw the menu item

@@ -340,7 +340,7 @@ function refreshGameScreen() {
 	var mechanics = $("<script src = 'mechanics.js'>");
 	var terrain = $("<script src = 'terrain.js'>");
 	container.append(main, character, constants, draw)
-		.append(eventHandlers, maps, mechanics, terrain);
+		.append(eventHandlers, mechanics); //implement maps and terrain later
 	
 	var canvas = $("<canvas width='800' height='600'>");
 	container.append(canvas);

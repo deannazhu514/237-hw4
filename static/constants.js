@@ -13,6 +13,7 @@ var pointGoal = 100;
 
 var playerNumber;
 
+var menu = []; //don't know if this is needed
 var characterMenu = [];
 var playerMenu = [];
 var menuIndex;
@@ -68,8 +69,8 @@ zombieImageF.src = "images/zombie_female.png";
 
 /*CURSOR IMAGE*/
 var cursor;
-//cursor.img = new Image();
-//cursor.img.src = "";
+cursor = new Image();
+cursor.src = "images/cursor.png";
 /*END CURSOR*/
 
 /*BASE STAT DICTIONARY*/

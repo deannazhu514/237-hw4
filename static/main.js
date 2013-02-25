@@ -1,7 +1,7 @@
-
+var currentGame; //for testing
 
 function init(gameData, player) {
-	//currentGame = gameData;
+	currentGame = gameData; //for testing
 	playerNumber = player;
 	init_map(currentGame.map);
 	p1charList = currentGame.p1charList;
@@ -14,7 +14,7 @@ function init(gameData, player) {
 	intervalId = setInterval(update, timerDelay);
 	cursor.x = 0;
 	cursor.y = 0;
-	playerFocus = viewing;
+	playerFocus = "viewing";
 	
 	//i hope the inconsistency in style doesnt bug anyone
 	key_pressed.timeleft = 0;

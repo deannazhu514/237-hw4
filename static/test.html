@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<canvas width='800' height='600' id="myCanvas">
+		No canvas!
+	</canvas>
+	
+	<title>test</title>
+	<script type='text/javascript' src='main.js'></script>
+	<script type='text/javascript' src='character.js'></script>
+	<script type='text/javascript' src='constants.js'></script>
+	<script type='text/javascript' src='draw.js'></script>
+	<script type='text/javascript' src='eventHandlers.js'></script>
+	<script type='text/javascript' src='mechanics.js'></script>
+	<!-- <script type='text/javascript' src='terrain.js'></script> -->
+	<script>
+		var p1charList = [];
+		var p2charList = [];
+	</script>
+</head>
+
+<body onload='init({"id": "123",
+										"name": "gameName",
+										"player1": "player1",
+										"player2": "player2",
+										"map": 1,
+										"status": "joined",
+										"p1charList": p1charList,
+										"p2charList": p2charList,
+										"p1points": 0,
+										"p2points": 0}, 1);'>
+	<style>
+		canvas {
+			display:block;
+			margin:auto;
+			border: 2px;
+		}
+	</style>
+</body>
+</html>
