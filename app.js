@@ -46,7 +46,7 @@ app.post("/createGame", function(req, res){
 		"player1": player1ID, 
 		"player2": "",
 		"map": mapNum,
-		"status": "joined",
+		"status": "not joined",
 		"p1charList": p1charList,
 		"p2charList": [], 
 		"p1points": 0,
