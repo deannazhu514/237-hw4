@@ -11,7 +11,7 @@ function init(gameData, player) {
 	p1charList = currentGame.p1charList;
 	p2charList = currentGame.p2charList; 
 	
-	cursor.x = width/2;
+	cursor.x = Math.floor(width/2);
 	cursor.y = height-1;
 	playerFocus = "viewing";
 	
@@ -48,6 +48,7 @@ function init_characters(datalist) {
 	}
 	return charlist;
 }
+
 
 //for now just one map 
 function init_map (mapNum) {

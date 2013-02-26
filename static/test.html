@@ -16,6 +16,32 @@
 	<script>
 		var p1charList = [];
 		var p2charList = [];
+		var type = ["mage","archer","warrior"]
+		for (var i = 0; i < 3; i++) {
+			var data = {};
+			data.type = type[i];
+			data.x = Math.floor(width/2-i+1);
+			data.y = height-1;
+			data.strength = i*2;
+			data.dexterity = i;
+			data.agility = i;
+			
+			var char = newCharacter(data);
+			p1charList.push(char);
+		}
+		for (var i = 0; i < 3; i++) {
+			var data = {};
+			data.type = type[i];
+			data.x = Math.floor(width/2-i+1);
+			data.y = 0;
+			data.strength = i*2;
+			data.dexterity = i;
+			data.agility = i;
+			
+			var char = newCharacter(data);
+			p2charList.push(char);
+		}
+
 	</script>
 </head>
 

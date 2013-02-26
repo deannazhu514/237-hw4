@@ -8,7 +8,7 @@ var keyPressTickMod = 2;
 var map;
 var canvasWidth = 1100; //0-800 for game, 800-1100 for menu
 var canvasHeight = 600;
-var tileSize = 40;
+var tileSize = 60;
 
 var width = Math.floor((canvasWidth-300)/tileSize);
 var height = Math.floor(canvasHeight/tileSize);
@@ -70,20 +70,50 @@ var waterImage = new Image();
 waterImage.src = "images/water.png";
 /*END TILE IMAGES*/
 
-/*CHARACTER IMAGES HERE*/
+var graveImg = new Image();
+graveImg.src = "images/grave.png";
+
+/*CHARACTER CONSTANTS HERE*/
+
+var sXList = {"warrior":[0, 30, 60], 
+				"archer":[0, 30, 55], 
+				"mage":[0, 30, 60]
+			};
+var sYList = {"warrior":[0,35,70,105], 
+				"archer":[0,45,85,125],
+				"mage":[0,35,70,105]
+			};
+var widthList = {"warrior":[30,30,30], 
+				"archer":[25,25,25],
+				"mage":[30,30,30]
+			};
+var heightList = {"warrior":[34,34,34,34], 
+				"archer":[43,40,40,43],
+				"mage":[33,33,33,33]
+			};
+var index = {"warrior":0, 
+				"archer":0,
+				"mage":0
+			};
+
 var warriorImageM = new Image();
 warriorImageM.src = "images/human_male.png";
 var warriorImageF = new Image();
 warriorImageF.src = "images/human_female.png";
-var elfImageM = new Image();
-elfImageM.src = "images/elf_male.png";
-var elfImageF = new Image();
-elfImageF.src = "images/elf_female.png";
-var zombieImageM = new Image();
-zombieImageM.src = "images/zombie_male.png";
-var zombieImageF = new Image();
-zombieImageF.src = "images/zombie_female.png";
-/* END CHARACTER IMAGES*/
+
+var archerImageM = new Image();
+archerImageM.src = "images/elf_male.png";
+
+var archerImageF = new Image();
+archerImageF.src = "images/elf_female.png";
+
+var mageImageM = new Image();
+mageImageM.src = "images/zombie_female.png";
+
+var mageImageF = new Image();
+mageImageF.src = "images/zombie_male.png";
+
+/* END CHARACTER CONSTANTS*/
 
 /*CURSOR IMAGE*/
 var cursorImg;

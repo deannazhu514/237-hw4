@@ -51,7 +51,18 @@ function drawCharacters() {
 	for (var i = 0; i < p1charList.length; i++) {
 		var character = p1charList[i];
 		if (!isDead(character)) {
-			ctx.drawImage(character.img, character.x * tileSize, character.y * tileSize);
+			var ci = index[character.type];
+			ctx.drawImage(character.img, 
+				sXList[character.type][0], sYList[character.type][0],
+				widthList[character.type][0], heightList[character.type][0],
+				character.x*tileSize, character.y*tileSize,
+				tileSize, tileSize);
+		}
+		else {
+			//character is dead :(
+			ctx.drawImage(graveImg, 
+				character.x*tileSize, character.y*tileSize,
+				tileSize, tileSize);
 		}
 	}
 	
@@ -60,7 +71,20 @@ function drawCharacters() {
 	//or perhaps coloring character types differently based on team? 
 	for (var i = 0; i < p2charList.length; i++) {
 		var character = p2charList[i];
-		ctx.drawImage(character.img, character.x * tileSize, character.y * tileSize);
+		if (!isDead(character)) {
+			var ci = index[character.type];
+			ctx.drawImage(character.img, 
+				sXList[character.type][0], sYList[character.type][0],
+				widthList[character.type][0], heightList[character.type][0],
+				character.x*tileSize, character.y*tileSize,
+				tileSize, tileSize);
+		}
+		else {
+			//character is dead :(
+			ctx.drawImage(graveImg, 
+				character.x*tileSize, character.y*tileSize,
+				tileSize, tileSize);
+		}
 	}
 }
 

@@ -21,11 +21,22 @@
 
 function newCharacter(data) {
 	var type = data.type;
-	var character;
+	var character = {};
 	character.x = data.x;
 	character.y = data.y;
 	character.player = data.player;
 	character.type = type; //used for animation purposes, i guess?
+	
+	if (type === "warrior") {
+		character.img = warriorImageM;
+	} else if (type === "mage") {
+		character.img = mageImageM;
+	} else if (type === "archer") {
+		character.img = archerImageM;
+	} else {
+		character.img = "";
+	}
+	
 	
 	var strength = data.strength;
 	var dexterity = data.dexterity;
@@ -40,7 +51,7 @@ function newCharacter(data) {
 	character.toHit = baseStats[type].toHit + (dexterity * dexHit);
 	character.damage = baseStats[type].damage + (strength * strDmg);
 	character.health = baseStats[type].health + (endurance * endHP);
-	character.maxHealth = baseStats[type].health (endurance * endHP); 
+	character.maxHealth = baseStats[type].health + (endurance * endHP); 
 	character.range = baseStats[type].range;
 	character.defense = baseStats[type].defense + (endurance * endDef); 
 	//DEFENSE IS AN OPTIONAL STAT. DO NOT KNOW IF WE WANT TO IMPLEMENT
