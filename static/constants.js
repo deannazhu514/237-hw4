@@ -28,10 +28,18 @@ var menu = []; //don't know if this is needed
 
 var characterMenu = [];
 var playerMenu = [];
+var statMenu = [];
 var menuIndex = 0;
 /*END MENU CONSTANTS*/
 
-var pathList;
+/* GAMEPLAY VARIABLES */
+var listPath = [];
+var hit = false;
+var attacked = false;
+var damage = -1;
+var turnEnd = false;
+
+/*END GAMEPLAY VARIABLES*/
 
 var pointGain = 20;
 
@@ -51,13 +59,10 @@ var currentChar;
 var isDrawingPathFlag;
 var animationFlag;
 var gameEndFlag;
-
 /*END FLAGS*/
 
 /*TILE CONSTANTS*/
 var tileType = ["plain", "mountain", "forest"];
-//var tileSize = 20;
-
 /*END TILE CONSTANTS*/
 
 /*TILE IMAGES HERE*/
@@ -176,6 +181,3 @@ var endHP = 12;
 var endDef = 0; //NOT SURE YET IF WANT TO INCLUDE DEFENSE AS CORE STAT
 
 /*END COEFFICIENTS*/
-
-
-//ETC ETC

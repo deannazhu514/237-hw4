@@ -1,5 +1,3 @@
-
-
 //calculation when someone attacks someone else
 //returns true if hit was successful, false if not 
 
@@ -16,11 +14,14 @@ function calculateHit(attacker, defender) {
 	var hitChance = attacker.toHit - defender.dodgeChance;
 	var tile = map[defender.y][defender.x];
 	var terrain = terrainDict[tile.type];
+	var h = Math.random();
 	hitChance -= terrain.dodgeModifier;
-	if (Math.random > hitChance) {
+	console.log(h, hitChance);
+	if (h > Math.abs(hitChance)) {
 		return false;
 	}
-	defender.health -= attacker.damage - terrain.damageModifier;
+	damage = attacker.damage - terrain.damageModifier;
+	defender.health -= damage;
 	return true;
 }
 

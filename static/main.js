@@ -1,11 +1,11 @@
-// var currentGame;
+ var currentGame;
 
-function init(/*gameData, */player) {
+function init(gameData, player) {
 	canvas.addEventListener('keyup', onKeyUp, false);
 	canvas.addEventListener('keydown', onKeyDown, false);
 	//canvas.addEventListener('mousemove', onMouseMove, false);
 
-	// currentGame = gameData;
+	currentGame = gameData;
 	playerNumber = player;
 	init_map(currentGame.map);
 	p1charList = currentGame.p1charList;
@@ -55,7 +55,6 @@ function init_characters(datalist) {
 //for now just one map 
 function init_map (mapNum) {
 	if (mapNum == '1') {
-		
 		//initialize a widthxheight 2D array for the map tiles
 		map = new Array(height);
 		for (var i = 0; i < height; i++) {
@@ -182,6 +181,12 @@ function checkKeyPressed() {
 function update() {
 	
 	var cList;
+	for (var i = 0; i < p1charList.length; i++) {
+			map[p1charList[i].y][p1charList[i].x].character = p1charList[i];
+	}
+	for (var i = 0; i < p2charList.length; i++) {
+			map[p2charList[i].y][p2charList[i].x].character = p2charList[i];
+	}	
 	if ((playerNumber === 1) && (currentGame.status === "p1turn")) {
 		cList = p1charList;
 	} else if (currentGame.status === "p2turn") {
@@ -191,16 +196,6 @@ function update() {
 		return;
 	}
 	
-	//fall through: it is your turn, check to see if 
-	//any characters can still move
-	//check to see if any living characters have movepoints left
-	for (var i = 0; i < cList.length; i++) {
-		map[cList[i].y][cList[i].x].character = cList[i];
-		if (cList[i].hasMoved && !isDead(cList[i])) {
-			return;
-		}
-	}
-	
 	draw();
 	checkKeyPressed();
 	checkVictory();
@@ -208,13 +203,23 @@ function update() {
 		return;
 	}
 	
+	//fall through: it is your turn, check to see if 
+	//any characters can still move
+	//check to see if any living characters have movepoints left
+	for (var i = 0; i < cList.length; i++) {
+		if (!cList[i].hasMoved && !isDead(cList[i])) {
+			return;
+		}
+	}
+	
 	//only reaches endturn if all characters have moved or are dead
-	//endTurn();
+	endTurn();
 }
 
 function endTurn() {
 	var pList; //player's list
 	var opList; //opponent's list
+	turnEnd = true;
 	if (playerNumber === 1) {
 		pList = p1charList;
 		opList = p2charList;

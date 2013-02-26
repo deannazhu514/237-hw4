@@ -12,7 +12,7 @@
 	<script type='text/javascript' src='draw.js'></script>
 	<script type='text/javascript' src='eventHandlers.js'></script>
 	<script type='text/javascript' src='mechanics.js'></script>
-	<!-- <script type='text/javascript' src='terrain.js'></script> -->
+	<script type='text/javascript' src='terrain.js'></script>
 	<script>
 		var p1charList = [];
 		var p2charList = [];
@@ -36,7 +36,7 @@
 			var data = {};
 			data.type = type[i];
 			data.x = Math.floor(width/2-i+1);
-			data.y = 0;
+			data.y = height-4;
 			data.strength = i*2;
 			data.dexterity = i;
 			data.agility = i;

@@ -89,10 +89,22 @@ function drawCharacters() {
 }
 
 function drawCursor() {	
-	//DRAW CURSOR IMAGE
-	ctx.drawImage(cursorImg, 
-			cursor.x*tileSize, cursor.y*tileSize, tileSize, tileSize); 
+	//DRAW MOVE PATH, IF ANY
+	ctx.globalAlpha = 0.5
+	for (var i = 0; i < listPath.length; i++) {
+			var arrayTuple = listPath[i].split(",");
+			var y = (arrayTuple[0] - 0);
+			var x = (arrayTuple[1] - 0);
+			
+			ctx.drawImage(cursorImg, 
+				x*tileSize, y*tileSize, tileSize, tileSize);
+	}
 	
+	//DRAW CURSOR IMAGE
+	ctx.globalAlpha = 1;
+	ctx.drawImage(cursorImg, 
+			cursor.x*tileSize, cursor.y*tileSize, tileSize, tileSize); 	
+			
 	//POSSIBLY CHANGE CURSOR BASED ON CURRENT ACTIOn
 	//SUCH AS ATTACKING OR MOVING OR WHEN HOVERING
 	//OVER A CLICKABLE CHARACTER
@@ -104,43 +116,66 @@ function drawMenu() {
 	ctx.fillRect(menuX,menuY,menuWidth,menuHeight);
 
 	var menu = [];
-	if (playerFocus === "characterMenu") {
-		menu = characterMenu;
-		var character = currentChar;
-		ctx.drawImage(character.img, 
-				sXList[character.type][1], sYList[character.type][0],
-				widthList[character.type][1], heightList[character.type][0],
-				menuX+90, menuY+7*30,
-				tileSize*2, tileSize*2);
-	} 	
+	var offset;
+	
+	if (!turnEnd) {
+		if (playerFocus === "viewing") {
+			if (hit) {
+				ctx.font="40px Courier New";
+				ctx.fillStyle = "#0FF";
+				ctx.fillText("Hit!", menuX+20, 200);	
+			} else if (attacked) {
+				ctx.font="40px Courier New";
+				ctx.fillStyle = "#0FF";
+				ctx.fillText("Missed!", menuX+20, 200);
+			} else {
+				var instructions = "[space] to select character";
+				ctx.font="12px Courier New";
+				ctx.fillStyle = "#0FF";
+				ctx.fillText(instructions, menuX+20, 200);	
+			}
+		} else if (playerFocus === "characterMenu") {
+			offset = 30;
+			menu = characterMenu;
+			var character = currentChar;
+			ctx.drawImage(character.img, 
+					sXList[character.type][1], sYList[character.type][0],
+					widthList[character.type][1], heightList[character.type][0],
+					menuX+90, menuY+7*30,
+					tileSize*2, tileSize*2);
+			if (character.hasMoved) {
+				ctx.font="40px Courier New";
+				ctx.fillStyle = "#0FF";
+				ctx.fillText("Moved", menuX+20, 200);
+			}
+		} else if (playerFocus === "playerMenu") {
+			menu = playerMenu;
+			offset = 100;
+		} else if (playerFocus === "attacking") {
+			ctx.font="40px Courier New";
+			ctx.fillStyle = "#0FF";
+			ctx.fillText("Attack!", menuX+20, 200);
+		}  	
+	}
+	
+	if (playerFocus === "view stats") {
+		menu = statMenu;
+	}
 	
 	for (var i = 0; i < menu.length; i++) {
 		ctx.font="20px Courier New";
 		if (i === menuIndex) {
 			ctx.fillStyle = "black";
-			ctx.fillRect(menuX+10,menuY+(i+1)*30, menuWidth-20, 30);
+			ctx.fillRect(menuX+10,menuY+(i+1)*offset, menuWidth-20, 30);
 			ctx.fillStyle = "white";
 		}
 		else {
 			ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
-			ctx.fillRect(menuX+10,menuY+(i+1)*30, menuWidth-20, 30);
+			ctx.fillRect(menuX+10,menuY+(i+1)*offset, menuWidth-20, 30);
 			ctx.fillStyle = "red";
 		}	
-		ctx.fillText(menu[i], menuX+20, menuY+(i+1)*30+20);
+		ctx.fillText(menu[i], menuX+20, menuY+(i+1)*offset+20);
 	}
-	
-	ctx.font="30px Courier New";
-	//end turn button
-	ctx.fillStyle = "red";
-	ctx.fillRect(menuX+10, menuHeight-120, menuWidth-20, 30);
-	ctx.fillRect(menuX+10, menuHeight-80, menuWidth-20, 30);
-	ctx.fillRect(menuX+10, menuHeight-40, menuWidth-20, 30);
-	
-	
-	ctx.fillStyle = "white";
-	ctx.fillText("Surrender", menuX+10+10, menuHeight-95);
-	ctx.fillText("End Turn", menuX+10+10, menuHeight-55);
-	ctx.fillText("Save and Exit", menuX+10+10, menuHeight-15);
 }
 
 function displayStats() {
