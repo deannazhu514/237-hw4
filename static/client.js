@@ -1,6 +1,7 @@
 var playerName; //id for the player
 var currentGame; //which game the player is playing, is a game object
 var gameList;
+var gamenum = 0;
 var openGameList = {};	//array of objects, containing joinable games			
 var myGameList = {}; //array of objects, containing games player is currently in	
 var pageState = []; //what screens to load on page 
@@ -58,8 +59,8 @@ function refreshMenuScreen() {
 	container.html("");
 	
 	var title = $("#title");
-	title.html("<h1>"+playerName+", welcome to "+gametitle+"</h1>");
-	title.css("font-size", "30px");
+	title.html("<h1> Welcome to "+gametitle+"</h1>");
+	//title.css("font-size", "30px");
 	
 	var instructions = $("<div class = 'instructions'>");
 	instructions.html("[instructions]"); // load from text file on server?
@@ -136,6 +137,7 @@ function refreshMenuScreen() {
 		});
 		
 	rooms.append(gamesAvailable);
+	rooms.css("height", gamenum*20+10);
 	container.append(instructions,
 				availButton, currButton,
 				rooms, createButton, joinButton);
@@ -143,7 +145,9 @@ function refreshMenuScreen() {
 
 function refreshOpenGames(gamesAvailable) {
 // display all available games on menu screen
+	gamenum = 0;
 	for (var gameID in openGameList) {
+		gamenum++;
 		var game = openGameList[gameID];
 		var listing = $("<li>")
 			.attr("id", gameID)

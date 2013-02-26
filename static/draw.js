@@ -13,10 +13,6 @@ function draw() {
 	drawCharacters();
 	drawCursor();
 	drawMenu();
-	if (playerFocus === "view stats") {
-		displayStats(); //this will be an overlay over the whole map
-		//maybe? //or display it anywhere just implement it
-	}
 }
 
 
@@ -118,6 +114,10 @@ function drawMenu() {
 	var menu = [];
 	var offset;
 
+	ctx.font="20px Courier New";
+	ctx.fillStyle = "#0FF";
+	ctx.fillText("[ESC] to return", menuX+20, 500);
+	
 	if (!turnEnd) {
 		if (playerFocus === "viewing") {
 			if (hit) {

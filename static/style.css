@@ -8,10 +8,17 @@ body {
 }
 
 #title {
-	margin: 50px;
-	padding: 10px 20px 10px 20px;
+	background: black;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	
+	padding: 15px;
+	border: 2px solid #FAA;
 	border-radius: 5px;
 	font-size: 64px;
+	z-index: 1;
 }
 
 h1 {
@@ -24,6 +31,7 @@ h1 {
 #content {
 	background-color: #000;
 	position: relative;
+	top: 100px;
 	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	width: 700px;
 	margin: 70px auto;
@@ -85,7 +93,6 @@ input, a {
 
 .rooms {
 	position: relative;
-	/* top: 20px; */
 	background-color: #000;
 	color: #FF0;
 	padding: 10px 10px;
@@ -138,6 +145,14 @@ input, a {
 
 #myCanvas{
 	margin: 10px auto;
+}
+
+.menubut:hover, a:hover, #createButton:hover{
+	background-color: #00F;
+}
+
+li:hover {
+	background-color: #333;
 }
 
 
