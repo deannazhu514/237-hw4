@@ -51,6 +51,7 @@ function newCharacter(data) {
 	character.toHit = baseStats[type].toHit + (dexterity * dexHit);
 	character.damage = baseStats[type].damage + (strength * strDmg);
 	character.health = baseStats[type].health + (endurance * endHP);
+	console.log(character.health);
 	character.maxHealth = baseStats[type].health + (endurance * endHP); 
 	character.range = baseStats[type].range;
 	character.defense = baseStats[type].defense + (endurance * endDef); 

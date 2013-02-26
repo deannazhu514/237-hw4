@@ -7,8 +7,8 @@ function init(player) {
 	init_map(currentGame.map);
 	p1charList = currentGame.p1charList;
 	p2charList = currentGame.p2charList; 
-	init_characters(p1charList);
-	init_characters(p2charList);
+	//init_characters(p1charList);
+	//init_characters(p2charList);
 	
 	cursor.x = Math.floor(width/2);
 	cursor.y = height-1;

@@ -238,11 +238,18 @@ function keyDownMove(e) {
 			return;
 		}
 	} else if (e === 32) { //space
-		listPath = [];
+		for (var i = 1; i < listPath.length; i++) {
+			 var arrayTuple = listPath[i].split(",");
+			 tile = map[(arrayTuple[0] - 0)][(arrayTuple[1] - 0)]; // the - 0 just casts it to a number
+			 terrain = terrainDict[tile.type];
+			 currentChar.movePoints -= terrain.moveCost;
+		}
 		map[currentChar.y][currentChar.x].character = null;
 		currentChar.x = cursor.x;
 		currentChar.y = cursor.y;
 		map[currentChar.y][currentChar.x].character = currentChar;
+		playerFocus = "characterMenu";
+		listPath = [];
 		//THIS IS JUST PLACEHOLDER: WE SHOULD PUT IN ANIMATIONS	
 		return;
 	} else if (e === 27) { //ESC
@@ -267,7 +274,7 @@ function keyDownMove(e) {
 			 var arrayTuple = listPath[i].split(",");
 			 tile = map[(arrayTuple[0] - 0)][(arrayTuple[1] - 0)]; // the - 0 just casts it to a number
 			 terrain = terrainDict[tile.type];
-			 currentChar.movePoints += terrain.moveCost;
+			 currentChar.movePoints -= terrain.moveCost;
 		 }
 	} else {
 		tile = map[cursor.y][cursor.x];
