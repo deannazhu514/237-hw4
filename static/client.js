@@ -1,6 +1,6 @@
 nvar playerName; //id for the player
 var currentGame; //which game the player is playing, is a game object
-var gameList; //array of all games from server
+var gameList;
 var openGameList = {};	//array of objects, containing joinable games			
 var myGameList = {}; //array of objects, containing games player is currently in	
 var pageState = []; //what screens to load on page 
@@ -101,9 +101,29 @@ function refreshMenuScreen() {
 		.addClass("menubut")
 		.attr("id", "joinButton")
 		.click(function() {
-			pageState[0] = "joinGame";
-			pageState[1] = "";
-			refreshDOM();
+		// join or continue game only if game is selected
+		// and it appears in the active tab
+			if ((currentGame!==undefined) && (pageState[1]==="openGames")) {
+				for (var gameID in openGameList) {
+					if (currentGame.id==gameID) {
+						pageState[0] = "joinGame";
+						pageState[1] = "";
+						refreshDOM();
+						return;
+					}
+				}
+			}
+			else if ((currentGame!==undefined)	&& (pageState[1]==="myGames")) {	
+				for (var gameID in myGameList) {
+					if (currentGame.id==gameID) {
+						pageState[0] = "joinGame";
+						pageState[1] = "";
+						refreshDOM();
+						return;
+					}
+				}			
+			}
+			alert("Please select a game.");
 		});
 	var createButton = $("<a>")
 		.html("Create Game")
@@ -341,8 +361,7 @@ function createGame() {
 		success: function(data) {
 			if (data.success === true) {
 				currentGame = data.game;
-				refreshGameScreen();
-				init(/*currentGame, */1);
+				refreshDOM();
 			}
 		}
 	});
@@ -367,7 +386,7 @@ function joinGame() {
 				playerNumber = 2;
 			}
 			refreshGameScreen();
-			init(currentGame, playerNumber);
+			init(playerNumber);
 		}
 	});
 }
