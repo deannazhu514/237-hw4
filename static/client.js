@@ -101,9 +101,29 @@ function refreshMenuScreen() {
 		.addClass("menubut")
 		.attr("id", "joinButton")
 		.click(function() {
-			pageState[0] = "joinGame";
-			pageState[1] = "";
-			refreshDOM();
+		// join or continue game only if game is selected
+		// and it appears in the active tab
+			if ((currentGame!==undefined) && (pageState[1]==="openGames")) {
+				for (var gameID in openGameList) {
+					if (currentGame.id==gameID) {
+						pageState[0] = "joinGame";
+						pageState[1] = "";
+						refreshDOM();
+					}
+				}
+				alert("Please select a game.");
+			}
+			else if ((currentGame!==undefined)	&& (pageState[1]==="myGames")) {	
+				for (var gameID in openGameList) {
+					if (currentGame.id==gameID) {
+						pageState[0] = "joinGame";
+						pageState[1] = "";
+						refreshDOM();
+					}
+				}			
+				alert("Please select a game.");
+			}
+			alert("Please select a game.");
 		});
 	var createButton = $("<a>")
 		.html("Create Game")
@@ -342,7 +362,7 @@ function createGame() {
 			if (data.success === true) {
 				currentGame = data.game;
 				refreshGameScreen();
-				init(/*currentGame, */1);
+				init(1);
 			}
 		}
 	});
@@ -365,7 +385,7 @@ function joinGame() {
 				playerNumber = 2;
 			}
 			refreshGameScreen();
-			init(currentGame, playerNumber);
+			init(playerNumber);
 		}
 	});
 }
