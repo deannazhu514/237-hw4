@@ -147,11 +147,11 @@ input, a {
 	margin: 10px auto;
 }
 
-.menubut:hover, a:hover, #createButton:hover{
-	background-color: #00F;
+.menubut:hover, .roombut:hover, #createButton:hover{
+	background-color: #333;
 }
 
-li:hover {
+.rooms li:hover {
 	background-color: #333;
 }
 
