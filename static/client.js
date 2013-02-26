@@ -53,6 +53,7 @@ function loadTitleScreen() {
 /* MENU SCREEN FUNCTIONS */
 function refreshMenuScreen() {
 // refreshDOM while on menu screen
+// to do: add continue game functionality
 	var container = $("#content");
 	container.html("");
 	
@@ -185,6 +186,7 @@ function selectGame(listing) {
 		// }
 	// });
 // }
+
 
 /* GAME START SCREEN FUNCTIONS */
 function refreshCreateTeamScreen() {	
@@ -368,13 +370,6 @@ function joinGame() {
 	});
 }
 
-function submitTeam() {
-	// submit the created team's stats and other new game data
-	// might just consolidate with join/createGame
-	$.ajax({
-		type: "post"
-	});
-}
 
 /* GAME FUNCTIONS */
 function refreshGameScreen() {	

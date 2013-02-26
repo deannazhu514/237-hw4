@@ -92,7 +92,7 @@ app.get("/isYourTurn/:info", function(req,res) {
 		&& (game.status === "p2turn"))){
 		res.send({ 
 			answer: 'true',
-			game: currentGame
+			game: game
 		});
 	} else {
 		res.send({
@@ -105,7 +105,7 @@ app.get("/isYourTurn/:info", function(req,res) {
 
 app.post("/updateGame", function(req,res) {
 	var game = JSON.parse(req.body.gameObj);
-	var gameID = game.gameID;
+	var gameID = game.id;
 	gameList[gameID] = game;
 
 	writeFile("games.txt", JSON.stringify(gameList));
