@@ -6,10 +6,12 @@ var keyPressThreshhold = 5;
 var keyPressTickMod = 2;
 
 var map;
-var canvasWidth = 1100;
+var canvasWidth = 1100; //0-800 for game, 800-1100 for menu
 var canvasHeight = 600;
-var width = 20;
-var height = 20;
+var tileSize = 40;
+
+var width = Math.floor((canvasWidth-300)/tileSize);
+var height = Math.floor(canvasHeight/tileSize);
 var p1charList;
 var p2charList;
 var pointGoal = 100;
@@ -22,7 +24,7 @@ var menuHeight = canvasHeight;
 var menuX = canvasWidth-menuWidth;
 var menuY = 0;
 
-var menuText = ["move", "attack", "spell", "use item", "defend"]; //don't know if this is needed
+var menuText = ["[m]ove", "[a]ttack", "[s]pell", "use [i]tem", "[d]efend"]; //don't know if this is needed
 
 var characterMenu = [];
 var playerMenu = [];
@@ -53,8 +55,8 @@ var gameEndFlag;
 
 /*TILE CONSTANTS*/
 var tileType = ["plain", "mountain", "forest"];
-var tileSize = (canvasWidth-menuWidth)/width;
 //var tileSize = 20;
+
 /*END TILE CONSTANTS*/
 
 /*TILE IMAGES HERE*/
@@ -84,9 +86,10 @@ zombieImageF.src = "images/zombie_female.png";
 /* END CHARACTER IMAGES*/
 
 /*CURSOR IMAGE*/
-var cursor;
-cursor = new Image();
-cursor.src = "images/cursor.png";
+var cursorImg;
+cursorImg = new Image();
+cursorImg.src = "images/cursor.png";
+var cursor={};
 /*END CURSOR*/
 
 /*BASE STAT DICTIONARY*/

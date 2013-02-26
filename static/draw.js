@@ -10,14 +10,13 @@ function draw() {
 	
 	ctx.clearRect(0,0,canvas.width,canvas.height);
 	drawMap();
-	//drawCharacters();
+	drawCharacters();
 	drawCursor();
 	drawMenu();
 	if (playerFocus === "view stats") {
 		displayStats(); //this will be an overlay over the whole map
 		//maybe? //or display it anywhere just implement it
 	}
-	
 }
 
 
@@ -67,7 +66,8 @@ function drawCharacters() {
 
 function drawCursor() {	
 	//DRAW CURSOR IMAGE
-	ctx.drawImage(cursor, cursor.x*tileSize, cursor.y*tileSize, tileSize, tileSize); 
+	ctx.drawImage(cursorImg, 
+			cursor.x*tileSize, cursor.y*tileSize, tileSize, tileSize); 
 	
 	//POSSIBLY CHANGE CURSOR BASED ON CURRENT ACTIOn
 	//SUCH AS ATTACKING OR MOVING OR WHEN HOVERING
@@ -83,29 +83,29 @@ function drawMenu() {
 		ctx.font="20px Courier New";
 		if (i === menuIndex) {
 			ctx.fillStyle = "black";
-			ctx.fillRect(menuX+10,menuY+(i+1)*40, menuWidth-20, 30);
+			ctx.fillRect(menuX+10,menuY+(i+1)*30, menuWidth-20, 30);
 			ctx.fillStyle = "white";
 		}
 		else {
 			ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
 
-			ctx.fillRect(menuX+10,menuY+(i+1)*40, menuWidth-20, 30);
+			ctx.fillRect(menuX+10,menuY+(i+1)*30, menuWidth-20, 30);
 			ctx.fillStyle = "red";
 		}	
-		ctx.fillText(menuText[i], menuX+20, menuY+(i+1)*40+20);
+		ctx.fillText(menuText[i], menuX+20, menuY+(i+1)*30+20);
 	}
 	ctx.font="30px Courier New";
 	//end turn button
 	ctx.fillStyle = "red";
-	ctx.fillRect(menuX+10, menuHeight-140, menuWidth-20, 30);
+	ctx.fillRect(menuX+10, menuHeight-100, menuWidth-20, 30);
 	ctx.fillStyle = "white";
-	ctx.fillText("End Turn", menuX+10+10, menuHeight-115);
+	ctx.fillText("End Turn", menuX+10+10, menuHeight-75);
 	
 	//save and exit button
 	ctx.fillStyle = "red";
-	ctx.fillRect(menuX+10, menuHeight-70, menuWidth-20, 30);
+	ctx.fillRect(menuX+10, menuHeight-50, menuWidth-20, 30);
 	ctx.fillStyle = "white";
-	ctx.fillText("Save and Exit", menuX+10+10, menuHeight-45);
+	ctx.fillText("Save and Exit", menuX+10+10, menuHeight-25);
 }
 
 function displayStats() {

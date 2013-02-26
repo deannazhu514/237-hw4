@@ -49,7 +49,6 @@ function loadTitleScreen() {
 
 /* MENU SCREEN FUNCTIONS */
 function refreshMenuScreen() {
-
 // refreshDOM while on menu screen
 	var container = $("#content");
 	container.html("");
@@ -171,7 +170,6 @@ function getOpenGames() {
 	});
 }
 
-
 /* GAME START SCREEN FUNCTIONS */
 function refreshCreateTeamScreen() {	
 // refreshDOM while on game start screen
@@ -206,54 +204,58 @@ function refreshCreateTeamScreen() {
 	var createTeam = $("<div>")
 				.attr("id", "teampick");//.addClass("rooms");
 	// show all characters on your team
-	for (var i=0; i<charList.length; i++) {
-		var currCharacter = $("<ul>").addClass("charStats");
+	for (var i=0; i< charList.length; i++) {
+		var currCharacter = $("<ul>")
+			.attr("id", i)
+			.addClass("charStats");
+		
 		// displays and sets stats of each character on team
 		// for now, user types it in, might make buttons/scrollbar later
 		var charType = $("<li>").append(
 			$("<label>").html("Class: "),
 			$("<input>").addClass("charInput")
-				.attr("name", "charType")
+				.attr("id", i+"charType")
 				.attr("type", "text")
 		);
 		
 		var charXPos = $("<li>").append(
 			$("<label>").html("X Position: "),
 			$("<input>").addClass("charInput")
-				.attr("name", "charXPos")
+				.attr("id", i+"charXPos")
 				.attr("type", "number")
 		);
 		var charYPos = $("<li>").append(
 			$("<label>").html("Y Position: "),
 			$("<input>").addClass("charInput")
-				.attr("name", "charYPos")
+				.attr("id", i+"charYPos")
 				.attr("type", "number")
 		);
 
 		var charStrength = $("<li>").append(
 			$("<label>").html("Strength: "),
 			$("<input>").addClass("charInput")
-				.attr("name", "charStrength")
+				.attr("id", i+"charStrength")
 				.attr("type", "number")
 		);
 		var charDexterity = $("<li>").append(
 			$("<label>").html("Dexterity: "),
 			$("<input>").addClass("charInput")
-				.attr("name", "charDexterity")
+				.attr("id", i+"charDexterity")
 				.attr("type", "number")
 		);
 		var charEndurance = $("<li>").append(
 			$("<label>").html("Endurance: "),
 			$("<input>").addClass("charInput")
-				.attr("name", "charEndurance")
+				.attr("id", i+"charEndurance")
 				.attr("type", "number")
 		);
 		var charAgility = $("<li>").append(
 			$("<label>").html("Agility: "),
 			$("<input>").addClass("charInput")
-				.attr("name", "charAgility")
+				.attr("id", i+"charAgility")
 				.attr("type", "number")
 		);
+		
 		currCharacter.append(charType, charXPos, charYPos,
 							charStrength, charDexterity, 
 							charEndurance, charAgility);
@@ -268,6 +270,8 @@ function refreshCreateTeamScreen() {
 		startButton.click(function(){
 			pageState[0] = "gameInPlay";
 			pageState[1] = "";
+			var datalist = getCharData();
+			var charList =[]; //= init_characters(datalist);
 			createGame(charList);
 			refreshDOM();
 		});
@@ -277,6 +281,8 @@ function refreshCreateTeamScreen() {
 		startButton.click(function(){
 			pageState[0] = "gameInPlay";
 			pageState[1] = "";
+			var datalist = getCharData();
+			var charList = init_characters(datalist);
 			joinGame(charList);
 			refreshDOM();
 		});
@@ -288,6 +294,22 @@ function refreshCreateTeamScreen() {
 		refreshMenuScreen();
 	});
 	container.append(backButton, startButton);
+}
+
+function getCharData() {
+	var charStats = $(".charStats");
+	var datalist = Array(charStats.length);
+	for (var i=0; i< charStats.length; i++) {
+		var data ={};
+		data.type = $("#"+i+"charType").val();
+		data.x = $("#"+i+"charXPos").val();
+		data.y = $("#"+i+"charYPos").val();
+		data.strength = $("#"+i+"charStrength").val();
+		data.dexterity = $("#"+i+"charDexterity").val();
+		data.agility = $("#"+i+"charAgility").val();
+		datalist[i] = data;
+	}
+	return datalist;
 }
 
 function createGame(charList) {

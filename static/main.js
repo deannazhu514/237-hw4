@@ -1,19 +1,18 @@
 var currentGame; //for testing
 
 function init(gameData, player) {
+	canvas.addEventListener('keyup', onKeyUp, false);
+	canvas.addEventListener('keydown', onKeyDown, false);
+	//canvas.addEventListener('mousemove', onMouseMove, false);
+
 	currentGame = gameData; //for testing
 	playerNumber = player;
 	init_map(currentGame.map);
 	p1charList = currentGame.p1charList;
 	p2charList = currentGame.p2charList; 
-	canvas.addEventListener('keyup', onKeyUp, false);
-	canvas.addEventListener('keydown', onKeyDown, false);
 	
-	//canvas.addEventListener('mousemove', onMouseMove, false);
-	
-	intervalId = setInterval(update, timerDelay);
-	cursor.x = 0;
-	cursor.y = 0;
+	cursor.x = width/2;
+	cursor.y = height-1;
 	playerFocus = "viewing";
 	
 	//i hope the inconsistency in style doesnt bug anyone
@@ -26,6 +25,11 @@ function init(gameData, player) {
 	key_pressed["up"] = false;
 	key_pressed["down"] = false;
 	gameEndFlag = false;
+	
+	canvas.setAttribute('tabindex','0');
+	canvas.focus();
+	
+	intervalId = setInterval(update, timerDelay);
 }
 
 //ASSUMING GIVEN TWO LISTS WITH DATA OBJECTS
@@ -45,12 +49,9 @@ function init_characters(datalist) {
 	return charlist;
 }
 
-
 //for now just one map 
 function init_map (mapNum) {
 	if (mapNum == '1') {
-		// width = 20;
-		// height = 20;
 		
 		//initialize a widthxheight 2D array for the map tiles
 		map = new Array(height);
