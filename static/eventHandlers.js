@@ -106,7 +106,7 @@ function falsifyKeyPress() {
 function generateCharacterMenu() {
 	characterMenu = [];
 	if (playerNumber === currentChar.player) {
-		characterMenu.push("Move");
+		characterMenu.push("Move: "+currentChar.movePoints+" left");
 		characterMenu.push("Attack");
 		if (currentChar.type === "mage") {
 			characterMenu.push("Magic");
@@ -178,7 +178,7 @@ function keyDownCharacterMenu(e) {
 }
 
 function processMenuSelection(item) {
-	if (item === "Move") {
+	if (item.indexOf("Move") === 0) {
 		playerFocus = "moving";
 		listPath = ["" + cursor.y +","+ cursor.x];
 	} else if (item === "Attack") {

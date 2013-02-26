@@ -117,7 +117,7 @@ function drawMenu() {
 
 	var menu = [];
 	var offset;
-	
+
 	if (!turnEnd) {
 		if (playerFocus === "viewing") {
 			if (hit) {
@@ -134,6 +134,10 @@ function drawMenu() {
 				ctx.fillStyle = "#0FF";
 				ctx.fillText(instructions, menuX+20, 200);	
 			}
+		} else if (playerFocus == "moving") {
+				ctx.font="30px Courier New";
+				ctx.fillStyle = "#0FF";
+				ctx.fillText("Moves Left: "+currentChar.movePoints, menuX+20, 200);					
 		} else if (playerFocus === "characterMenu") {
 			offset = 30;
 			menu = characterMenu;
@@ -146,7 +150,7 @@ function drawMenu() {
 			if (character.hasMoved) {
 				ctx.font="40px Courier New";
 				ctx.fillStyle = "#0FF";
-				ctx.fillText("Moved", menuX+20, 200);
+				ctx.fillText("Moved", menuX+60, 400);
 			}
 		} else if (playerFocus === "playerMenu") {
 			menu = playerMenu;
@@ -156,6 +160,11 @@ function drawMenu() {
 			ctx.fillStyle = "#0FF";
 			ctx.fillText("Attack!", menuX+20, 200);
 		}  	
+	}
+	else { //turn has ended
+		ctx.font="30px Courier New";
+		ctx.fillStyle = "#0FF";
+		ctx.fillText("Turn Ended!", menuX+20, 300);
 	}
 	
 	if (playerFocus === "view stats") {
@@ -179,29 +188,8 @@ function drawMenu() {
 	}
 }
 
-function displayStats() {
-	// blank lawls
-	/*
-	character.toHit ;
-	character.damage ;
-	character.health ;
-	character.maxHealth ; 
-	character.range ;
-	character.defense ; 
-	//DEFENSE IS AN OPTIONAL STAT. DO NOT KNOW IF WE WANT TO IMPLEMENT
-	
-	
-	character.movePoints; 
-	//note 5 not need be inside the floor function but we may want
-	//characters with fractional base movePoints so they benefit
-	//more from agility, so for consistency's sake i include it inside
-	
-	character.maxMovePoints ;
-	character.critChance;
-	character.dodgeChance;
-	*/
-}
-
 function drawVictory(){
-
+	ctx.font="40px Courier New";
+	ctx.fillStyle = "black";
+	ctx.fillText("CONGRATULATIONS, YOU WON!", 200, 200);
 }
