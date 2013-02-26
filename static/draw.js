@@ -75,18 +75,37 @@ function drawCursor() {
 }
 
 function drawMenu() {
-	ctx.fillStyle = "black";
+	ctx.fillStyle = "#333";
 	ctx.fillRect(menuX,menuY,menuWidth,menuHeight);
 	
-	for (var i = 0; i < menu.length; i++) {
-		//draw the menu item
-		//menu's items are strings (like "Move")
+	
+	for (var i = 0; i < menuText.length; i++) {
+		ctx.font="20px Courier New";
 		if (i === menuIndex) {
-			//draw something special for this item
-			//like an arrow pointing at it
-			//or highlight it or something
+			ctx.fillStyle = "black";
+			ctx.fillRect(menuX+10,menuY+(i+1)*40, menuWidth-20, 30);
+			ctx.fillStyle = "white";
 		}
+		else {
+			ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+
+			ctx.fillRect(menuX+10,menuY+(i+1)*40, menuWidth-20, 30);
+			ctx.fillStyle = "red";
+		}	
+		ctx.fillText(menuText[i], menuX+20, menuY+(i+1)*40+20);
 	}
+	ctx.font="30px Courier New";
+	//end turn button
+	ctx.fillStyle = "red";
+	ctx.fillRect(menuX+10, menuHeight-140, menuWidth-20, 30);
+	ctx.fillStyle = "white";
+	ctx.fillText("End Turn", menuX+10+10, menuHeight-115);
+	
+	//save and exit button
+	ctx.fillStyle = "red";
+	ctx.fillRect(menuX+10, menuHeight-70, menuWidth-20, 30);
+	ctx.fillStyle = "white";
+	ctx.fillText("Save and Exit", menuX+10+10, menuHeight-45);
 }
 
 function displayStats() {

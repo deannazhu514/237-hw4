@@ -1,3 +1,5 @@
+var gametitle = "Norbert Wars"
+
 var timerDelay = 20;
 var key_pressed = {};
 var keyPressThreshhold = 5;
@@ -20,10 +22,11 @@ var menuHeight = canvasHeight;
 var menuX = canvasWidth-menuWidth;
 var menuY = 0;
 
-var menu = []; //don't know if this is needed
+var menuText = ["move", "attack", "spell", "use item", "defend"]; //don't know if this is needed
+
 var characterMenu = [];
 var playerMenu = [];
-var menuIndex;
+var menuIndex = 0;
 /*END MENU CONSTANTS*/
 
 var pathList;
