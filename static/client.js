@@ -251,6 +251,7 @@ function refreshCreateTeamScreen() {
 		);
 		var charAgility = $("<li>").append(
 			$("<label>").html("Agility: "),
+
 			$("<input>").addClass("charInput")
 				.attr("id", i+"charAgility")
 				.attr("type", "number")
@@ -270,23 +271,31 @@ function refreshCreateTeamScreen() {
 		startButton.click(function(){
 			pageState[0] = "gameInPlay";
 			pageState[1] = "";
+
 			var datalist = getCharData();
-			var charList =[]; //= init_characters(datalist);
-			createGame(charList);
+			var charList = init_characters(datalist);
+
+			currentGame.p1charList = charList;
+
+			createGame();
 			refreshDOM();
 		});
 	}
 	else if (pageState[0] === "joinGame") {
 		startButton.html("Join Game");
 		startButton.click(function(){
-			pageState[0] = "gameInPlay";
+					pageState[0] = "gameInPlay";
 			pageState[1] = "";
+
 			var datalist = getCharData();
 			var charList = init_characters(datalist);
-			joinGame(charList);
+
+			currentGame.p1charList = charList;
+			joinGame();
 			refreshDOM();
 		});
 	}
+	
 	var backButton = $("<a id=joinButton>").html("Go Back").addClass("menubut");
 	backButton.click(function(){
 		pageState[0] = "menu";
@@ -312,14 +321,14 @@ function getCharData() {
 	return datalist;
 }
 
-function createGame(charList) {
+function createGame() {
 	$.ajax({
 		type: "post",
 		url: "/createGame",
-		data: { "name": $("#gameName").val(),
+		data: { "name": currentGame.name,
 				"playerName": playerName,
-				"charList": charList,
-				"map": 1},		
+				"charList": currentGame.p1charList,
+				"map": currentGame.map},		
 		success: function(data) {
 			if (data.success) {
 				currentGame = data.game;
@@ -329,13 +338,13 @@ function createGame(charList) {
 		}
 	});
 }
-function joinGame(charList) {
+function joinGame() {
 	$.ajax({
 		type: "post",
 		url: "/joinGame",
 		data: { "playerName": playerName, 
 				"gameID": currentGame.name,
-				"charList": charList},
+				"charList": currentGame.p2charList},
 		success: function(data) {
 			console.log("game start");
 			currentGame = JSON.parse(data.game);
