@@ -1,4 +1,4 @@
-nvar playerName; //id for the player
+var playerName; //id for the player
 var currentGame; //which game the player is playing, is a game object
 var gameList;
 var openGameList = {};	//array of objects, containing joinable games			

@@ -14,8 +14,8 @@
 	<script type='text/javascript' src='mechanics.js'></script>
 	<script type='text/javascript' src='terrain.js'></script>
 	<script>
-		var p1charList = [];
-		var p2charList = [];
+		p1charList = [];
+		p2charList = [];
 		var type = ["mage","archer","warrior"]
 		for (var i = 0; i < 3; i++) {
 			var data = {};
@@ -46,11 +46,7 @@
 			char.player = 2;
 			p2charList.push(char);
 		}
-
-	</script>
-</head>
-
-<body onload='init({"id": "123",
+		var currentGame = {"id": "123",
 					"name": "gameName",
 					"player1": "player1",
 					"player2": "player2",
@@ -59,7 +55,12 @@
 					"p1charList": p1charList,
 					"p2charList": p2charList,
 					"p1points": 0,
-					"p2points": 0}, 1);'>
+					"p2points": 0};
+
+	</script>
+</head>
+
+<body onload='init(1);'>
 	
 	<style>
 		canvas {
