@@ -1,4 +1,4 @@
-var playerName; //id for the player
+nvar playerName; //id for the player
 var currentGame; //which game the player is playing, is a game object
 var gameList; //array of all games from server
 var openGameList = {};	//array of objects, containing joinable games			
@@ -352,11 +352,13 @@ function joinGame() {
 		type: "post",
 		url: "/joinGame",
 		data: { "playerName": playerName, 
-				"gameID": currentGame.name,
+				"gameID": currentGame.id,
 				"charList": currentGame.p2charList},
 		success: function(data) {
 			console.log("game start");
-			currentGame = JSON.parse(data.game);
+			//var stringgame = data.game;
+			//console.log(stringgame);
+			currentGame = data.game;
 			refreshDOM();
 			var playerNumber;
 			if (currentGame.player1 === "playerName") {
