@@ -39,7 +39,7 @@ function onKeyDownParser(e) {
 	} else if (playerFocus == "playerMenu") {
 		keyDownPlayerMenu(e);
 	} else if (playerFocus == "magicMenu") {
-	
+		
 	}
 }
 
@@ -185,6 +185,7 @@ function processMenuSelection(item) {
 		playerFocus = "attacking";
 	} else if (item === "View Stats") {
 		playerFocus = "view stats";
+		generateStatsMenu();
 	} else if (item === "Magic") {
 		playerFocus = "menuMagic";
 	} else if (item === "Wait") {
@@ -392,10 +393,9 @@ function keyDownPlayerMenu(e) {
 		key_pressed.time = 0;
 		menuIndex = (menuIndex - 1) % playerMenu.length;
 	}
-
 }
 
-function keyDownStats(e) {
+function generateStatsMenu(){
 	statMenu = [];
 	statMenu.push("Class: "+currentChar.type);
 	statMenu.push("toHit: "+currentChar.toHit);
@@ -403,8 +403,9 @@ function keyDownStats(e) {
 	statMenu.push("Health: "+currentChar.health+"/"+currentChar.maxHealth);
 	statMenu.push("Range: "+currentChar.range);
 	statMenu.push("Defense: "+currentChar.defense);
-	
-	console.log("statssss", statMenu);
+}
+
+function keyDownStats(e) {
 	if (e === 27) {
 		playerFocus = "characterMenu";
 		generateCharacterMenu();

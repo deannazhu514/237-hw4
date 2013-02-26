@@ -160,11 +160,12 @@ function drawMenu() {
 	
 	if (playerFocus === "view stats") {
 		menu = statMenu;
+		offset = 30;
 	}
 	
 	for (var i = 0; i < menu.length; i++) {
 		ctx.font="20px Courier New";
-		if (i === menuIndex) {
+		if (i === menuIndex && playerFocus !== "view stats") {
 			ctx.fillStyle = "black";
 			ctx.fillRect(menuX+10,menuY+(i+1)*offset, menuWidth-20, 30);
 			ctx.fillStyle = "white";
@@ -173,7 +174,7 @@ function drawMenu() {
 			ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
 			ctx.fillRect(menuX+10,menuY+(i+1)*offset, menuWidth-20, 30);
 			ctx.fillStyle = "red";
-		}	
+		}
 		ctx.fillText(menu[i], menuX+20, menuY+(i+1)*offset+20);
 	}
 }
