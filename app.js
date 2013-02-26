@@ -151,6 +151,11 @@ app.get("/displayCurrentGames/:playerID", function(req,res) {
 						success: (data !== undefined)});
 });
 
+app.get("/displayAllGames", function(req,res) {
+	res.send({games: gameList,
+						success: (gameList !== undefined)});
+});
+
 // taken from hw3
 function initServer() {
 	var defaultList = "{}";
