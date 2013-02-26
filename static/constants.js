@@ -1,27 +1,37 @@
-var tileSize = 12;
+var gametitle = "Norbert Wars"
+
 var timerDelay = 20;
 var key_pressed = {};
 var keyPressThreshhold = 5;
 var keyPressTickMod = 2;
 
 var map;
-var width;
-var height;
+var canvasWidth = 1100;
+var canvasHeight = 600;
+var width = 20;
+var height = 20;
 var p1charList;
 var p2charList;
 var pointGoal = 100;
 
 var playerNumber;
 
-var menu = []; //don't know if this is needed
+/* MENU CONSTANTS */
+var menuWidth = 300;
+var menuHeight = canvasHeight;
+var menuX = canvasWidth-menuWidth;
+var menuY = 0;
+
+var menuText = ["move", "attack", "spell", "use item", "defend"]; //don't know if this is needed
+
 var characterMenu = [];
 var playerMenu = [];
-var menuIndex;
+var menuIndex = 0;
+/*END MENU CONSTANTS*/
 
 var pathList;
 
 var pointGain = 20;
-
 
 var playerFocus;
 /*
@@ -40,6 +50,12 @@ var animationFlag;
 var gameEndFlag;
 
 /*END FLAGS*/
+
+/*TILE CONSTANTS*/
+var tileType = ["plain", "mountain", "forest"];
+var tileSize = (canvasWidth-menuWidth)/width;
+//var tileSize = 20;
+/*END TILE CONSTANTS*/
 
 /*TILE IMAGES HERE*/
 var plainImage = new Image();

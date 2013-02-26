@@ -55,7 +55,7 @@ function refreshMenuScreen() {
 	container.html("");
 	
 	var title = $("#title");
-	title.html("<h1>"+playerName+", welcome to Norbert Wars</h1>");
+	title.html("<h1>"+playerName+", welcome to "+gametitle+"</h1>");
 	title.css("font-size", "30px");
 	
 	var instructions = $("<div class = 'instructions'>");
@@ -371,11 +371,11 @@ function submitTeam() {
 function refreshGameScreen() {	
 // load canvas for the game
 	var title = $("#title");
-	title.html("Norbert Wars");
+	title.html("<h1>"+gametitle+"</h1>");
 	var container = $("#content");
 	container.html("");
 
-	var canvas = $("<canvas width='800' height='600' id='myCanvas'>");
+	var canvas = $("<canvas width='1100' height='600' id='myCanvas'>");
 	container.append(canvas);
 	
 	var main = $("<script src = 'main.js'>");
@@ -389,14 +389,12 @@ function refreshGameScreen() {
 	container.append(main, character, constants, draw,
 				eventHandlers, mechanics); //implement maps and terrain later
 	
-	
 }
 
 function updateGame() {
 	//send: gameID, character lists, player points
 	//see update game in app.js
 
-	
 	//update points if we ever implement that victory condition
 	$.ajax({
 		type: "post",

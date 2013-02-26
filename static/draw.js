@@ -1,6 +1,26 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 
+function draw() {
+	if (gameEndFlag) {
+		drawVictory();
+		//draw victory banner for p1 or p2
+		return; //stop drawing the rest of the crap
+	}
+	
+	ctx.clearRect(0,0,canvas.width,canvas.height);
+	drawMap();
+	//drawCharacters();
+	drawCursor();
+	drawMenu();
+	if (playerFocus === "view stats") {
+		displayStats(); //this will be an overlay over the whole map
+		//maybe? //or display it anywhere just implement it
+	}
+	
+}
+
+
 function drawMap() {
 	//note: Assumes canvas width & height >= tileSize*map's width & height
 	for (var i = 0; i < height; i++) {
@@ -12,6 +32,19 @@ function drawMap() {
 				//i dunno can we make the square tinted and glow red or something?
 			}
 		}
+	}
+}
+
+function getTileImage(type) {
+	if (type == "plain") {
+		return plainImage;
+	} else if (type == "mountain") {
+		return mountainImage;
+	} else if (type == "forest") {
+		return forestImage;
+	} else {
+		alert("error: unknown type " + type);
+		return "";
 	}
 }
 
@@ -32,10 +65,9 @@ function drawCharacters() {
 	}
 }
 
-function drawCursor() {
-	
+function drawCursor() {	
 	//DRAW CURSOR IMAGE
-	ctx.drawImage(cursor, cursor.x*tileSize, cursor.y*tileSize); 
+	ctx.drawImage(cursor, cursor.x*tileSize, cursor.y*tileSize, tileSize, tileSize); 
 	
 	//POSSIBLY CHANGE CURSOR BASED ON CURRENT ACTIOn
 	//SUCH AS ATTACKING OR MOVING OR WHEN HOVERING
@@ -43,49 +75,43 @@ function drawCursor() {
 }
 
 function drawMenu() {
-	ctx.fillRect(width*tileSize, 0, canvas.width -(width * tileSize), canvas.height); //menu box
+	ctx.fillStyle = "#333";
+	ctx.fillRect(menuX,menuY,menuWidth,menuHeight);
 	
-	for (var i = 0; i < menu.length; i++) {
-		//draw the menu item
-		//menu's items are strings (like "Move")
+	
+	for (var i = 0; i < menuText.length; i++) {
+		ctx.font="20px Courier New";
 		if (i === menuIndex) {
-			//draw something special for this item
-			//like an arrow pointing at it
-			//or highlight it or something
+			ctx.fillStyle = "black";
+			ctx.fillRect(menuX+10,menuY+(i+1)*40, menuWidth-20, 30);
+			ctx.fillStyle = "white";
 		}
-	}
-}
+		else {
+			ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
 
-function draw() {
-	if (gameEndFlag) {
-		//draw victory banner for p1 or p2
-		return; //stop drawing the rest of the crap
+			ctx.fillRect(menuX+10,menuY+(i+1)*40, menuWidth-20, 30);
+			ctx.fillStyle = "red";
+		}	
+		ctx.fillText(menuText[i], menuX+20, menuY+(i+1)*40+20);
 	}
-	ctx.clearRect(0,0,canvas.width,canvas.height);
-	drawMap();
-	drawCharacters();
-	drawCursor();
-	drawMenu();
-	if (playerFocus === "view stats") {
-		displayStats(); //this will be an overlay over the whole map
-		//maybe? //or display it anywhere just implement it
-	}
+	ctx.font="30px Courier New";
+	//end turn button
+	ctx.fillStyle = "red";
+	ctx.fillRect(menuX+10, menuHeight-140, menuWidth-20, 30);
+	ctx.fillStyle = "white";
+	ctx.fillText("End Turn", menuX+10+10, menuHeight-115);
 	
+	//save and exit button
+	ctx.fillStyle = "red";
+	ctx.fillRect(menuX+10, menuHeight-70, menuWidth-20, 30);
+	ctx.fillStyle = "white";
+	ctx.fillText("Save and Exit", menuX+10+10, menuHeight-45);
 }
 
 function displayStats() {
 	// blank lawls
 }
 
-function getTileImage(type) {
-	if (type == "plain") {
-		return plainImage;
-	} else if (type == "mountain") {
-		return mountainImage;
-	} else if (type == "forest") {
-		return forestImage;
-	} else {
-		alert("error: unknown type " + type);
-		return "";
-	}
+function drawVictory(){
+
 }

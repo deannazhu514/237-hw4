@@ -39,3 +39,6 @@ http://www.rpgmakervx.net/lofiversion/index.php/t34543.html
 
 zombie_male:
 http://s562.beta.photobucket.com/user/ChipGaming/media/BlodyZombie.png.html?fromLegacy=true
+
+arrows, books, potions, arrow:
+http://forum.chaos-project.com/index.php?topic=8831.0
