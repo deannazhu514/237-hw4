@@ -1,15 +1,17 @@
-var currentGame; //for testing
+// var currentGame;
 
-function init(gameData, player) {
+function init(/*gameData, */player) {
 	canvas.addEventListener('keyup', onKeyUp, false);
 	canvas.addEventListener('keydown', onKeyDown, false);
 	//canvas.addEventListener('mousemove', onMouseMove, false);
 
-	currentGame = gameData; //for testing
+	// currentGame = gameData;
 	playerNumber = player;
 	init_map(currentGame.map);
 	p1charList = currentGame.p1charList;
 	p2charList = currentGame.p2charList; 
+	init_characters(p1charList);
+	init_characters(p2charList);
 	
 	cursor.x = width/2;
 	cursor.y = height-1;
