@@ -212,45 +212,45 @@ function refreshCreateTeamScreen() {
 		// for now, user types it in, might make buttons/scrollbar later
 		var charType = $("<li>").append(
 			$("<label>").html("Class: "),
-			$("<input>").addClass("charInput")
+			$("<input>").addClass("charInput charType")
 				.attr("name", "charType")
 				.attr("type", "text")
 		);
 		
 		var charXPos = $("<li>").append(
 			$("<label>").html("X Position: "),
-			$("<input>").addClass("charInput")
+			$("<input>").addClass("charInput charXPos")
 				.attr("name", "charXPos")
 				.attr("type", "number")
 		);
 		var charYPos = $("<li>").append(
 			$("<label>").html("Y Position: "),
-			$("<input>").addClass("charInput")
+			$("<input>").addClass("charInput charYPos")
 				.attr("name", "charYPos")
 				.attr("type", "number")
 		);
 
 		var charStrength = $("<li>").append(
 			$("<label>").html("Strength: "),
-			$("<input>").addClass("charInput")
+			$("<input>").addClass("charInput charStrength")
 				.attr("name", "charStrength")
 				.attr("type", "number")
 		);
 		var charDexterity = $("<li>").append(
 			$("<label>").html("Dexterity: "),
-			$("<input>").addClass("charInput")
+			$("<input>").addClass("charInput charDexterity")
 				.attr("name", "charDexterity")
 				.attr("type", "number")
 		);
 		var charEndurance = $("<li>").append(
 			$("<label>").html("Endurance: "),
-			$("<input>").addClass("charInput")
+			$("<input>").addClass("charInput charEndurance")
 				.attr("name", "charEndurance")
 				.attr("type", "number")
 		);
 		var charAgility = $("<li>").append(
 			$("<label>").html("Agility: "),
-			$("<input>").addClass("charInput")
+			$("<input>").addClass("charInput charAgility")
 				.attr("name", "charAgility")
 				.attr("type", "number")
 		);
@@ -268,7 +268,23 @@ function refreshCreateTeamScreen() {
 		startButton.click(function(){
 			pageState[0] = "gameInPlay";
 			pageState[1] = "";
-			createGame(charList);
+			currentGame = new Object();
+			currentGame.name = $("#gameName").val();
+			currentGame.map = $("#mapNumber").val();
+			$(".charStats").each(function(i) {
+				var currCharacter = new Object();
+				currCharacter.type = $(".charStats.charType").val();
+				currCharacter.x = $(".charStats.charXPos").val();
+				currCharacter.y = $(".charStats.charYPos").val();
+				currCharacter.strength = $(".charStats.charStrength").val();
+				currCharacter.dexterity = $(".charStats.charDexterity").val();
+				currCharacter.endurance = $(".charStats.charEndurance").val();
+				currCharacter.agility = $(".charStats.charAgility").val();
+				currCharacter.player = playerName;
+				charList[i] = currCharacter;
+			});
+			currentGame.p1charList = charList;
+			createGame();
 			refreshDOM();
 		});
 	}
@@ -277,7 +293,20 @@ function refreshCreateTeamScreen() {
 		startButton.click(function(){
 			pageState[0] = "gameInPlay";
 			pageState[1] = "";
-			joinGame(charList);
+			$(".charStats").each(function(i) {
+				var currCharacter = new Object();
+				currCharacter.type = $(".charStats.charType").val();
+				currCharacter.x = $(".charStats.charXPos").val();
+				currCharacter.y = $(".charStats.charYPos").val();
+				currCharacter.strength = $(".charStats.charStrength").val();
+				currCharacter.dexterity = $(".charStats.charDexterity").val();
+				currCharacter.endurance = $(".charStats.charEndurance").val();
+				currCharacter.agility = $(".charStats.charAgility").val();
+				currCharacter.player = playerName;
+				charList[i] = currCharacter;
+			});
+			currentGame.p2charList = charList;
+			joinGame();
 			refreshDOM();
 		});
 	}
@@ -290,14 +319,14 @@ function refreshCreateTeamScreen() {
 	container.append(backButton, startButton);
 }
 
-function createGame(charList) {
+function createGame() {
 	$.ajax({
 		type: "post",
 		url: "/createGame",
-		data: { "name": $("#gameName").val(),
+		data: { "name": currentGame.name,
 				"playerName": playerName,
-				"charList": charList,
-				"map": 1},		
+				"charList": currentGame.p1charList,
+				"map": currentGame.map},		
 		success: function(data) {
 			if (data.success) {
 				currentGame = data.game;
@@ -307,13 +336,13 @@ function createGame(charList) {
 		}
 	});
 }
-function joinGame(charList) {
+function joinGame() {
 	$.ajax({
 		type: "post",
 		url: "/joinGame",
 		data: { "playerName": playerName, 
 				"gameID": currentGame.name,
-				"charList": charList},
+				"charList": currentGame.p2charList},
 		success: function(data) {
 			console.log("game start");
 			currentGame = JSON.parse(data.game);
