@@ -1,5 +1,5 @@
 var playerName; //id for the player
-var currentGame; //which game the player is playing, is a game object
+var currentGame; //which game the player is playing or making, is a game object
 var gameList;
 var openGameList = {};	//array of objects, containing joinable games			
 var myGameList = {}; //array of objects, containing games player is currently in	
@@ -72,7 +72,6 @@ function refreshMenuScreen() {
 				function(event) {
 					pageState[1] = "openGames";
 					refreshDOM();
-					// getAllGames();
 					// getOpenGames();
 				});
 	var currButton = $("<a>").html("Current Games");
@@ -81,7 +80,6 @@ function refreshMenuScreen() {
 				function(event) {
 					pageState[1] = "myGames";
 					refreshDOM();
-					// getAllGames();
 					// getCurrentGames();
 				});
 
@@ -296,12 +294,12 @@ function refreshCreateTeamScreen() {
 	}
 	container.append(createTeam);
 	
-	var startButton = $("<a id=createButton>").addClass("menubut");
+	var startButton = $("<a id=createTeamButton>").addClass("menubut");
 	if (pageState[0] === "createGame") {		
 		startButton.html("Create Game");
 		startButton.click(function(){
-			pageState[0] = "gameInPlay";
-			pageState[1] = "";
+			pageState[0] = "menu";
+			pageState[1] = "openGames";
 			currentGame = new Object();
 			var datalist = getCharData();
 			currentGame.p1charList = datalist;
@@ -360,7 +358,6 @@ function createGame() {
 				"map": currentGame.map},		
 		success: function(data) {
 			if (data.success === true) {
-				currentGame = data.game;
 				refreshDOM();
 			}
 		}
@@ -404,15 +401,13 @@ function refreshGameScreen() {
 	container.append(canvas);
 	
 	var character = $("<script src = 'character.js'>");
-	var constants = $("<script src = 'constants.js'>");
 	var draw = $("<script src = 'draw.js'>");
 	var eventHandlers = $("<script src = 'eventHandlers.js'>");
 	var maps = $("<script src = 'maps.js'>");
 	var mechanics = $("<script src = 'mechanics.js'>");
 	var terrain = $("<script src = 'terrain.js'>");
 	var main = $("<script src = 'main.js'>");
-	container.append(character, constants, draw,
-				eventHandlers, mechanics);
+	container.append(character, draw,	eventHandlers, mechanics);
 	container.append(main);//implement maps and terrain later
 }
 
