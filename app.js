@@ -46,7 +46,7 @@ app.post("/createGame", function(req, res){
 		"player1": player1ID, 
 		"player2": "",
 		"map": mapNum,
-		"status": "joined",
+		"status": "not joined",
 		"p1charList": p1charList,
 		"p2charList": [], 
 		"p1points": 0,
@@ -54,7 +54,7 @@ app.post("/createGame", function(req, res){
 	}
 	gameList[time] = game;
 	writeFile("games.txt", JSON.stringify(gameList));
-	res.send( {success : true ,
+	res.send( {success : (game !== undefined) ,
 				game: game});
 });
 
@@ -149,6 +149,11 @@ app.get("/displayCurrentGames/:playerID", function(req,res) {
 	}
 	res.send({games: data,
 						success: (data !== undefined)});
+});
+
+app.get("/displayAllGames", function(req,res) {
+	res.send({games: gameList,
+						success: (gameList !== undefined)});
 });
 
 // taken from hw3

@@ -1,8 +1,10 @@
 var playerName; //id for the player
 var currentGame; //which game the player is playing, is a game object
-var openGameList;	//array of objects, containing joinable games			
-var myGameList; //array of objects, containing games player is currently in	
+var gameList; //array of all games from server
+var openGameList = {};	//array of objects, containing joinable games			
+var myGameList = {}; //array of objects, containing games player is currently in	
 var pageState = []; //what screens to load on page 
+var teamSize = 3; //default size of your team
 
 
 function refreshDOM() {	
@@ -13,6 +15,7 @@ function refreshDOM() {
 		loadTitleScreen();
 	}
 	else if (pageState[0] === "menu") {
+		getAllGames();
 		refreshMenuScreen();
 	}
 	else if (pageState[0] === "createGame") {
@@ -38,7 +41,7 @@ function loadTitleScreen() {
 			playerName = playerID.val();
 			playerID.val("");
 			pageState[0] = "menu";
-			getOpenGames();
+			refreshDOM();
 		}
 		else {
 			alert("Please input a username");
@@ -67,21 +70,25 @@ function refreshMenuScreen() {
 	availButton.mousedown(
 				function(event) {
 					pageState[1] = "openGames";
-					getOpenGames();
+					refreshDOM();
+					// getAllGames();
+					// getOpenGames();
 				});
 	var currButton = $("<a>").html("Current Games");
 	currButton.addClass("roombut");
 	currButton.mousedown(
 				function(event) {
 					pageState[1] = "myGames";
-					getCurrentGames();
+					refreshDOM();
+					// getAllGames();
+					// getCurrentGames();
 				});
 
 	var rooms = $("<div>").addClass("rooms");
 	var gamesAvailable = $("<ul>");		
 	if (pageState[1] === "openGames") {
 		// getOpenGames();
-		refreshAllGames(gamesAvailable);
+		refreshOpenGames(gamesAvailable);
 	}
 	if (pageState[1] === "myGames") {
 		// getCurrentGames();
@@ -113,67 +120,71 @@ function refreshMenuScreen() {
 				rooms, createButton, joinButton);
 }
 
-function refreshAllGames(gamesAvailable) {
+function refreshOpenGames(gamesAvailable) {
 // display all available games on menu screen
-	for (var key in openGameList) {
-		var game = openGameList[key];
+	for (var gameID in openGameList) {
+		var game = openGameList[gameID];
 		var listing = $("<li>")
-			.attr("id", game.id)
-			.html(game.id+": "+game.name+" creator: "+game.player1)
+			.attr("id", gameID)
+			.html(gameID+": "+game.name+" creator: "+game.player1)
 			.click(function() {
-				if ((currentGame !== undefined) && (currentGame.id !== game.id)) {
-					$("#"+currentGame.id).removeClass("selected");
-				}
-				currentGame = game;
-				$(this).addClass("selected");	
+				selectGame($(this));
+				refreshDOM();
 			});
+		if ((currentGame !== undefined) && (currentGame.id == gameID)) {
+			listing.addClass("selected");
+		}	
 		gamesAvailable.append(listing);
 	}
 }
-
 function refreshMyGames(gamesAvailable) {
 // display player's games on menu screen
-	for (var key in myGameList) {
-		var game = $("<li>")
-			.attr("id", myGameList[key].id)
-			.html(myGameList[key].id +": "+myGameList[key].name)
+	for (var gameID in myGameList) {
+		var game = myGameList[gameID];
+		var listing = $("<li>")
+			.attr("id", gameID)
+			.html(gameID +": "+game.name)
 			.click(function() {
-				if (currentGameName !== undefined) {
-					$("#"+currentGameName).removeClass("selected");
-				}
-				currentGameName = $(this).attr("id");
-				$(this).addClass("selected");		
-			});
-		gamesAvailable.append(game);
+				selectGame($(this));
+				refreshDOM();
+			});	
+		if ((currentGame !== undefined) && (currentGame.id == gameID)) {
+			listing.addClass("selected");
+		}
+		gamesAvailable.append(listing);
 	}
 }
+function selectGame(listing) {
+	currentGame = gameList[listing.attr("id")];
+	listing.addClass("selected");
+}
 
-function getOpenGames() {
-	$.ajax({
-		type: "get",
-		url: "/displayOpenGames/:" + playerName,
-		success: function(data) {
-			if (data.success === true) {
-				openGameList = data.games;
-				console.log("getopen");
-				refreshDOM();
-			}
-		}
-	});
-}
-function getCurrentGames() {
-	$.ajax({
-		type: "get",
-		url: "/displayCurrentGames/:" + playerName,
-		success: function(data) {
-			if (data.success === true) {
-				myGameList = data.games;
-				console.log("getcurrent");
-				refreshMenuScreen();
-			}
-		}
-	});
-}
+// function getOpenGames() {
+	// $.ajax({
+		// type: "get",
+		// url: "/displayOpenGames/:" + playerName,
+		// success: function(data) {
+			// if (data.success === true) {
+				// openGameList = data.games;
+				// console.log("getopen");
+				// refreshDOM();
+			// }
+		// }
+	// });
+// }
+// function getCurrentGames() {
+	// $.ajax({
+		// type: "get",
+		// url: "/displayCurrentGames/:" + playerName,
+		// success: function(data) {
+			// if (data.success === true) {
+				// myGameList = data.games;
+				// console.log("getcurrent");
+				// refreshDOM();
+			// }
+		// }
+	// });
+// }
 
 /* GAME START SCREEN FUNCTIONS */
 function refreshCreateTeamScreen() {	
@@ -183,7 +194,7 @@ function refreshCreateTeamScreen() {
 	var container = $("#content");
 	container.html("");
 	
-	var charList = new Array(3);
+	var charList = new Array(teamSize);
 	
 	var instructions = $("<div>").addClass("instructions");
 	instructions.html("Create Team [insert better description]");
@@ -201,8 +212,7 @@ function refreshCreateTeamScreen() {
 				$("<input id=mapNumber>")
 					.attr("name", "mapNumber")
 					.attr("type", "number")
-			);
-			
+			);	
 		container.append(gameName, mapNumber);
 	}
 	
@@ -211,9 +221,8 @@ function refreshCreateTeamScreen() {
 	// show all characters on your team
 	for (var i=0; i< charList.length; i++) {
 		var currCharacter = $("<ul>")
-			.attr("id", i)
-			.addClass("charStats");
-		
+			.attr("id", "char"+i)
+			.addClass("charStats");		
 		// displays and sets stats of each character on team
 		// for now, user types it in, might make buttons/scrollbar later
 		var charType = $("<li>").append(
@@ -221,8 +230,7 @@ function refreshCreateTeamScreen() {
 			$("<input>").addClass("charInput")
 				.attr("id", i+"charType")
 				.attr("type", "text")
-		);
-		
+		);		
 		var charXPos = $("<li>").append(
 			$("<label>").html("X Position: "),
 			$("<input>").addClass("charInput")
@@ -235,7 +243,6 @@ function refreshCreateTeamScreen() {
 				.attr("id", i+"charYPos")
 				.attr("type", "number")
 		);
-
 		var charStrength = $("<li>").append(
 			$("<label>").html("Strength: "),
 			$("<input>").addClass("charInput")
@@ -256,12 +263,10 @@ function refreshCreateTeamScreen() {
 		);
 		var charAgility = $("<li>").append(
 			$("<label>").html("Agility: "),
-
 			$("<input>").addClass("charInput")
 				.attr("id", i+"charAgility")
 				.attr("type", "number")
-		);
-		
+		);		
 		currCharacter.append(charType, charXPos, charYPos,
 							charStrength, charDexterity, 
 							charEndurance, charAgility);
@@ -275,28 +280,24 @@ function refreshCreateTeamScreen() {
 		startButton.click(function(){
 			pageState[0] = "gameInPlay";
 			pageState[1] = "";
-
+			currentGame = new Object();
 			var datalist = getCharData();
-			var charList = init_characters(datalist);
-
-			currentGame.p1charList = charList;
-
+			currentGame.p1charList = datalist;
+			currentGame.name = $("#gameName").val();
+			currentGame.map = $("#mapNumber").val();
 			createGame();
-			refreshDOM();
+			// refreshDOM();
 		});
 	}
 	else if (pageState[0] === "joinGame") {
 		startButton.html("Join Game");
 		startButton.click(function(){
-					pageState[0] = "gameInPlay";
+			pageState[0] = "gameInPlay";
 			pageState[1] = "";
-
 			var datalist = getCharData();
-			var charList = init_characters(datalist);
-
-			currentGame.p1charList = charList;
+			currentGame.p1charList = datalist;
 			joinGame();
-			refreshDOM();
+			// refreshDOM();
 		});
 	}
 	
@@ -319,7 +320,9 @@ function getCharData() {
 		data.y = $("#"+i+"charYPos").val();
 		data.strength = $("#"+i+"charStrength").val();
 		data.dexterity = $("#"+i+"charDexterity").val();
+		data.endurance = $("#"+i+"charEndurance").val();
 		data.agility = $("#"+i+"charAgility").val();
+		data.player = playerName;
 		datalist[i] = data;
 	}
 	return datalist;
@@ -334,10 +337,10 @@ function createGame() {
 				"charList": currentGame.p1charList,
 				"map": currentGame.map},		
 		success: function(data) {
-			if (data.success) {
+			if (data.success === true) {
 				currentGame = data.game;
 				refreshGameScreen();
-				init(currentGame, 1);
+				init(/*currentGame, */1);
 			}
 		}
 	});
@@ -384,7 +387,6 @@ function refreshGameScreen() {
 	var canvas = $("<canvas width='1100' height='600' id='myCanvas'>");
 	container.append(canvas);
 	
-	var main = $("<script src = 'main.js'>");
 	var character = $("<script src = 'character.js'>");
 	var constants = $("<script src = 'constants.js'>");
 	var draw = $("<script src = 'draw.js'>");
@@ -392,9 +394,10 @@ function refreshGameScreen() {
 	var maps = $("<script src = 'maps.js'>");
 	var mechanics = $("<script src = 'mechanics.js'>");
 	var terrain = $("<script src = 'terrain.js'>");
-	container.append(main, character, constants, draw,
-				eventHandlers, mechanics); //implement maps and terrain later
-	
+	var main = $("<script src = 'main.js'>");
+	container.append(character, constants, draw,
+				eventHandlers, mechanics);
+	container.append(main);//implement maps and terrain later
 }
 
 function updateGame() {
@@ -438,14 +441,31 @@ function isMyTurn() {
 	});
 }
 
-/* don't need for now
-function deleteAll() {
+function getAllGames() {
 	$.ajax({
-		type: "delete"
+		type: "get",
+		url: "/displayAllGames",
+		success: function(data) {
+			if (data.success === true) {
+				gameList = data.games;
+				// refreshDOM();
+			}
+		}
 	});
+	if (playerName === undefined) return;
+	for (var gameID in gameList) {
+		var game = gameList[gameID];
+		if ((game.status === "not joined") && (playerName !== game.player1)) {
+			openGameList[gameID] = game;
+		}
+		else if ((game.player1 === playerName) || (game.player2 === playerName)) {
+			myGameList[gameID] = game;
+		}
+	}
 }
-*/
+
 
 $(document).ready(function() {
+	getAllGames();
 	refreshDOM();
 });
