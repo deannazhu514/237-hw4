@@ -26,6 +26,7 @@ function newCharacter(data) {
 	character.y = data.y;
 	character.player = data.player;
 	character.type = type; //used for animation purposes, i guess?
+	character.index = data.index;
 	
 	if (type === "warrior") {
 		character.img = warriorImageM;
@@ -36,7 +37,6 @@ function newCharacter(data) {
 	} else {
 		character.img = "";
 	}
-	
 	
 	var strength = data.strength;
 	var dexterity = data.dexterity;

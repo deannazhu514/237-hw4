@@ -72,14 +72,16 @@ function keyDownView(e) {
 			}
 		} else if (e === 32) { //spacebar: select button
 			var sel_char = map[cursor.y][cursor.x].character;
-				if (sel_char !== null) {
-					currentChar = sel_char;
-					playerFocus = "characterMenu";
-					generateCharacterMenu();
-				}
+			console.log(sel_char);
+			if (sel_char !== null) {
+				currentChar = sel_char;
+				playerFocus = "characterMenu";
+				generateCharacterMenu();
+			}
 		} 
 	} 
 	
+	//NOT NECESSARY ANYMORE?
 	if (e === 27) { 
 	//escape: go to settings characterMenu (quit/forfeit/end all turn)
 		//THE ONLY THING YOU CAN DO WHEN GAME IS OVER IS QUIT
@@ -139,7 +141,7 @@ function keyDownMove(e) {
 		} else {
 			return;
 		}
-	} else if (e === 32) {
+	} else if (e === 32) { //space
 		map[currentChar.y][currentChar.x].character = null;
 		currentChar.x = cursor.x;
 		currentChar.y = cursor.y;
@@ -147,7 +149,7 @@ function keyDownMove(e) {
 		//THIS IS JUST PLACEHOLDER: WE SHOULD PUT IN ANIMATIONS
 		
 		return;
-	} else if (e === 27) {
+	} else if (e === 27) { //ESC
 		playerFocus = "characterMenu";
 		generateCharacterMenu();
 		listPath = [];
@@ -178,8 +180,28 @@ function keyDownMove(e) {
 	}
 }
 	
+function generateCharacterMenu() {
+	characterMenu = [];
+	if ((playerNumber === currentChar.player) 
+	 && (currentChar.hasMoved !== true)) {
+		characterMenu.push("Move");
+		characterMenu.push("Attack");
+		if (currentChar.type === "mage") {
+			characterMenu.push("Magic");
+		}
+		characterMenu.push("View Stats");
+		characterMenu.push("Wait");
+	} else {
+		characterMenu.push("View Stats");
+	}
+	//pop up characterMenu for move/attack/view stats?
+	menuIndex = 0;
+	console.log("current", currentChar);
+}
+
 function keyDownCharacterMenu(e) {
 	var index = currentChar.index;
+	console.log(index, currentChar);
 	var player = currentChar.player;
 	var charList;
 	if (player === 1) {
@@ -187,28 +209,45 @@ function keyDownCharacterMenu(e) {
 	} else {
 		charList = p2charList;
 	}
+	
 	if (e === 65) { //a
 		falsifyKeyPress();
 		key_pressed["left"] = true;
 		key_pressed.time = 0;
-		currentChar = charList[(currentChar.index - 1)%charList.length];
+		if (index == 0) {
+			index = charList.length;
+			cursor.x += charList.length;
+		}
+		currentChar = charList[--index];
+		cursor.x = currentChar.x;
 		generateCharacterMenu();
 	} else if (e === 68) { //d
 		falsifyKeyPress();
 		key_pressed["right"] = true;
 		key_pressed.time = 0;
-		currentChar = charList[(currentChar.index + 1)%charList.length];
-		generateCharacterMenu();
+		if (index == charList.length-1) {
+			index = -1;
+			cursor.x -= charList.length;
+		}
+		currentChar = charList[++index];
+		cursor.x = currentChar.x;
+		
 	} else if (e === 87) { //w
 		falsifyKeyPress();
 		key_pressed["up"] = true;
 		key_pressed.time = 0;
-		menuIndex = (menuIndex - 1) %menu.length;
+		if (menuIndex == 0) {
+			menuIndex = characterMenu.length;
+		}
+		menuIndex--;
 	} else if (e === 83) { //s
 		falsifyKeyPress();
 		key_pressed["down"] = true;
 		key_pressed.time = 0;
-		menuIndex = (menuIndex +1)%menu.length;
+		if (menuIndex == characterMenu.length-1) {
+			menuIndex = -1;
+		}
+		menuIndex++;
 	} else if (e === 32) {
 		processMenuSelection(menu[menuIndex]);
 	} else if (e === 27) {
@@ -317,24 +356,6 @@ function keyDownStats(e) {
 	}
 }
 
-function generateCharacterMenu() {
-	characterMenu = [];
-	if ((playerNumber === currentChar.player) 
-	 && (currentChar.hasMoved ===false)) {
-		menu.push("Move");
-		menu.push("Attack");
-		if (currentChar.type === "mage") {
-			menu.push("Magic");
-		}
-		menu.push("View Stats");
-		menu.push("Wait");
-	} else {
-		menu.push("View Stats");
-	}
-	//pop up characterMenu for move/attack/view stats?
-	menuIndex = 0;
-}
-
 function processMenuSelection(item) {
 	if (item === "Move") {
 		playerFocus = "moving";
@@ -362,17 +383,16 @@ function isValidMove(tile) {
 	return true;
 }
 
-
 function generatePlayerMenu() {
 	playerMenu = [];
-	if (!endGameFlag) {
+	playerMenu.push("Main Menu");
+	
+	if (!gameEndFlag) {
 		playerMenu.push("End Turn");
 		playerMenu.push("Surrender");
 	}
-	playerMenu.push("Main Menu"); 
 	menuIndex = 0;
 }
-
 
 function processPlayerMenuSelection() {
 	var item = playerMenu[menuIndex];
@@ -386,8 +406,6 @@ function processPlayerMenuSelection() {
 		// return to main menu some how
 	}
 }
-
-
 
 /* //FOR NOW NOT USING MOUSE EVENTS
 function onMouseMove(event) {

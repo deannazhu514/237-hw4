@@ -25,10 +25,13 @@
 			data.strength = i*2;
 			data.dexterity = i;
 			data.agility = i;
+			data.index = i;
 			
 			var char = newCharacter(data);
+			char.player = 1;
 			p1charList.push(char);
 		}
+		
 		for (var i = 0; i < 3; i++) {
 			var data = {};
 			data.type = type[i];
@@ -37,8 +40,10 @@
 			data.strength = i*2;
 			data.dexterity = i;
 			data.agility = i;
+			data.index = i;
 			
 			var char = newCharacter(data);
+			char.player = 2;
 			p2charList.push(char);
 		}
 
@@ -50,7 +55,7 @@
 					"player1": "player1",
 					"player2": "player2",
 					"map": 1,
-					"status": "joined",
+					"status": "p1turn",
 					"p1charList": p1charList,
 					"p2charList": p2charList,
 					"p1points": 0,

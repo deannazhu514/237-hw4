@@ -118,7 +118,7 @@ function checkVictory() {
 		}
 		if (i === p2charList.length) { //never broke out of the loop
 			currentGame.status = "p1Victory"; //have not yet implemented anything server side to deal with victories and ending games
-											  //this is a placeholder
+			//this is a placeholder
 			//display victory animation
 			gameEndFlag = true;
 			endTurn();
@@ -178,17 +178,9 @@ function checkKeyPressed() {
 }
 
 function update() {
-	draw();
-	checkKeyPressed();
 	
-	/*if (checkVictory()) {
-		endTurn();
-		return;
-	}
-	*/
 	var cList;
-	if ((playerNumber === 1) 
-	&& (currentGame.status === "p1turn")) {
+	if ((playerNumber === 1) && (currentGame.status === "p1turn")) {
 		cList = p1charList;
 	} else if (currentGame.status === "p2turn") {
 		cList = p2charList;
@@ -201,13 +193,21 @@ function update() {
 	//any characters can still move
 	//check to see if any living characters have movepoints left
 	for (var i = 0; i < cList.length; i++) {
+		map[cList[i].y][cList[i].x].character = cList[i];
 		if (cList[i].hasMoved && !isDead(cList[i])) {
 			return;
 		}
 	}
 	
+	draw();
+	checkKeyPressed();
+	checkVictory();
+	if (gameEndFlag == true) {
+		return;
+	}
+	
 	//only reaches endturn if all characters have moved or are dead
-	endTurn();
+	//endTurn();
 }
 
 function endTurn() {

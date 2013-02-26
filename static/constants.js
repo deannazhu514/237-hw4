@@ -24,7 +24,7 @@ var menuHeight = canvasHeight;
 var menuX = canvasWidth-menuWidth;
 var menuY = 0;
 
-var menuText = ["[m]ove", "[a]ttack", "[s]pell", "use [i]tem", "[d]efend"]; //don't know if this is needed
+var menu = []; //don't know if this is needed
 
 var characterMenu = [];
 var playerMenu = [];
@@ -46,6 +46,7 @@ var playerFocus;
 */
 
 var currentChar;
+
 /*FLAGS HERE */
 var isDrawingPathFlag;
 var animationFlag;
