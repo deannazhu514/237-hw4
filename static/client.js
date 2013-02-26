@@ -38,7 +38,7 @@ function loadTitleScreen() {
 			playerName = playerID.val();
 			playerID.val("");
 			pageState[0] = "menu";
-			refreshDOM();
+			getOpenGames();
 		}
 		else {
 			alert("Please input a username");
@@ -67,24 +67,24 @@ function refreshMenuScreen() {
 	availButton.mousedown(
 				function(event) {
 					pageState[1] = "openGames";
-					refreshMenuScreen();
+					getOpenGames();
 				});
 	var currButton = $("<a>").html("Current Games");
 	currButton.addClass("roombut");
 	currButton.mousedown(
 				function(event) {
 					pageState[1] = "myGames";
-					refreshMenuScreen();
+					getCurrentGames();
 				});
 
 	var rooms = $("<div>").addClass("rooms");
 	var gamesAvailable = $("<ul>");		
 	if (pageState[1] === "openGames") {
-		getOpenGames();
+		// getOpenGames();
 		refreshAllGames(gamesAvailable);
 	}
 	if (pageState[1] === "myGames") {
-		getCurrentGames();
+		// getCurrentGames();
 		refreshMyGames(gamesAvailable);
 	}
 		
@@ -121,7 +121,7 @@ function refreshAllGames(gamesAvailable) {
 			.attr("id", game.id)
 			.html(game.id+": "+game.name+" creator: "+game.player1)
 			.click(function() {
-				if ((currentGame !== undefined) && (currentGame !== game)) {
+				if ((currentGame !== undefined) && (currentGame.id !== game.id)) {
 					$("#"+currentGame.id).removeClass("selected");
 				}
 				currentGame = game;
@@ -148,24 +148,29 @@ function refreshMyGames(gamesAvailable) {
 	}
 }
 
-function getCurrentGames() {
-	$.ajax({
-		type: "get",
-		url: "/displayCurrentGames/:" + playerName,
-		success: function(data) {
-			myGameList = data;
-			// refreshDOM();
-		}
-	});
-}
-
 function getOpenGames() {
 	$.ajax({
 		type: "get",
 		url: "/displayOpenGames/:" + playerName,
 		success: function(data) {
-			openGameList = data;
-			// refreshDOM();
+			if (data.success === true) {
+				openGameList = data.games;
+				console.log("getopen");
+				refreshDOM();
+			}
+		}
+	});
+}
+function getCurrentGames() {
+	$.ajax({
+		type: "get",
+		url: "/displayCurrentGames/:" + playerName,
+		success: function(data) {
+			if (data.success === true) {
+				myGameList = data.games;
+				console.log("getcurrent");
+				refreshMenuScreen();
+			}
 		}
 	});
 }
@@ -202,7 +207,7 @@ function refreshCreateTeamScreen() {
 	}
 	
 	var createTeam = $("<div>")
-				.attr("id", "teampick");//.addClass("rooms");
+				.attr("id", "teampick");
 	// show all characters on your team
 	for (var i=0; i< charList.length; i++) {
 		var currCharacter = $("<ul>")
@@ -260,7 +265,6 @@ function refreshCreateTeamScreen() {
 		currCharacter.append(charType, charXPos, charYPos,
 							charStrength, charDexterity, 
 							charEndurance, charAgility);
-		// character.player = playerName;
 		createTeam.append(currCharacter);
 	}
 	container.append(createTeam);
@@ -443,5 +447,5 @@ function deleteAll() {
 */
 
 $(document).ready(function() {
-	loadTitleScreen();
+	refreshDOM();
 });

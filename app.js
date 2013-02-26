@@ -46,7 +46,7 @@ app.post("/createGame", function(req, res){
 		"player1": player1ID, 
 		"player2": "",
 		"map": mapNum,
-		"status": "not joined",
+		"status": "joined",
 		"p1charList": p1charList,
 		"p2charList": [], 
 		"p1points": 0,
@@ -132,7 +132,8 @@ app.get("/displayOpenGames/:playerID", function(req, res) {
 			data[gameID] = game;
 		}
 	}
-	res.send(data);
+	res.send({games: data,
+						success: (data !== undefined)});
 });
 
 
@@ -141,12 +142,13 @@ app.get("/displayCurrentGames/:playerID", function(req,res) {
 	var playerID = req.params.playerID;
 	for (var gameID in gameList) {
 		var game = gameList[gameID];
-		if ((game.player1 == playerID) ||
-			(game.player2 == playerID)) {
+		if ((game.player1 === playerID) ||
+			(game.player2 === playerID)) {
 				data[gameID] = game;
-			}
+		}
 	}
-	res.send(data);
+	res.send({games: data,
+						success: (data !== undefined)});
 });
 
 // taken from hw3
