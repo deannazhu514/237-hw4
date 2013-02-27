@@ -54,14 +54,15 @@ function loadTitleScreen() {
 function refreshMenuScreen() {
 // refreshDOM while on menu screen
 // to do: add continue game functionality
-	var instructions = $("#instruction").html("instructions");
+	var instructions = $("#instruction").addClass("instructions").html(menuText);
 	var container = $("#content");
 	container.html("");
 	
 	
 	if (pageState.length === 1) 
 		pageState.push("openGames");
-	var availButton = $("<a>").html("Available Games");
+	var availButton = $("<a id=availButton>")
+					.html("Available Games <span> See which games are available. </span>");
 	availButton.addClass("roombut");
 	availButton.click(
 				function() {
@@ -69,7 +70,7 @@ function refreshMenuScreen() {
 					refreshDOM();
 					//getOpenGames();
 				});
-	var currButton = $("<a>").html("Current Games");
+	var currButton = $("<a id=currButton>").html("Current Games <span> See the games you've joined. </span>");
 	currButton.addClass("roombut");
 	currButton.click(
 				function() {
@@ -90,7 +91,7 @@ function refreshMenuScreen() {
 	}
 		
 	var joinButton = $("<a>")
-		.html("Join Game")
+		.html("Join Game <span> Join this game. </span>")
 		.addClass("menubut")
 		.attr("id", "joinButton")
 		.click(function() {
@@ -119,7 +120,7 @@ function refreshMenuScreen() {
 			alert("Please select a game.");
 		});
 	var createButton = $("<a>")
-		.html("Create Game")
+		.html("Create Game <span> Create a new game. </span>")
 		.addClass("menubut")
 		.attr("id", "createButton")
 		.click(function() {
@@ -132,7 +133,7 @@ function refreshMenuScreen() {
 	
 	//adjust height of games box based on number of games
 	rooms.css("height", gamenum*20+10);
-	container.append(
+	container.append(instructions,
 				availButton, currButton,
 				rooms, createButton, joinButton);
 }
