@@ -185,7 +185,8 @@ function keyDownCharacterMenu(e) {
 function processMenuSelection(item) {
 	if (item.indexOf("Move") === 0) {
 		playerFocus = "moving";
-		listPath = ["" + cursor.y +","+ cursor.x];
+		listPath =  ["" + cursor.y +","+ cursor.x];
+		//listPath =  [];
 	} else if (item === "Attack") {
 		playerFocus = "attacking";
 	} else if (item === "View Stats") {
@@ -245,30 +246,31 @@ function keyDownMove(e) {
 			return;
 		}
 	} else if (e === 32) { //space
-		//tuple = cursor.y + "," + cursor.x;
-		//console.log(tuple + "tuplee");
-		//listPath.push("" + y + "," + x);
-		//currentChar.movePoints = currentChar.maxMovePoints;
-		/*for (var i = 0; i < listPath.length; i++) {
+
+		tuple = cursor.y + "," + cursor.x;
+		console.log(tuple, "tuplee");
+		listPath.push("" + y + "," + x);
+		/*currentChar.movePoints = currentChar.maxMovePoints;
+		for (var i = 0; i < listPath.length; i++) {
         
-			 var arrayTuple = listPath[i].split(",");
-       var tx = arrayTuple[1] - 0;
-       var ty = arrayTuple[0] - 0;
-       if (currentChar.x != tx || currentChar.y != ty) {
-         tile = map[(ty)][(tx)]; // the - 0 just casts it to a number
-         terrain = terrainDict[tile.type];
-         currentChar.movePoints -= terrain.moveCost;
-       }
+			var arrayTuple = listPath[i].split(",");
+			var tx = arrayTuple[1] - 0;
+			var ty = arrayTuple[0] - 0;
+			if (currentChar.x != tx || currentChar.y != ty) {
+			 tile = map[(ty)][(tx)]; // the - 0 just casts it to a number
+			 terrain = terrainDict[tile.type];
+			 currentChar.movePoints -= terrain.moveCost;
+		   }
 		}*/
 		
 		map[currentChar.y][currentChar.x].character = null;
 		currentChar.x = cursor.x;
 		currentChar.y = cursor.y;
-		animationFlag = true;
+		//animationFlag = true;
 		map[currentChar.y][currentChar.x].character = currentChar;
-		movePath = movePath.concat(listPath);
-		console.log("movePath", movePath);
-		listPath = [];
+		// movePath = movePath.concat(listPath);
+		// console.log("movePath", movePath);
+		 listPath = [];
 		playerFocus = "characterMenu";
 		generateCharacterMenu();
 		
@@ -276,7 +278,7 @@ function keyDownMove(e) {
 		return;
 	} else if (e === 27) { //ESC
 		listPath = [];
-		currentChar.movePoints = currentChar.maxMovePoints;
+		//currentChar.movePoints = currentChar.maxMovePoints;
 		playerFocus = "characterMenu";
 		generateCharacterMenu();
     cursor.x = currentChar.x;
@@ -288,12 +290,13 @@ function keyDownMove(e) {
 	
 	tuple = cursor.y + "," + cursor.x;
 	i = listPath.indexOf(tuple);
-	console.log("move", cursor.y, cursor.x, tuple, listPath);
+	console.log("move", tuple, listPath);
 	//check if reversing a move
 	if (i !== -1) {
-		console.log("reverse");
+		console.log("i is : " + i);
     var templist = listPath.slice(i+1, listPath.length);
 		listPath.splice(i+1,(listPath.length - i));
+    console.log(templist);
     for (var j = 0; j < templist.length; j++) {
       var arrayTuple = templist[j].split(",");
        var tx = arrayTuple[1] - 0;
@@ -301,6 +304,7 @@ function keyDownMove(e) {
        tile = map[ty][tx]; // the - 0 just casts it to a number
 			 terrain = terrainDict[tile.type];
 			 currentChar.movePoints += terrain.moveCost;
+       console.log(terrain.moveCost);
     }
     
 		//currentChar.movePoints = currentChar.maxMovePoints;
@@ -317,7 +321,8 @@ function keyDownMove(e) {
 	} else {
 		tile = map[cursor.y][cursor.x];
 		if (isValidMove(tile)) {
-			listPath.push(tuple);
+			listPath.push("" + cursor.y + "," + cursor.x);
+			//listPath.push(tuple);
 			currentChar.movePoints -= terrainDict[tile.type].moveCost;
 		} else {
 			console.log("invalid move");

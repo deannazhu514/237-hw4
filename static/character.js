@@ -47,7 +47,6 @@ function newCharacter(data) {
 	character.toHit = baseStats[type].toHit + (dexterity * dexHit);
 	character.damage = baseStats[type].damage + (strength * strDmg);
 	character.health = baseStats[type].health + (endurance * endHP);
-	console.log(character.health);
 	character.maxHealth = baseStats[type].health + (endurance * endHP); 
 	character.range = baseStats[type].range;
 	character.defense = baseStats[type].defense + (endurance * endDef); 
@@ -61,7 +60,6 @@ function newCharacter(data) {
 	character.maxMovePoints = Math.floor(baseStats[type].movePoints + (agility * agilMov));
 	character.critChance = baseStats[type].critChance + (dexterity * dexCrit) + (strength * strCrit);
 	character.dodgeChance = baseStats[type].dodgeChance + (agility * agilDodge);
-	console.log("dodge: " + character.dodgeChance);
 	return character;
 }
 

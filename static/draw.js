@@ -131,7 +131,6 @@ function drawCharacters() {
 				console.log("draw attack");
 				animationFlag = false;
 			}
-			console.log('hi');
 			ctx.drawImage(character.img, 
 				sXList[character.type][0], sYList[character.type][0],
 				widthList[character.type][0], heightList[character.type][0],	

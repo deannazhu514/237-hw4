@@ -8,8 +8,6 @@ function init(player) {
 
 	playerNumber = player;
 	init_map(currentGame.map);
-	//p1charList = init_characters(currentGame.p1charList);
-	//p2charList = init_characters(currentGame.p2charList);
 	p1charList = currentGame.p1charList;
   p2charList = currentGame.p2charList;
   init_char_images();
