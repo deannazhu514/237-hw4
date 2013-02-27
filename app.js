@@ -74,10 +74,9 @@ app.post("/joinGame", function(req,res){
 		gameList[gameID] = game; //is this line necessary?
 		writeFile("games.txt", JSON.stringify(gameList));
 		res.send( {
-			"game" : game,
+			game : game,
 			success : true });
 	} else {
-		alert("cannot join game");
 		res.send ( {success: false});
 	}
 });
