@@ -23,7 +23,6 @@ function onKeyDown(event) {
 }
 
 function onKeyDownParser(e) {
-
 	//don't allow player to input commands while animations are playing
 	if (animationFlag) { 
 		return;
@@ -100,7 +99,6 @@ function keyDownView(e) {
 		playerFocus = "playerMenu";
 		generatePlayerMenu();
 	}
-	
 	generateStatMenu();
 }
 
@@ -178,7 +176,6 @@ function generateCharacterMenu() {
 	} else {
 		characterMenu.push("View Stats");
 	}
-	//pop up characterMenu for move/attack/view stats?
 	menuIndex = 0;
 }
 
@@ -251,10 +248,10 @@ function processMenuSelection(item) {
 		generateStatsMenu();
 	} else if (item === "Magic") {
 		playerFocus = "magic";
-    generateMagicMenu();
+		generateMagicMenu();
 	} else if (item === "Wait") {
 		currentChar.hasMoved = true;
-		playerFocus = "viewing";
+		playerFocus = "characterMenu";
 	}
 }
 
@@ -268,7 +265,6 @@ function keyDownMove(e) {
 		falsifyKeyPress();
 		key_pressed["left"] = true;
 		key_pressed.time = 0;
-
 		if (cursor.x > 0) {
 			cursor.x--;
 		} else { 
@@ -302,7 +298,6 @@ function keyDownMove(e) {
 			return;
 		}
 	} else if (e === 32) { //space
-
 		map[currentChar.y][currentChar.x].character = null;
 		currentChar.x = cursor.x;
 		currentChar.y = cursor.y;
@@ -310,15 +305,14 @@ function keyDownMove(e) {
 		map[currentChar.y][currentChar.x].character = currentChar;
 		listPath = [];
 		playerFocus = "characterMenu";
-		generateCharacterMenu();
-		
+		generateCharacterMenu();		
 		return;
 	} else if (e === 27) { //ESC
 		listPath = [];
 		playerFocus = "characterMenu";
 		generateCharacterMenu();
-    cursor.x = currentChar.x;
-    cursor.y = currentChar.y;
+		cursor.x = currentChar.x;
+		cursor.y = currentChar.y;
 		return;
 	} else {
 		return;
@@ -362,6 +356,7 @@ function isValidMove(tile) {
 	if (tile.character != null) {
 		return false;
 	}
+	
 	return true;
 }
 
@@ -411,8 +406,8 @@ function keyDownAttack(e) {
 			&& (enemy_char.player !== currentChar.player)
 			&& (!isDead(enemy_char))){
 			if (calculateHit(currentChar, enemy_char)) {
-        //look at calculate hit: we might want to 
-        //an extra effect upon critical hit
+			//look at calculate hit: we might want to 
+			//an extra effect upon critical hit
 				hit = true;
 				ctx.font="40px Courier New";
 				ctx.fillStyle = "#0FF";
@@ -429,8 +424,9 @@ function keyDownAttack(e) {
 		}		
 		currentChar.hasMoved = true;
 		attacked = true;
-		playerFocus = "viewing";
-		animationFlag = true;
+		playerFocus = "characterMenu";
+		generateCharacterMenu();
+		//animationFlag = true;
 		return;
 	} else if (e === 27) { //escape
 		playerFocus = "characterMenu";
@@ -440,7 +436,8 @@ function keyDownAttack(e) {
 		return; 
 	}
 	
-	if ((Math.abs(cursor.x - currentChar.x) + Math.abs(cursor.y - currentChar.y)) > currentChar.range) {
+	if ((Math.abs(cursor.x - currentChar.x) + Math.abs(cursor.y - currentChar.y)) 
+				> currentChar.range) {
 		//can't attack farther than your range!
 		cursor.x = x;
 		cursor.y = y;
@@ -465,39 +462,42 @@ function keyDownPlayerMenu(e) {
 		key_pressed["up"] = true;
 		key_pressed.time = 0;
 		menuIndex = (menuIndex - 1);
-    if (menuIndex < 0) {
-      menuIndex = playerMenu.length -1;
-    }
+		if (menuIndex < 0) {
+		  menuIndex = playerMenu.length -1;
+		}
 	}
 }
 
 function generateStatsMenu(){
-  var tile = map[currentChar.y][currentChar.x];
-  var terrain = terrainDict[tile.type];
-  var dchance = terrain.dodgeModifier.toFixed(2);
-  var dstring = "";
-  if (dchance > 0) {
-    dstring = " + " + dchance;
-  } else if (dchance < 0) {
-    dstring = " - " + Math.abs(dchance);
-  }
-  var defMod = terrain.damageModifier;
-  var defstring = "";
-  if (defMod > 0) {
-    defstring = " + " + defMod;
-  } else if (defMod < 0) {
-    defstring = " - " + Math.abs(defMod);
-  }
-  
+	var tile = map[currentChar.y][currentChar.x];
+	var terrain = terrainDict[tile.type];
+	var dchance = terrain.dodgeModifier.toFixed(2);
+	var dstring = "";
+	if (dchance > 0) {
+		dstring = " + " + dchance;
+	} else if (dchance < 0) {
+		dstring = " - " + Math.abs(dchance);
+	}
+	var defMod = terrain.damageModifier;
+	var defstring = "";
+	if (defMod > 0) {
+		defstring = " + " + defMod;
+	} else if (defMod < 0) {
+		defstring = " - " + Math.abs(defMod);
+	}
+ 
 	statMenu = [];
 	statMenu.push("Class: "+currentChar.type);
-	statMenu.push("toHit: "+(currentChar.toHit.toFixed(2)));
-	statMenu.push("damage: "+currentChar.damage);
 	statMenu.push("Health: "+currentChar.health+"/"+currentChar.maxHealth);
+	if (currentChar.type === "mage") {
+		  statMenu.push("Mana: " + currentChar.mana + "/" + maxMana);
+	}
+	statMenu.push("Damage: "+currentChar.damage);		
 	statMenu.push("Range: "+currentChar.range);
-	statMenu.push("Critical Chance: " + currentChar.critChance.toFixed(2));
-	statMenu.push("Dodge: "+(currentChar.dodgeChance).toFixed(2) + dstring);
 	statMenu.push("Defense: "+currentChar.defense + defstring);
+	statMenu.push("toHit: "+(currentChar.toHit.toFixed(2)));
+	statMenu.push("Critical Chance: " + currentChar.critChance.toFixed(2));
+	statMenu.push("Dodge: "+(currentChar.dodgeChance).toFixed(2) + dstring);	
 }
 
 function keyDownStats(e) {
@@ -533,36 +533,39 @@ function processPlayerMenuSelection() {
 }
 
 function generateMagicMenu() {
-  magicMenu = [];
-  magicMenu.push(mageSpells.fireball.name);
-  magicMenu.push(mageSpells.lightning.name);
-  menuIndex = 0;
+	magicMenu = [];
+	magicMenu.push(mageSpells.fireball.name);
+	magicMenu.push(mageSpells.lightning.name);
+	menuIndex = 0;
 }
 
 function keyDownMagicMenu(e) {
-  if (e === 83) {
+	if (e === 83) {
 		falsifyKeyPress();
 		key_pressed["down"] = true;
 		key_pressed.time = 0;
+		
 		menuIndex = (menuIndex + 1) % magicMenu.length;
 	} else if (e === 87) {
 		falsifyKeyPress();
 		key_pressed["up"] = true;
 		key_pressed.time = 0;
-		menuIndex = menuIndex - 1;
-    if (menuIndex < 0) menuIndex = magicMenu.length -1;
-    
-    
+		
+		menuIndex--;
+		if (menuIndex < 0) 
+			menuIndex = magicMenu.length -1;
+	} else if (e === 32) {
+		if (canCast(magicMenu[menuIndex])) {
+		  magicMenu = [];
+		  playerFocus = "use magic";
+		}
 	} else if (e === 27) {
 		playerFocus = "characterMenu";
-    magicMenu = [];
+		magicMenu = [];
 		generateCharacterMenu();
-	} else if (e === 32) {
-    if (canCast(magicMenu[menuIndex])) {
-      magicMenu = [];
-      playerFocus = "use magic";
-    }
-  }
+	} else {
+		return;
+	}
 }
 
 function canCast(item) {
@@ -580,7 +583,7 @@ function canCast(item) {
   return false;
 }
 
-function keyDownMagicTarget() {
+function keyDownMagicTarget(e) {
   var x = cursor.x;
   var y = cursor.y;
   if (e === 65) { //a
@@ -619,36 +622,43 @@ function keyDownMagicTarget() {
 			cursor.y++;
 		} else {
 			return;
-    }
-  } else if (e === 32) {
-      if (castSpell(cursor.x, cursor.y)) {
-        playerFocus = "viewing";
-        currentChar.hasMoved = true;
-      }
-  } else if (e === 27) {
-    
-  }
-  if (Math.abs(cursor.x - currentChar.x) + Math.abs(cursor.y - currentChar.y) > sel_spell.range) {
+		}
+	} else if (e === 32) {
+		if (castSpell(cursor.x, cursor.y)) {
+			currentChar.hasMoved = true;
+			animationFlag = true;
+			playerFocus = "characterMenu";
+			generateCharacterMenu();
+		}
+	} else if (e === 27) {
+		playerFocus = "characterMenu";
+		magicMenu = [];
+		generateCharacterMenu();
+	}
+	if (Math.abs(cursor.x - currentChar.x) + Math.abs(cursor.y - currentChar.y) > sel_spell.range) {
     cursor.x = x;
     cursor.y = y;
-  }
-	
+  }	
 }
 
 function castSpell(x, y) {
-  var spell;
-  if (sel_spell === mageSpells.fireball.name) {
-    spell = mageSpells.fireball;
-    spell.cast(x,y);
-    currentChar.mana -= spell.cost;
-    return true;
-  } else if (sel_spell === mageSpells.lightning.name) {
-    if (map[y][x].character !== null) {
-      spell = mageSpells.lightning;
-      spell.cast(x,y);
-      currentChar.mana -= spell.cost;
-      return true;
-    }
+	var spell;
+	spell_x = x;
+	spell_y = y;
+	if (sel_spell.name === mageSpells.fireball.name) {
+		animation = "fireball";
+		spell = mageSpells.fireball;
+		spell.cast(x,y);
+		currentChar.mana -= spell.cost;
+		return true;
+	} else if (sel_spell.name === mageSpells.lightning.name) {
+		if (map[y][x].character !== null) {
+		  animation = "lightning";
+		  spell = mageSpells.lightning;
+		  spell.cast(x,y);
+		  currentChar.mana -= spell.cost;
+		  return true;
+		}
   }
   return false; //invalid target: only possible for lightning, which must
                 //select a character, fireball can select terrain

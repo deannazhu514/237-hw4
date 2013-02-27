@@ -40,7 +40,6 @@ var hit = false;
 var attacked = false;
 var damage = -1;
 var turnEnd = false;
-
 /*END GAMEPLAY VARIABLES*/
 
 var pointGain = 20;
@@ -67,8 +66,6 @@ var terrainText = "TERRAIN: Desert: No modifiers. Valley (low ground): penalty t
 
 var winText = "WINNING THE GAME. There are a few “score spots” in the middle of the map. Every turn that you have a character on one of these tiles, you earn a certain number of points. The first to 100 wins! Be careful however, these spots often provide defensive penalties, and another victory condition is simply killing all the enemy units! "
 
-
-
 /* ANIMATION */
 var movePath = [];
 var anim_done = false;
@@ -79,6 +76,7 @@ var currentChar;
 /*FLAGS HERE */
 var isDrawingPathFlag;
 var animationFlag;
+var animation = ""; //"attack", "fireball", "lightning", "victory"
 var gameEndFlag;
 /*END FLAGS*/
 
@@ -93,15 +91,12 @@ var mountainImage = new Image();
 mountainImage.src = "images/mountain.png"; //IMAGE SOURCE HERE
 var forestImage = new Image();
 forestImage.src = "images/forest.png"; //IMAGE SOURCE HERE
-var waterImage = new Image();
-waterImage.src = "images/water.png";
 /*END TILE IMAGES*/
 
 var graveImg = new Image();
 graveImg.src = "images/grave.png";
 
-/*CHARACTER CONSTANTS HERE*/
-
+/*CHARACTER IMAGE CONSTANTS HERE*/
 var sXList = {"warrior":[0, 30, 60], 
 				"archer":[0, 30, 55], 
 				"mage":[0, 30, 60]
@@ -130,30 +125,21 @@ var delay = {"warrior":5,
 						
 var warriorImage1 = new Image();
 warriorImage1.src = "images/human_male.png";
-
 var warriorImage2 = new Image();
 warriorImage2.src = "images/human_male2.png";
-
-var warriorImage = [warriorImage1, warriorImage2];
-
 var archerImage1 = new Image();
 archerImage1.src = "images/elf_male.png";
-
 var archerImage2 = new Image();
 archerImage2.src = "images/elf_male2.png";
-
-var archerImage = [archerImage1, archerImage2];
-
 var mageImage1 = new Image();
 mageImage1.src = "images/zombie_female.png";
-
 var mageImage2 = new Image();
 mageImage2.src = "images/zombie_female2.png";
 
+var warriorImage = [warriorImage1, warriorImage2];
+var archerImage = [archerImage1, archerImage2];
 var mageImage = [mageImage1, mageImage2];
-
-
-/* END CHARACTER CONSTANTS*/
+/* END CHARACTER IMAGE CONSTANTS*/
 
 /*CURSOR IMAGE*/
 var cursorImg;
@@ -223,8 +209,6 @@ classStats["mage"] = {
 	"endurance": [3, 1, 5],
 	"agility": [3, 1, 5]
 }
-
-
 /*END STAT DICTIONARY*/
 
 /*STAT COEFFICIENTS*/
@@ -236,5 +220,28 @@ var agilMov = .5;
 var agilDodge = .05;
 var endHP = 12;
 var endDef = 0; //NOT SURE YET IF WANT TO INCLUDE DEFENSE AS CORE STAT
-
 /*END COEFFICIENTS*/
+
+/* MAGIC CONSTANTS */
+var spell_x;
+var spell_y;
+var spell_flag = 0;
+var mageSpells = {};
+var fireballImg;
+fireballImg = new Image();
+fireballImg.src = "images/fireball.png";
+var fireballsX = [0,30,60];
+var fireballsY = [0,30,60,90];
+var fireballWidth = 30;
+var fireballHeight = 30;
+
+var lightningImg;
+lightningImg = new Image();
+lightningImg.src = "images/lightning.png";
+var lightningsX = [0,30,60];
+var lightningsY = [0,30,60,90];
+var lightningWidth = 60;
+var lightningHeight = 117;
+
+
+/* END MAGIC CONSTANTS */
