@@ -5,10 +5,8 @@ function init(player) {
 
 	playerNumber = player;
 	init_map(currentGame.map);
-	p1charList = currentGame.p1charList;
-	p2charList = currentGame.p2charList; 
-	//init_characters(p1charList);
-	//init_characters(p2charList);
+	p1charList = init_characters(currentGame.p1charList);
+	p2charList = init_characters(currentGame.p2charList);
 	
 	cursor.x = Math.floor(width/2);
 	cursor.y = height-1;
@@ -51,7 +49,7 @@ function init_characters(datalist) {
 
 //for now just one map 
 function init_map (mapNum) {
-	if (mapNum == '1') {
+	if ((mapNum == '1') || (mapNum === undefined)) {
 		//initialize a widthxheight 2D array for the map tiles
 		map = new Array(height);
 		for (var i = 0; i < height; i++) {
@@ -72,7 +70,7 @@ function init_map (mapNum) {
 				map[i][j] = tile;
 			}
 		}
-		return map;
+		// return map;
 	} else if (mapNum == '2') {
 		//second map type
 	} else if (mapNum == '3') {
@@ -186,11 +184,11 @@ function update() {
 	}	
 	if ((playerNumber === 1) && (currentGame.status === "p1turn")) {
 		cList = p1charList;
-	} else if (currentGame.status === "p2turn") {
+	} else if ((playerNumber === 2) && (currentGame.status === "p2turn")) {
 		cList = p2charList;
 	} else { //it isn't your turn, whichever player you are...
-		//isMyTurn();
-		return;
+		isMyTurn();
+		// return;
 	}
 	
 	draw();
