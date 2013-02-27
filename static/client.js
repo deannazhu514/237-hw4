@@ -340,7 +340,11 @@ function getCharData() {
 		data.dexterity = getRandom(data.type, "dexterity");
 		data.endurance = getRandom(data.type, "endurance");
 		data.agility = getRandom(data.type, "agility");
-		data.player = playerName;
+		if (pageState[0] === "createGame") {
+			data.player = 1;
+		}	else if (pageState[0] === "joinGame") {
+			data.player = 2;
+		}
 		charList[i] = data;
 	}
 	return charList;
@@ -593,13 +597,15 @@ function isMyTurn() {
 		type: "get",
 		url: "/isYourTurn/:"+ JSON.stringify(namegame),
 		success: function(data) {
-			if (data.answer === 'true') {
+			if (data.answer === true) {
 				currentGame = JSON.parse(data.game);
+				console.log("yes");
 				//this should have a new status 
 				//which will cause ismyturn to not be
 				//called anymore in update
 			}
-			refreshGameScreen();
+			else console.log("no");
+			// refreshGameScreen();
 		}
 	});
 }
