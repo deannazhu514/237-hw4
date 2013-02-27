@@ -189,47 +189,24 @@ baseStats["mage"] = {
 
 var classStats = {};
 // the base stats that the player will see when making characters
+// base, min, max
 classStats["warrior"] = {
-	strength: 8,
-	strMin: 1,
-	strMax: 10,
-	dexterity: 2,
-	dexMin: 1,
-	dexMax: 5,
-	endurance: 8,
-	endMin: 1,
-	endMax: 10,
-	agility: 2,
-	agiMin: 1,
-	agiMax: 5
+	"strength": [8, 1, 10],
+	"dexterity": [2, 1, 5],
+	"endurance": [8, 1, 10],
+	"agility": [2, 1, 5]
 }
 classStats["archer"] = {
-	strength: 3,
-	strMin: 1,
-	strMax: 5,
-	dexterity: 8,
-	dexMin: 1,
-	dexMax: 10,
-	endurance: 5,
-	endMin: 1,
-	endMax: 8,
-	agility: 8,
-	agiMin: 1,
-	agiMax: 10
+	"strength": [3, 1, 5],
+	"dexterity": [8, 1, 10],
+	"endurance": [5, 1, 8],
+	"agility": [8, 1, 10]
 }
 classStats["mage"] = {
-	strength: 8,
-	strMin: 1,
-	strMax: 10,
-	dexterity: 5,
-	dexMin: 1,
-	dexMax: 10,
-	endurance: 3,
-	endMin: 1,
-	endMax: 5,
-	agility: 3,
-	agiMin: 1,
-	agiMax: 5
+	"strength": [8, 1, 10],
+	"dexterity": [5, 1, 10],
+	"endurance": [3, 1, 5],
+	"agility": [3, 1, 5]
 }
 
 

@@ -19,11 +19,12 @@ function refreshDOM() {
 		getAllGames();
 		refreshMenuScreen();
 	}
-	else if (pageState[0] === "createGame") {
+	else if ((pageState[0] === "createGame") ||
+					 (pageState[0] === "joinGame")) {
 		refreshCreateTeamScreen();
 	}	
-	else if (pageState[0] === "joinGame") {
-		refreshCreateTeamScreen();
+	else if (pageState[0] === "confirmScreen") {
+		refreshConfirmScreen();
 	}
 	else if (pageState[0] === "gameInPlay") {
 		refreshGameScreen();
@@ -106,7 +107,7 @@ function refreshMenuScreen() {
 				for (var gameID in openGameList) {
 					if (currentGame.id==gameID) {
 						pageState[0] = "joinGame";
-						pageState[1] = "";
+						pageState[1] = "openGames";
 						refreshDOM();
 						return;
 					}
@@ -116,7 +117,7 @@ function refreshMenuScreen() {
 				for (var gameID in myGameList) {
 					if (currentGame.id==gameID) {
 						pageState[0] = "joinGame";
-						pageState[1] = "";
+						pageState[1] = "myGames";
 						refreshDOM();
 						return;
 					}
@@ -210,8 +211,136 @@ function selectGame(listing) {
 // }
 
 
-/* GAME START SCREEN FUNCTIONS */
-function refreshCreateTeamScreen() {	
+/* CREATE TEAM SCREEN FUNCTIONS */
+function refreshCreateTeamScreen() {
+// load the team create screen
+	$("#title").html("Create your team");
+	$(".instructions").html("instructions or class descriptions go here");
+	var container = $("#content");
+	container.html("");
+	var charList = Array(teamSize);
+	var teamList = $("<div>").attr("id", "teamList");
+	
+	if (pageState[0] === "createGame") {
+		var gameName = $("<div>").append(
+				$("<label>").html("Enter a game name: "),
+				$("<input id=gameName>")
+					.attr("name", "gameName")
+					.attr("type", "text")
+			);
+		container.append(gameName);
+	}
+	
+	for (var i=0; i<charList.length; i++) {
+		var currCharacter = $("<div>")
+			.attr("id", "char"+i)
+			.addClass("charInput")
+			.addClass(baseStats[0]); //set default character class
+		var classOptions = $("<ul>").addClass("classOptions");
+		for (var className in baseStats) {
+			var currOption = $("<li>")
+				.html(className)
+				.click(function() {
+					var selectedChar = $(this).parent(".charInput");
+					selectedChar.addClass(className);
+					refreshDOM();
+				});
+			classOptions.append(currOption);
+		}
+		var charImageSrc = getCharImgSrc(currCharacter);
+		var charImage = $("<img>").attr("src", charImageSrc);
+		var charDescription = $("<div>")
+			.addClass("charDescription")
+			.html("class description");
+		currCharacter.append(charImage, classOptions, charDescription);
+		teamList.append(currCharacter);
+	}
+	container.append(teamList);
+	
+	// goes to confirmation screen
+	var continueButton = $("<a id=continueButton>")
+		.html("continue")
+		.addClass("menubut");
+	continueButton.click(function() {
+		// add verification stuff
+		charList = inputCharData();
+		if (pageState[0] === "createGame") {
+		// creates new game object
+			currentGame = new Object();
+			currentGame.player1 = playerName;
+			currentGame.name = $("#gameName").val();
+			currentGame.p1charList = charList;
+			currentGame.map = 1; // default map number 
+		}
+		else {
+		// adds player to another player's game
+			currentGame.player2 = playerName;
+			currentGame.p2charList = charList;
+		}
+		pageState[0] = "confirmScreen";
+		refreshDOM();
+	});	
+	// go back to menu screen
+	var backButton = $("<a id=joinButton>").html("Go Back").addClass("menubut");
+	backButton.click(function(){
+		pageState[0] = "menu";
+		pageState[1] = "openGames";
+		refreshDOM();
+	});
+	container.append(continueButton, backButton);
+}
+
+function getCharImgSrc(currCharacter) {
+// helper function to get appropriate image for character
+	var src = "";
+	if (currCharacter.hasClass("warrior"))
+		src = warriorImageM.src;
+	else if (currCharacter.hasClass("archer"))
+		src = archerImageM.src;
+	else if (currCharacter.hasClass("mage"))
+		src = mageImageM.src;
+	return src;
+}
+function inputCharData() {
+// gets classes of characters and creates array of player's characters
+	var teamList = $("#teamList");
+	var charList = Array(teamList.length);
+	for (var i=0; i< teamList.length; i++) {
+		var currChar = $("#char"+i);
+		var data = new Object();
+		if (currChar.hasClass("warrior"))
+			data.type = "warrior";
+		else if (currChar.hasClass("archer"))
+			data.type = "archer";
+		else if (currChar.hasClass("mage"))
+			data.type = "mage";
+		else
+			data.type = "warrior";
+		data.x = i; // figure out what the default starting points are
+		data.y = i; // and put them here in a variable later
+		data.strength = getRandom(data.type, "strength");
+		data.dexterity = getRandom(data.type, "dexterity");
+		data.endurance = getRandom(data.type, "endurance");
+		data.agility = getRandom(data.type, "agility");
+		data.player = playerName;
+		charList[i] = data;
+	}
+	return charList;
+}
+function getRandom(charClass, stat) {
+// helper function to generate random character stats
+	var min = classStats[charClass][stat][1];
+	var max = classStats[charClass][stat][2];
+	return Math.floor(min + Math.random()*(max-min));
+}
+
+
+function refreshConfirmScreen() {
+// shows your team and game info before playing game
+	refreshGameScreen();
+}
+
+/*function refreshCreateTeamScreen() {	
 // refreshDOM while on game start screen
 // create a team to join/create a game
 // if creating a new game, can choose map type
@@ -351,7 +480,7 @@ function getCharData() {
 	}
 	return datalist;
 }
-
+*/
 function createGame() {
 	$.ajax({
 		type: "post",
