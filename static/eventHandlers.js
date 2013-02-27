@@ -158,7 +158,7 @@ function keyDownCharacterMenu(e) {
 		currentChar = charList[++index];
 		cursor.x = currentChar.x;
 		cursor.y = currentChar.y;
-		
+		generateCharacterMenu();
 	} else if (e === 87) { //w
 		falsifyKeyPress();
 		key_pressed["up"] = true;
@@ -247,21 +247,6 @@ function keyDownMove(e) {
 		}
 	} else if (e === 32) { //space
 
-		tuple = cursor.y + "," + cursor.x;
-		console.log(tuple, "tuplee");
-		listPath.push("" + y + "," + x);
-		/*currentChar.movePoints = currentChar.maxMovePoints;
-		for (var i = 0; i < listPath.length; i++) {
-        
-			var arrayTuple = listPath[i].split(",");
-			var tx = arrayTuple[1] - 0;
-			var ty = arrayTuple[0] - 0;
-			if (currentChar.x != tx || currentChar.y != ty) {
-			 tile = map[(ty)][(tx)]; // the - 0 just casts it to a number
-			 terrain = terrainDict[tile.type];
-			 currentChar.movePoints -= terrain.moveCost;
-		   }
-		}*/
 		
 		map[currentChar.y][currentChar.x].character = null;
 		currentChar.x = cursor.x;
@@ -468,7 +453,8 @@ function generateStatsMenu(){
   }
 	statMenu = [];
 	statMenu.push("Class: "+currentChar.type);
-	statMenu.push("toHit: "+currentChar.toHit.toFixed(2));
+  console.log("type: " + typeof(currentChar.toHit));
+	statMenu.push("toHit: "+(currentChar.toHit.toFixed(2)));
 	statMenu.push("damage: "+currentChar.damage);
 	statMenu.push("Health: "+currentChar.health+"/"+currentChar.maxHealth);
 	statMenu.push("Range: "+currentChar.range);

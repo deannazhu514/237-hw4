@@ -26,6 +26,11 @@ function refreshDOM() {
 	}	
 	else if (pageState[0] === "gameInPlay") {
 		refreshGameScreen();
+    if (playerName === currentGame.player1) {
+      init(1);
+    } else {
+      init(2);
+    }
 	}
 }
 
@@ -309,8 +314,8 @@ function getCharData() {
 			data.type = "archer";
 		else if (currChar.hasClass("mage"))
 			data.type = "mage";
-		data.x = i+1; // figure out what the default starting points are
-		data.y = i+1; // and put them here in a variable later
+		data.x = Math.floor(Math.random()*10); // figure out what the default starting points are
+		data.y = Math.floor(Math.random()*10); // and put them here in a variable later
 								// make sure no one has same starting point
 		data.strength = getRandom(data.type, "strength");
 		data.dexterity = getRandom(data.type, "dexterity");
@@ -405,12 +410,12 @@ function refreshGameScreen() {
 function updateGame() {
 	//send: gameID, character lists, player points
 	//see update game in app.js
-
-	//update points if we ever implement that victory condition
+  
+	console.log(currentGame);
 	$.ajax({
 		type: "post",
 		url: "/updateGame",
-		data: {"gameObj" : JSON.stringify(currentGame)},
+		data: {"gameObj" : (currentGame)},
 		success: function() {
 			refreshGameScreen();
 		}
@@ -423,21 +428,20 @@ function isMyTurn() {
 	//ask the server if its my turn
 	
 	//to be implemented
-	var namegame = {
-		name: playerName,
-		game: currentGame.id
-	}
 	
 	$.ajax({
 		type: "get",
-		url: "/isYourTurn/:"+ JSON.stringify(namegame),
+		url: "/isYourTurn/"+playerName+"/"+(currentGame.id),
 		success: function(data) {
-			if (data.answer === true) {
-				currentGame = JSON.parse(data.game);
+			if (data.answer) {
+				//currentGame = JSON.parse(data.game);
+				currentGame = (data.game);
 				console.log("yes");
 				//this should have a new status 
 				//which will cause ismyturn to not be
 				//called anymore in update
+        window.clearInterval(intervalId);
+        init(playerNumber);
 			}
 			else console.log("no");
 			// refreshGameScreen();

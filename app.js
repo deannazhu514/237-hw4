@@ -82,10 +82,9 @@ app.post("/joinGame", function(req,res){
 	}
 });
 
-app.get("/isYourTurn/:info", function(req,res) {
-	var obj = JSON.parse(req.params.info);
-	var pname = obj.name;
-	var game = gameList[obj.game];
+app.get("/isYourTurn/:name/:game", function(req,res) {
+	var pname = req.params.name;
+	var game = gameList[req.params.game];
 	if (((game.player1 === pname) 
 		&& (game.status === "p1turn")) 
 	 || ((game.player2 === pname) 
@@ -104,7 +103,7 @@ app.get("/isYourTurn/:info", function(req,res) {
 
 
 app.post("/updateGame", function(req,res) {
-	var game = JSON.parse(req.body.gameObj);
+	var game = (req.body.gameObj);
 	var gameID = game.id;
 	gameList[gameID] = game;
 

@@ -10,6 +10,7 @@ function init(player) {
 	init_map(currentGame.map);
 	p1charList = currentGame.p1charList;
   p2charList = currentGame.p2charList;
+  recast_char_stats();
   init_char_images();
 	cursor.x = Math.floor(width/2);
 	cursor.y = height-1;
@@ -30,6 +31,42 @@ function init(player) {
 	canvas.focus();
 	
 	intervalId = setInterval(update, timerDelay);
+}
+
+function recast_char_stats() {
+  for (var i = 0; i < p1charList.length; i++) {
+    var character = p1charList[i];
+    character.x -= 0;
+    character.y -= 0;
+    character.index -= 0;
+    character.mana -= 0;
+    character.toHit -= 0;
+    character.damage -= 0;
+    character.health -= 0;
+    character.range -= 0;
+    character.movePoints -= 0;
+    character.maxMovePoints -= 0;
+    character.critChance -= 0;
+    character.dodgeChance -= 0;
+    character.player -= 0;
+    p1charList[i] = character;
+	}
+  for (var i = 0; i < p2charList.length; i++) {
+    var character = p2charList[i];
+    character.x -= 0;
+    character.y -= 0;
+    character.index -= 0;
+    character.mana -= 0;
+    character.toHit -= 0;
+    character.damage -= 0;
+    character.health -= 0;
+    character.range -= 0;
+    character.movePoints -= 0;
+    character.maxMovePoints -= 0;
+    character.critChance -= 0;
+    character.dodgeChance -= 0;
+    p2charList[i] = character;
+	}
 }
 
 function init_char_images() {
@@ -189,7 +226,7 @@ function update() {
 	} else if ((playerNumber == 2) && (currentGame.status === "p2turn")) {
 		cList = p2charList;
 	} else { //it isn't your turn, whichever player you are...
-		isMyTurn();
+		 isMyTurn();
 		 return;
 	}
 	
@@ -250,24 +287,23 @@ function endTurn() {
 	//redundant code lool fml
 	
   
+	remove_char_images();
 	currentGame.p1charList = p1charList;
 	currentGame.p2charList = p2charList;
-	remove_char_images();
 	if (currentGame.status === "p1turn") {
 		currentGame.status = "p2turn";
 	} else {
 		currentGame.status = "p1turn";
 	}
-	
-	update();
+  updateGame();
 }
 
 function remove_char_images() {
-  for (var i = 0; i < currentGame.p1charList; i++) {
-    delete currentGame.p1charList[i].img;
+  for (var i = 0; i < p1charList.length; i++) {
+    delete p1charList[i]['img'];
   }
-  for (var i = 0; i < p2charList; i++) {
-    delete currentGame.p2charList[i].img;
+  for (var i = 0; i < p2charList.length; i++) {
+    delete p2charList[i]['img'];
 	}
 }
 

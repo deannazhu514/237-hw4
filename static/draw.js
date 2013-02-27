@@ -84,12 +84,12 @@ function displayTerrainStats() {
     }
     templist = [];
   	templist.push("Class: "+viewchar.type);
-    templist.push("toHit: "+viewchar.toHit.toFixed(2));
+    templist.push("toHit: "+(viewchar.toHit.toFixed(2)));
     templist.push("damage: "+viewchar.damage);
     templist.push("Health: "+viewchar.health+"/"+viewchar.maxHealth);
     templist.push("Range: "+viewchar.range);
-    templist.push("Critical Chance: " + viewchar.critChance.toFixed(2));
-    templist.push("Dodge: "+(viewchar.dodgeChance).toFixed(2) + dstring);
+    templist.push("Critical Chance: " + (viewchar.critChance.toFixed(2)));
+    templist.push("Dodge: "+(viewchar.dodgeChance.toFixed(2)) + dstring);
     templist.push("Defense: "+viewchar.defense + defstring);
     if (viewchar.type === "mage") {
       templist.push("Mana: " + viewchar.mana + "/" + maxMana);
@@ -131,6 +131,7 @@ function drawCharacters() {
 				console.log("draw attack");
 				animationFlag = false;
 			}
+      //console.log("imgtype: " + character.img);
 			ctx.drawImage(character.img, 
 				sXList[character.type][0], sYList[character.type][0],
 				widthList[character.type][0], heightList[character.type][0],	
