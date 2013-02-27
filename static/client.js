@@ -279,11 +279,10 @@ function refreshNewCharacter(currCharacter, i) {
 		});
 		classOptions.append(currOption);
 	}		
-	var charImageSrc = getCharImgSrc(currCharacter);
-	var charImage = $("<img>").attr("src", charImageSrc);
 	var charDescription = $("<div>")
 		.addClass("charDescription")
 		.html("class description");
+	var charImage = getCharImage(currCharacter);
 	currCharacter.append(charImage, classOptions, charDescription);
 }
 function selectClass(classOption, i) {
@@ -292,16 +291,37 @@ function selectClass(classOption, i) {
 	currentTeam[i].type = className;
 	selectedChar.attr("class", "charInput "+className);
 }
-function getCharImgSrc(currCharacter) {
-// helper function to get appropriate image for character
-	var src;
-	if (currCharacter.hasClass("warrior"))
-		src = warriorImage1.src;
-	else if (currCharacter.hasClass("archer"))
-		src = archerImage1.src;
-	else if (currCharacter.hasClass("mage"))
-		src = mageImage1.src;
-	return src;
+function getCharImage(currCharacter) {
+// helper function to load appropriate image for character
+	var img, sx, sy, width, height;
+	var charImage = $("<canvas>")
+		.attr("id", currCharacter.attr("id")+"Canvas");
+	if (currCharacter.hasClass("warrior")) {
+		img = warriorImage1;
+		sx = sXList["warrior"][0];
+		sy = sYList["warrior"][0];
+		width = widthList["warrior"][0];
+		height = heightList["warrior"][0];
+	}
+	else if (currCharacter.hasClass("archer")) {
+		img = archerImage1;
+		sx = sXList["archer"][0];
+		sy = sYList["archer"][0];
+		width = widthList["archer"][0];
+		height = heightList["archer"][0];
+	}
+	else if (currCharacter.hasClass("mage")) {
+		img = mageImage1;
+		sx = sXList["mage"][0];
+		sy = sYList["mage"][0];
+		width = widthList["mage"][0];
+		height = heightList["mage"][0];
+	}
+	charImage.attr("width", width)
+		.attr("height", height);
+	var context = $(charImage)[0].getContext("2d");
+	context.drawImage(img,sx,sy,width,height,0,0,width,height);
+	return charImage;
 }
 
 function getCharData() {

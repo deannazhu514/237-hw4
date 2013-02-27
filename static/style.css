@@ -219,4 +219,28 @@ input, a {
 	background-color: #333;
 }
 
+#teamList {
+	margin: 5px 0;
+	padding: 10px;
+	text-align: center;
+}
 
+.charInput {
+	margin: 10px;
+	padding: 10px 15px;
+	display: inline-block;
+	text-align: center;
+	background-color: #CC0;
+	border-radius: 5px;
+}
+
+.classOptions {
+	border-radius: 5px;
+	color: #000000;
+	background-color: #AAA;
+}
+
+.charDescription {
+	font-size: 15px;
+	color: #000000;
+}
