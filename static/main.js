@@ -5,8 +5,8 @@ function init(player) {
 
 	playerNumber = player;
 	init_map(currentGame.map);
-	p1charList = init_characters(currentGame.p1charList);
-	p2charList = init_characters(currentGame.p2charList);
+	//p1charList = init_characters(currentGame.p1charList);
+	//p2charList = init_characters(currentGame.p2charList);
 	
 	cursor.x = Math.floor(width/2);
 	cursor.y = height-1;
@@ -187,7 +187,7 @@ function update() {
 	} else if ((playerNumber === 2) && (currentGame.status === "p2turn")) {
 		cList = p2charList;
 	} else { //it isn't your turn, whichever player you are...
-		isMyTurn();
+		//isMyTurn();
 		// return;
 	}
 	
