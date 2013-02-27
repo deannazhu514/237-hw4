@@ -318,11 +318,11 @@ function getCharImgSrc(currCharacter) {
 // helper function to get appropriate image for character
 	var src;
 	if (currCharacter.hasClass("warrior"))
-		src = warriorImageM.src;
+		src = warriorImage1.src;
 	else if (currCharacter.hasClass("archer"))
-		src = archerImageM.src;
+		src = archerImage1.src;
 	else if (currCharacter.hasClass("mage"))
-		src = mageImageM.src;
+		src = mageImage1.src;
 	return src;
 }
 function getCharData() {
