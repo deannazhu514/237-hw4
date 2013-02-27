@@ -13,12 +13,11 @@ function init(player) {
 	playerNumber = player;
 	init_map(currentGame.map);
 	p1charList = currentGame.p1charList;
-  p2charList = currentGame.p2charList;
-  recast_char_stats();
-  init_char_images();
+	p2charList = currentGame.p2charList;
+	recast_char_stats();
+	init_char_images();
 	cursor.x = Math.floor(width/2);
 	cursor.y = height-1;
-	playerFocus = "viewing";
 	
 	//i hope the inconsistency in style doesnt bug anyone
 	key_pressed.timeleft = 0;
@@ -32,6 +31,8 @@ function init(player) {
 	gameEndFlag;
 	
 	
+	playerFocus = "viewing";
+	generateStatMenu();
 	
 	intervalId = setInterval(update, timerDelay);
 }

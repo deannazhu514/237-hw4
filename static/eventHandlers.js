@@ -1,5 +1,6 @@
 var currentMovePoints = -1;
 var sel_spell;
+var dir, tempdir;
 
 function onKeyUp(event) {
 	if (event.keyCode === 65) { //a
@@ -23,8 +24,8 @@ function onKeyDown(event) {
 }
 
 function onKeyDownParser(e) {
-	if (animationFlag) { 
 	//don't allow player to input commands while animations are playing
+	if (animationFlag) { 
 		return;
 	}
 	
@@ -44,12 +45,13 @@ function onKeyDownParser(e) {
 	} else if (playerFocus == "magic") {
 		keyDownMagicMenu(e);
 	} else if (playerFocus == "use magic") {
-    keyDownMagicTarget(e);
+		keyDownMagicTarget(e);
   }
 }
 
 function keyDownView(e) {
 	console.log("viewing", cursor.x, cursor.y);
+	statMenu = [];
 	if (!gameEndFlag) {
 		attacked = false;
 		hit = false;
@@ -98,7 +100,7 @@ function keyDownView(e) {
 		playerFocus = "playerMenu";
 		generatePlayerMenu();
 	}
-	console.log(playerFocus, cursor.x, cursor.y);
+	generateStatMenu();
 }
 
 function falsifyKeyPress() {
@@ -106,6 +108,60 @@ function falsifyKeyPress() {
 	key_pressed["right"] = false;
 	key_pressed["up"] = false;
 	key_pressed["down"] = false;
+}
+
+function generateStatMenu() {
+	statMenu = [];
+	var tile  = map[cursor.y][cursor.x];
+	var terrain = terrainDict[tile.type];
+	var i = 0;
+	var offset = 30;
+	if (tile.character === null) {
+		for (var key in terrain) {
+		  var terrainInfo = terrain[key];
+		  if (terrainInfo !== 0) {
+			statMenu.push(key+": "+terrainInfo);
+			i++;
+		  }
+		}
+		if (tile.special === "scorespot") {
+			statMenu.push("scoring space");
+		}
+	} else {
+		var viewchar = tile.character;
+		var dchance = terrain.dodgeModifier.toFixed(2);
+		var dstring = "";
+		
+		if (dchance > 0) {
+		  dstring = " + " + dchance;
+		} else if (dchance < 0) {
+		  dstring = " - " + Math.abs(dchance);
+		}
+		
+		var defMod = terrain.damageModifier;
+		var type = tile.type;
+		var defstring = "";
+		if (defMod > 0) {
+		  defstring = " + " + defMod + "("+type+")";
+		} else if (defMod < 0) {
+		  defstring = " - " + Math.abs(defMod) + "("+type+")";
+		}
+		
+		templist = [];
+		templist.push("Class: "+viewchar.type);
+		templist.push("Health: "+viewchar.health+"/"+viewchar.maxHealth);
+		if (viewchar.type === "mage") {
+		  templist.push("Mana: " + viewchar.mana + "/" + maxMana);
+		}
+		templist.push("Damage: "+viewchar.damage);
+		templist.push("Range: "+viewchar.range);
+		templist.push("Defense: "+viewchar.defense + defstring);
+		templist.push("toHit: "+(viewchar.toHit.toFixed(2)));
+		templist.push("Critical Chance: " + (viewchar.critChance.toFixed(2)));
+		templist.push("Dodge: "+(viewchar.dodgeChance.toFixed(2)) + dstring);
+	
+		statMenu = templist;
+	}
 }
 
 function generateCharacterMenu() {
@@ -121,7 +177,6 @@ function generateCharacterMenu() {
 	} else {
 		characterMenu.push("View Stats");
 	}
-	//pop up characterMenu for move/attack/view stats?
 	menuIndex = 0;
 }
 
@@ -194,12 +249,11 @@ function processMenuSelection(item) {
 		generateStatsMenu();
 	} else if (item === "Magic") {
 		playerFocus = "magic";
-    generateMagicMenu();
+		generateMagicMenu();
 	} else if (item === "Wait") {
 		currentChar.hasMoved = true;
-		playerFocus = "viewing";
+		playerFocus = "characterMenu";
 	}
-	console.log(item);
 }
 
 function keyDownMove(e) {
@@ -212,8 +266,8 @@ function keyDownMove(e) {
 		falsifyKeyPress();
 		key_pressed["left"] = true;
 		key_pressed.time = 0;
-
 		if (cursor.x > 0) {
+			tempdir = 1;
 			cursor.x--;
 		} else { 
 			return;
@@ -223,6 +277,7 @@ function keyDownMove(e) {
 		key_pressed["right"] = true;
 		key_pressed.time = 0;
 		if (cursor.x < width - 1) {
+			tempdir = 2;
 			cursor.x++;
 		} else {
 			return;
@@ -232,6 +287,7 @@ function keyDownMove(e) {
 		key_pressed["up"] = true;
 		key_pressed.time = 0;
 		if (cursor.y > 0) {
+			tempdir = 3;
 			cursor.y--;
 		} else {
 			return;
@@ -241,33 +297,28 @@ function keyDownMove(e) {
 		key_pressed["down"] = true;
 		key_pressed.time = 0;
 		if (cursor.y < height-1) {
+			tempdir = 0;
 			cursor.y++;
 		} else {
 			return;
 		}
 	} else if (e === 32) { //space
-
-		
+		currentChar.direction = dir;
 		map[currentChar.y][currentChar.x].character = null;
 		currentChar.x = cursor.x;
 		currentChar.y = cursor.y;
 		//animationFlag = true;
 		map[currentChar.y][currentChar.x].character = currentChar;
-		// movePath = movePath.concat(listPath);
-		// console.log("movePath", movePath);
-		 listPath = [];
+		listPath = [];
 		playerFocus = "characterMenu";
-		generateCharacterMenu();
-		
-		//THIS IS JUST PLACEHOLDER: WE SHOULD PUT IN ANIMATIONS	
+		generateCharacterMenu();		
 		return;
 	} else if (e === 27) { //ESC
 		listPath = [];
-		//currentChar.movePoints = currentChar.maxMovePoints;
 		playerFocus = "characterMenu";
 		generateCharacterMenu();
-    cursor.x = currentChar.x;
-    cursor.y = currentChar.y;
+		cursor.x = currentChar.x;
+		cursor.y = currentChar.y;
 		return;
 	} else {
 		return;
@@ -279,35 +330,21 @@ function keyDownMove(e) {
 	//check if reversing a move
 	if (i !== -1) {
 		console.log("i is : " + i);
-    var templist = listPath.slice(i+1, listPath.length);
+		var templist = listPath.slice(i+1, listPath.length);
 		listPath.splice(i+1,(listPath.length - i));
-    console.log(templist);
-    for (var j = 0; j < templist.length; j++) {
-      var arrayTuple = templist[j].split(",");
-       var tx = arrayTuple[1] - 0;
-       var ty = arrayTuple[0] - 0;
-       tile = map[ty][tx]; // the - 0 just casts it to a number
-			 terrain = terrainDict[tile.type];
-			 currentChar.movePoints += terrain.moveCost;
-       console.log(terrain.moveCost);
-    }
-    
-		//currentChar.movePoints = currentChar.maxMovePoints;
-		 /*for (var i = 0; i < listPath.length; i++) {
-			 var arrayTuple = listPath[i].split(",");
-       var tx = arrayTuple[1] - 0;
-       var ty = arrayTuple[0] - 0;
-       if (ty !== currentChar.y || (tx !== currentChar.x)) {
-        tile = map[ty][tx]; // the - 0 just casts it to a number
-			 terrain = terrainDict[tile.type];
-			 currentChar.movePoints -= terrain.moveCost;
-       }
-		 } */
+		for (var j = 0; j < templist.length; j++) {
+			var arrayTuple = templist[j].split(",");
+			var tx = arrayTuple[1] - 0;
+			var ty = arrayTuple[0] - 0;
+			tile = map[ty][tx]; // the - 0 just casts it to a number
+			terrain = terrainDict[tile.type];
+			currentChar.movePoints += terrain.moveCost;
+		}
 	} else {
 		tile = map[cursor.y][cursor.x];
 		if (isValidMove(tile)) {
+			dir = tempdir;
 			listPath.push("" + cursor.y + "," + cursor.x);
-			//listPath.push(tuple);
 			currentChar.movePoints -= terrainDict[tile.type].moveCost;
 		} else {
 			console.log("invalid move");
@@ -325,6 +362,7 @@ function isValidMove(tile) {
 	if (tile.character != null) {
 		return false;
 	}
+	
 	return true;
 }
 
@@ -374,8 +412,8 @@ function keyDownAttack(e) {
 			&& (enemy_char.player !== currentChar.player)
 			&& (!isDead(enemy_char))){
 			if (calculateHit(currentChar, enemy_char)) {
-        //look at calculate hit: we might want to 
-        //an extra effect upon critical hit
+			//look at calculate hit: we might want to 
+			//an extra effect upon critical hit
 				hit = true;
 				ctx.font="40px Courier New";
 				ctx.fillStyle = "#0FF";
@@ -392,8 +430,9 @@ function keyDownAttack(e) {
 		}		
 		currentChar.hasMoved = true;
 		attacked = true;
-		playerFocus = "viewing";
-		animationFlag = true;
+		playerFocus = "characterMenu";
+		generateCharacterMenu();
+		//animationFlag = true;
 		return;
 	} else if (e === 27) { //escape
 		playerFocus = "characterMenu";
@@ -403,7 +442,8 @@ function keyDownAttack(e) {
 		return; 
 	}
 	
-	if ((Math.abs(cursor.x - currentChar.x) + Math.abs(cursor.y - currentChar.y)) > currentChar.range) {
+	if ((Math.abs(cursor.x - currentChar.x) + Math.abs(cursor.y - currentChar.y)) 
+				> currentChar.range) {
 		//can't attack farther than your range!
 		cursor.x = x;
 		cursor.y = y;
@@ -428,39 +468,42 @@ function keyDownPlayerMenu(e) {
 		key_pressed["up"] = true;
 		key_pressed.time = 0;
 		menuIndex = (menuIndex - 1);
-    if (menuIndex < 0) {
-      menuIndex = playerMenu.length -1;
-    }
+		if (menuIndex < 0) {
+		  menuIndex = playerMenu.length -1;
+		}
 	}
 }
 
 function generateStatsMenu(){
-  var tile = map[currentChar.y][currentChar.x];
-  var terrain = terrainDict[tile.type];
-  var dchance = terrain.dodgeModifier.toFixed(2);
-  var dstring = "";
-  if (dchance > 0) {
-    dstring = " + " + dchance;
-  } else if (dchance < 0) {
-    dstring = " - " + Math.abs(dchance);
-  }
-  var defMod = terrain.damageModifier;
-  var defstring = "";
-  if (defMod > 0) {
-    defstring = " + " + defMod;
-  } else if (defMod < 0) {
-    defstring = " - " + Math.abs(defMod);
-  }
+	var tile = map[currentChar.y][currentChar.x];
+	var terrain = terrainDict[tile.type];
+	var dchance = terrain.dodgeModifier.toFixed(2);
+	var dstring = "";
+	if (dchance > 0) {
+		dstring = " + " + dchance;
+	} else if (dchance < 0) {
+		dstring = " - " + Math.abs(dchance);
+	}
+	var defMod = terrain.damageModifier;
+	var defstring = "";
+	if (defMod > 0) {
+		defstring = " + " + defMod;
+	} else if (defMod < 0) {
+		defstring = " - " + Math.abs(defMod);
+	}
+ 
 	statMenu = [];
 	statMenu.push("Class: "+currentChar.type);
-  console.log("type: " + typeof(currentChar.toHit));
-	statMenu.push("toHit: "+(currentChar.toHit.toFixed(2)));
-	statMenu.push("damage: "+currentChar.damage);
 	statMenu.push("Health: "+currentChar.health+"/"+currentChar.maxHealth);
+	if (currentChar.type === "mage") {
+		  statMenu.push("Mana: " + currentChar.mana + "/" + maxMana);
+	}
+	statMenu.push("Damage: "+currentChar.damage);		
 	statMenu.push("Range: "+currentChar.range);
-  statMenu.push("Critical Chance: " + currentChar.critChance.toFixed(2));
-  statMenu.push("Dodge: "+(currentChar.dodgeChance).toFixed(2) + dstring);
 	statMenu.push("Defense: "+currentChar.defense + defstring);
+	statMenu.push("toHit: "+(currentChar.toHit.toFixed(2)));
+	statMenu.push("Critical Chance: " + currentChar.critChance.toFixed(2));
+	statMenu.push("Dodge: "+(currentChar.dodgeChance).toFixed(2) + dstring);	
 }
 
 function keyDownStats(e) {
@@ -472,12 +515,12 @@ function keyDownStats(e) {
 
 function generatePlayerMenu() {
 	playerMenu = [];
-	playerMenu.push("Main Menu");
 	
 	if (!gameEndFlag) {
 		playerMenu.push("End Turn");
 		playerMenu.push("Surrender");
 	}
+	playerMenu.push("Main Menu");
 	menuIndex = 0;
 }
 
@@ -491,41 +534,44 @@ function processPlayerMenuSelection() {
 		gameEndFlag = true;
 		endTurn();
 	} else if (item === "Main Menu") {
-		// return to main menu some how
+		
 	}
 }
 
 function generateMagicMenu() {
-  magicMenu = [];
-  magicMenu.push(mageSpells.fireball.name);
-  magicMenu.push(mageSpells.lightning.name);
-  menuIndex = 0;
+	magicMenu = [];
+	magicMenu.push(mageSpells.fireball.name);
+	magicMenu.push(mageSpells.lightning.name);
+	menuIndex = 0;
 }
 
 function keyDownMagicMenu(e) {
-  if (e === 83) {
+	if (e === 83) {
 		falsifyKeyPress();
 		key_pressed["down"] = true;
 		key_pressed.time = 0;
+		
 		menuIndex = (menuIndex + 1) % magicMenu.length;
 	} else if (e === 87) {
 		falsifyKeyPress();
 		key_pressed["up"] = true;
 		key_pressed.time = 0;
-		menuIndex = menuIndex - 1;
-    if (menuIndex < 0) menuIndex = magicMenu.length -1;
-    
-    
+		
+		menuIndex--;
+		if (menuIndex < 0) 
+			menuIndex = magicMenu.length -1;
+	} else if (e === 32) {
+		if (canCast(magicMenu[menuIndex])) {
+		  magicMenu = [];
+		  playerFocus = "use magic";
+		}
 	} else if (e === 27) {
 		playerFocus = "characterMenu";
-    magicMenu = [];
+		magicMenu = [];
 		generateCharacterMenu();
-	} else if (e === 32) {
-    if (canCast(magicMenu[menuIndex])) {
-      magicMenu = [];
-      playerFocus = "use magic";
-    }
-  }
+	} else {
+		return;
+	}
 }
 
 function canCast(item) {
@@ -543,7 +589,7 @@ function canCast(item) {
   return false;
 }
 
-function keyDownMagicTarget() {
+function keyDownMagicTarget(e) {
   var x = cursor.x;
   var y = cursor.y;
   if (e === 65) { //a
@@ -582,36 +628,43 @@ function keyDownMagicTarget() {
 			cursor.y++;
 		} else {
 			return;
-    }
-  } else if (e === 32) {
-      if (castSpell(cursor.x, cursor.y)) {
-        playerFocus = "viewing";
-        currentChar.hasMoved = true;
-      }
-  } else if (e === 27) {
-    
-  }
-  if (Math.abs(cursor.x - currentChar.x) + Math.abs(cursor.y - currentChar.y) > sel_spell.range) {
+		}
+	} else if (e === 32) {
+		if (castSpell(cursor.x, cursor.y)) {
+			currentChar.hasMoved = true;
+			animationFlag = true;
+			playerFocus = "characterMenu";
+			generateCharacterMenu();
+		}
+	} else if (e === 27) {
+		playerFocus = "characterMenu";
+		magicMenu = [];
+		generateCharacterMenu();
+	}
+	if (Math.abs(cursor.x - currentChar.x) + Math.abs(cursor.y - currentChar.y) > sel_spell.range) {
     cursor.x = x;
     cursor.y = y;
-  }
-	
+  }	
 }
 
 function castSpell(x, y) {
-  var spell;
-  if (sel_spell === mageSpells.fireball.name) {
-    spell = mageSpells.fireball;
-    spell.cast(x,y);
-    currentChar.mana -= spell.cost;
-    return true;
-  } else if (sel_spell === mageSpells.lightning.name) {
-    if (map[y][x].character !== null) {
-      spell = mageSpells.lightning;
-      spell.cast(x,y);
-      currentChar.mana -= spell.cost;
-      return true;
-    }
+	var spell;
+	spell_x = x;
+	spell_y = y;
+	if (sel_spell.name === mageSpells.fireball.name) {
+		animation = "fireball";
+		spell = mageSpells.fireball;
+		spell.cast(x,y);
+		currentChar.mana -= spell.cost;
+		return true;
+	} else if (sel_spell.name === mageSpells.lightning.name) {
+		if (map[y][x].character !== null) {
+		  animation = "lightning";
+		  spell = mageSpells.lightning;
+		  spell.cast(x,y);
+		  currentChar.mana -= spell.cost;
+		  return true;
+		}
   }
   return false; //invalid target: only possible for lightning, which must
                 //select a character, fireball can select terrain

@@ -42,3 +42,8 @@ http://s562.beta.photobucket.com/user/ChipGaming/media/BlodyZombie.png.html?from
 
 arrows, books, potions, arrow:
 http://forum.chaos-project.com/index.php?topic=8831.0
+
+fireball:
+http://www.rpgmakervx.net/lofiversion/index.php/t8973.html
+
+lightning: 

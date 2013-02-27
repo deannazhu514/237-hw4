@@ -1,6 +1,3 @@
-var mageSpells = {};
-
-
 //casts a fireball that does 20 damage to every character in a 3x3 radius centered on x,y
 function fireballCast(x,y) {
   for (var i = 0; i < 3; i++) {
@@ -28,7 +25,7 @@ function lightningCast(x,y) {
     return;
   }
   var tempchar = map[y][x].character;
-  tempchar.health -= mageSpells.lightningStrike.damage;
+  tempchar.health -= mageSpells.lightning.damage;
   if (isDead(tempchar)) {
     map[yind][xind].character = null;
     //display death animation	

@@ -13,7 +13,6 @@ function draw() {
 	drawCharacters();
 	drawCursor();
 	drawMenu();
-	displayTerrainStats();
 }
 
 function drawMap() {
@@ -22,12 +21,17 @@ function drawMap() {
 		for (var j = 0; j < width; j++) {
 			var tile = map[i][j];
 			var img = getTileImage(tile.type);
-			ctx.drawImage(img, j*tileSize, i*tileSize);
 			if (tile.special === "scorespot") {
-				//i dunno can we make the square tinted and glow red or something?
+				ctx.globalAlpha = 1;
+				ctx.drawImage(img, j*tileSize, i*tileSize);
+			}
+			else {
+				ctx.globalAlpha = 0.8;
+				ctx.drawImage(img, j*tileSize, i*tileSize);
 			}
 		}
 	}
+	ctx.globalAlpha = 1;
 }
 
 function getTileImage(type) {
@@ -43,115 +47,12 @@ function getTileImage(type) {
 	}
 }
 
-function displayTerrainStats() {
-  var tile  = map[cursor.y][cursor.x];
-  var terrain = terrainDict[tile.type];
-  var i =0;
-  var offset = 30;
-  if (tile.character === null) {
-    for (var key in terrain) {
-      ctx.font="20px Courier New";
-      var terrainInfo = terrain[key];
-      ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
-      if (terrainInfo !== 0) {
-        ctx.fillRect(menuX+10,menuY+(i+1)*offset+210, menuWidth-20, 30);
-        ctx.fillStyle = "red";
-        ctx.fillText(key + ": " + terrainInfo, menuX+20, menuY+(i+1)*offset+230);
-        i++;
-      }
-    }
-    if (tile.special === "scorespot") {
-      ctx.fillRect(menuX+10,menuY+(i+1)*offset+310, menuWidth-20, 30);
-      ctx.fillStyle = "white";
-      ctx.fillText("scoring space", menuX+20, menuY+(i+1)*offset+330);
-    }
-	
-  } else {
-    var viewchar = tile.character;
-    var dchance = terrain.dodgeModifier.toFixed(2);
-    var dstring = "";
-    if (dchance > 0) {
-      dstring = " + " + dchance;
-    } else if (dchance < 0) {
-      dstring = " - " + Math.abs(dchance);
-    }
-    var defMod = terrain.damageModifier;
-    var defstring = "";
-    if (defMod > 0) {
-      defstring = " + " + defMod;
-    } else if (defMod < 0) {
-      defstring = " - " + Math.abs(defMod);
-    }
-    templist = [];
-  	templist.push("Class: "+viewchar.type);
-    templist.push("toHit: "+(viewchar.toHit.toFixed(2)));
-    templist.push("damage: "+viewchar.damage);
-    templist.push("Health: "+viewchar.health+"/"+viewchar.maxHealth);
-    templist.push("Range: "+viewchar.range);
-    templist.push("Critical Chance: " + (viewchar.critChance.toFixed(2)));
-    templist.push("Dodge: "+(viewchar.dodgeChance.toFixed(2)) + dstring);
-    templist.push("Defense: "+viewchar.defense + defstring);
-    if (viewchar.type === "mage") {
-      templist.push("Mana: " + viewchar.mana + "/" + maxMana);
-    }
-    for (var j = 0; j < templist.length; j++) {
-      ctx.font="20px Courier New";
-      ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
-      ctx.fillRect(menuX+10,menuY+(j+1)*offset+20, menuWidth-20, 30);
-      ctx.fillStyle = "red";
-      ctx.fillText(templist[j], menuX+20, menuY+(j+1)*offset+35);
-      
-    }
-  }
-}
-
 function drawCharacters() {
-	for (var i = 0; i < p1charList.length; i++) {
-		var character = p1charList[i];
-		if (!isDead(character)) {
-			var ci = index[character.type];
-			if (playerFocus === "characterMenu" && animationFlag){
-				//draw move
-				index[character.type] = ci++;
-				console.log("draw move", movePath);
-				if (movePath.length <= 1) {
-					animationFlag = false;
-				} else {
-					animationFlag = false;
-				/*	var src = movePath[0].split(",");
-					var dest = movePath[1].split(",");
-					character.x = src[1]+(dest[1]-src[1]);
-					character.x = src[0]+(dest[0]-src[0]);
-								
-					movePath.splice(0, 1);
-				*/}
-				
-			} else if (playerFocus === "viewing" && animationFlag){
-				//draw attack
-				console.log("draw attack");
-				animationFlag = false;
-			}
-      //console.log("imgtype: " + character.img);
-			ctx.drawImage(character.img, 
-				sXList[character.type][0], sYList[character.type][0],
-				widthList[character.type][0], heightList[character.type][0],	
-				character.x*tileSize, character.y*tileSize,
-				tileSize, tileSize);
-			p1charList[i] = character;	
-		}
-		else {
-			//character is dead :(
-			ctx.drawImage(graveImg, 
-				character.x*tileSize, character.y*tileSize,
-				tileSize, tileSize);
-		}
-	}
+	var cList = (playerNumber == 1) ? p1charList: p2charList;
+	var other = (playerNumber == 1) ? p2charList: p1charList;
 	
-	//a bit redundant code but in case we ever have asymmetry between
-	//team sizes or whatnot
-	//or perhaps coloring character types differently based on team? 
-	for (var i = 0; i < p2charList.length; i++) {
-		var character = p2charList[i];
+	for (var i = 0; i < other.length; i++) {
+		var character = other[i];
 		if (!isDead(character)) {
 			var ci = index[character.type];
 			ctx.drawImage(character.img, 
@@ -167,6 +68,60 @@ function drawCharacters() {
 				tileSize, tileSize);
 		}
 	}
+
+	for (var i = 0; i < cList.length; i++) {
+		var character = cList[i];
+		if (!isDead(character)) {
+			var ci = index[character.type];
+			
+			//console.log(character.direction);
+			ctx.drawImage(character.img, 
+					sXList[character.type][0], 
+					sYList[character.type][character.direction],
+					widthList[character.type][0], 
+					heightList[character.type][0],	
+					character.x*tileSize, character.y*tileSize,
+					tileSize, tileSize);
+
+			if (animationFlag){
+				if (animation === "fireball") {
+					if (spell_flag < 100) {
+						ctx.drawImage(fireballImg, 
+						fireballsX[0], 
+						fireballsY[0],
+						fireballWidth, 
+						fireballHeight,	
+						spell_x*tileSize, spell_y*tileSize,
+						tileSize, tileSize);
+						spell_flag++;
+					}
+					else {
+						spell_flag = 0;
+						animationFlag = false;		
+					}
+				} else if (animation === "lightning") {
+					if (spell_flag < 100) {
+						ctx.drawImage(lightningImg, 
+						lightningsX[3], lightningsY[3],
+						lightningWidth[3], lightningHeight[3],	
+						spell_x*tileSize, (spell_y+1)*tileSize,
+						tileSize, (character.y-spell_y-1)*tileSize);
+						spell_flag++;
+					}
+					else {
+						spell_flag = 0;
+						animationFlag = false;		
+					}
+				} 
+			}
+		} else {
+			//character is dead :(
+			ctx.drawImage(graveImg, 
+				character.x*tileSize, character.y*tileSize,
+				tileSize, tileSize);
+		}
+	}
+	
 }
 
 function drawCursor() {	
@@ -192,37 +147,45 @@ function drawCursor() {
 }
 
 function drawMenu() {
-	
 	ctx.fillStyle = "#333";
 	ctx.fillRect(menuX,menuY,menuWidth,menuHeight);
 
 	var menu = [];
 	var offset;
-
-	ctx.font="20px Courier New";
-	ctx.fillStyle = "#0FF";
-	ctx.fillText("[space] to select", menuX+20, 520);
-	ctx.fillText("[ESC] to return", menuX+20, 550);
+	
 	//var instructions = "[space] to select";	
 	
 	if (!turnEnd) {
+		ctx.font="20px Courier New";
+		ctx.fillStyle = "#0FF";
+		if (playerFocus === "viewing") {
+			ctx.fillText("[ESC] to player menu", menuX, 550);
+		} else {
+			ctx.fillText("[ESC] to return", menuX, 550);
+		}
+	
 		if (playerFocus === "viewing") {
 			if (hit) {
 				ctx.font="40px Courier New";
 				ctx.fillStyle = "#0FF";
-				ctx.fillText("Hit!", menuX+20, 200);	
+				ctx.fillText("Hit!", menuX+20, 200);					
 			} else if (attacked) {
 				ctx.font="40px Courier New";
 				ctx.fillStyle = "#0FF";
 				ctx.fillText("Missed!", menuX+20, 200);
 			} else {
-				
+				menu = statMenu;
+				offset = 30;
+				if (map[cursor.y][cursor.x].character !== null) {
+					ctx.font="18px Courier New"
+					ctx.fillStyle = "#0FF";
+					ctx.fillText("[SPACE] to view team", menuX, 520);
+				}
 			}
 		} else if (playerFocus == "moving") {
 				ctx.font="30px Courier New";
 				ctx.fillStyle = "#0FF";
-				ctx.fillText("Moves Left: "+currentChar.movePoints, menuX+20, 200);					
-		} else if (playerFocus === "characterMenu") {
+				ctx.fillText("Moves Left: "+currentChar.movePoints, menuX+20, 200);			} else if (playerFocus === "characterMenu") {
 			offset = 30;
 			menu = characterMenu;
 			var character = currentChar;
@@ -231,24 +194,46 @@ function drawMenu() {
 					widthList[character.type][1], heightList[character.type][0],
 					menuX+90, menuY+7*30,
 					tileSize*2, tileSize*2);
+			ctx.fillStyle = "#0FF";
+			ctx.font="18px Courier New"
+			ctx.fillStyle = "#0FF";
+			ctx.fillText("[SPACE] to select action", menuX, 520);		
 			if (character.hasMoved) {
 				ctx.font="40px Courier New";
-				ctx.fillStyle = "#0FF";
-				ctx.fillText("Moved", menuX+60, 400);
+				ctx.fillStyle = "#0F0";
+				ctx.fillText("Move Made", menuX+30, 350);
 			}
-		} else if (playerFocus === "playerMenu") {
-			menu = playerMenu;
-			offset = 100;
 		} else if (playerFocus === "attacking") {
 			ctx.font="40px Courier New";
-			ctx.fillStyle = "#0FF";
+			ctx.fillStyle = "#F00";
 			ctx.fillText("Attack!", menuX+20, 200);
-		}  	
+			ctx.fillStyle = "#0FF";
+			ctx.font="18px Courier New"
+			ctx.fillStyle = "#0FF";
+			ctx.fillText("[SPACE] to attack", menuX, 520);		
+		} else if (playerFocus === "magic") {
+			menu = magicMenu;
+			offset = 100;
+			ctx.font="18px Courier New"
+			ctx.fillStyle = "#0FF";
+			ctx.fillText("[SPACE] to cast spell", menuX, 520);	
+		}  else if (playerFocus === "use magic") {
+			ctx.font="30px Courier New";
+			ctx.fillStyle = "#F0F";
+			ctx.fillText("Casting spell!", menuX+20, 300);
+		} else if (playerFocus === "playerMenu") {
+			console.log(menu);
+			menu = playerMenu;
+			offset = 100;		
+		}
 	}
+	
 	else { //turn has ended
 		ctx.font="30px Courier New";
 		ctx.fillStyle = "#0FF";
-		ctx.fillText("Turn Ended!", menuX+20, 300);
+		ctx.fillText("Waiting for other player!", menuX+20, 400);
+		menu = playerMenu;
+		offset = 100;
 	}
 	
 	if (playerFocus === "view stats") {
@@ -258,7 +243,8 @@ function drawMenu() {
 	
 	for (var i = 0; i < menu.length; i++) {
 		ctx.font="20px Courier New";
-		if (i === menuIndex && playerFocus !== "view stats") {
+		if (i === menuIndex && playerFocus !== "view stats"
+				&& playerFocus !== "viewing") {
 			ctx.fillStyle = "black";
 			ctx.fillRect(menuX+10,menuY+(i+1)*offset, menuWidth-20, 30);
 			ctx.fillStyle = "white";
