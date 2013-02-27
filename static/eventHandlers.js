@@ -1,5 +1,6 @@
 var currentMovePoints = -1;
 var sel_spell;
+var dir, tempdir;
 
 function onKeyUp(event) {
 	if (event.keyCode === 65) { //a
@@ -266,6 +267,7 @@ function keyDownMove(e) {
 		key_pressed["left"] = true;
 		key_pressed.time = 0;
 		if (cursor.x > 0) {
+			tempdir = 1;
 			cursor.x--;
 		} else { 
 			return;
@@ -275,6 +277,7 @@ function keyDownMove(e) {
 		key_pressed["right"] = true;
 		key_pressed.time = 0;
 		if (cursor.x < width - 1) {
+			tempdir = 2;
 			cursor.x++;
 		} else {
 			return;
@@ -284,6 +287,7 @@ function keyDownMove(e) {
 		key_pressed["up"] = true;
 		key_pressed.time = 0;
 		if (cursor.y > 0) {
+			tempdir = 3;
 			cursor.y--;
 		} else {
 			return;
@@ -293,11 +297,13 @@ function keyDownMove(e) {
 		key_pressed["down"] = true;
 		key_pressed.time = 0;
 		if (cursor.y < height-1) {
+			tempdir = 0;
 			cursor.y++;
 		} else {
 			return;
 		}
 	} else if (e === 32) { //space
+		currentChar.direction = dir;
 		map[currentChar.y][currentChar.x].character = null;
 		currentChar.x = cursor.x;
 		currentChar.y = cursor.y;
@@ -326,7 +332,6 @@ function keyDownMove(e) {
 		console.log("i is : " + i);
 		var templist = listPath.slice(i+1, listPath.length);
 		listPath.splice(i+1,(listPath.length - i));
-		console.log(templist);
 		for (var j = 0; j < templist.length; j++) {
 			var arrayTuple = templist[j].split(",");
 			var tx = arrayTuple[1] - 0;
@@ -338,6 +343,7 @@ function keyDownMove(e) {
 	} else {
 		tile = map[cursor.y][cursor.x];
 		if (isValidMove(tile)) {
+			dir = tempdir;
 			listPath.push("" + cursor.y + "," + cursor.x);
 			currentChar.movePoints -= terrainDict[tile.type].moveCost;
 		} else {

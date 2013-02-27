@@ -27,6 +27,7 @@ function newCharacter(data) {
 	character.player = data.player;
 	character.type = type; //used for animation purposes, i guess?
 	character.index = data.index;
+	character.direction = character.player*3; // 0:front, 1: left, 2:right, 3: back
 	
   if (character.type === "mage") {
     character.mana = maxMana;

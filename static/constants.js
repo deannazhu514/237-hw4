@@ -102,7 +102,7 @@ var sXList = {"warrior":[0, 30, 60],
 				"mage":[0, 30, 60]
 			};
 var sYList = {"warrior":[0,35,70,105], 
-				"archer":[0,45,85,125],
+				"archer":[0,45,85,123],
 				"mage":[0,35,70,105]
 			};
 var widthList = {"warrior":[30,30,30], 
@@ -238,10 +238,10 @@ var fireballHeight = 30;
 var lightningImg;
 lightningImg = new Image();
 lightningImg.src = "images/lightning.png";
-var lightningsX = [0,30,60];
-var lightningsY = [0,30,60,90];
-var lightningWidth = 60;
-var lightningHeight = 117;
+var lightningsX = [0,60,175,290];
+var lightningsY = [0,5,5,0];
+var lightningWidth = [60, 115, 115, 60];
+var lightningHeight = [115, 60, 60, 115];
 
 
 /* END MAGIC CONSTANTS */

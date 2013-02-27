@@ -21,12 +21,17 @@ function drawMap() {
 		for (var j = 0; j < width; j++) {
 			var tile = map[i][j];
 			var img = getTileImage(tile.type);
-			ctx.drawImage(img, j*tileSize, i*tileSize);
 			if (tile.special === "scorespot") {
-				//i dunno can we make the square tinted and glow red or something?
+				ctx.globalAlpha = 1;
+				ctx.drawImage(img, j*tileSize, i*tileSize);
+			}
+			else {
+				ctx.globalAlpha = 0.8;
+				ctx.drawImage(img, j*tileSize, i*tileSize);
 			}
 		}
 	}
+	ctx.globalAlpha = 1;
 }
 
 function getTileImage(type) {
@@ -43,18 +48,40 @@ function getTileImage(type) {
 }
 
 function drawCharacters() {
-	for (var i = 0; i < p1charList.length; i++) {
-		var character = p1charList[i];
+	var cList = (playerNumber == 1) ? p1charList: p2charList;
+	var other = (playerNumber == 1) ? p2charList: p1charList;
+	
+	for (var i = 0; i < other.length; i++) {
+		var character = other[i];
+		if (!isDead(character)) {
+			var ci = index[character.type];
+			ctx.drawImage(character.img, 
+				sXList[character.type][0], sYList[character.type][0],
+				widthList[character.type][0], heightList[character.type][0],
+				character.x*tileSize, character.y*tileSize,
+				tileSize, tileSize);
+		}
+		else {
+			//character is dead :(
+			ctx.drawImage(graveImg, 
+				character.x*tileSize, character.y*tileSize,
+				tileSize, tileSize);
+		}
+	}
+
+	for (var i = 0; i < cList.length; i++) {
+		var character = cList[i];
 		if (!isDead(character)) {
 			var ci = index[character.type];
 			
+			//console.log(character.direction);
 			ctx.drawImage(character.img, 
-				sXList[character.type][0], 
-				sYList[character.type][0],
-				widthList[character.type][0], 
-				heightList[character.type][0],	
-				character.x*tileSize, character.y*tileSize,
-				tileSize, tileSize);
+					sXList[character.type][0], 
+					sYList[character.type][character.direction],
+					widthList[character.type][0], 
+					heightList[character.type][0],	
+					character.x*tileSize, character.y*tileSize,
+					tileSize, tileSize);
 
 			if (animationFlag){
 				if (animation === "fireball") {
@@ -75,13 +102,10 @@ function drawCharacters() {
 				} else if (animation === "lightning") {
 					if (spell_flag < 100) {
 						ctx.drawImage(lightningImg, 
-						lightningsX[0], 
-						lightningsY[0],
-						lightningWidth, 
-						lightningHeight,	
-						character.x*tileSize, character.y*tileSize,
-						(spell_x-character.x)*tileSize, 
-						(spell_y-character.y)*tileSize);
+						lightningsX[3], lightningsY[3],
+						lightningWidth[3], lightningHeight[3],	
+						spell_x*tileSize, (spell_y+1)*tileSize,
+						tileSize, (character.y-spell_y-1)*tileSize);
 						spell_flag++;
 					}
 					else {
@@ -89,8 +113,6 @@ function drawCharacters() {
 						animationFlag = false;		
 					}
 				} 
-				
-				p1charList[i] = character;	
 			}
 		} else {
 			//character is dead :(
@@ -100,26 +122,6 @@ function drawCharacters() {
 		}
 	}
 	
-	//a bit redundant code but in case we ever have asymmetry between
-	//team sizes or whatnot
-	//or perhaps coloring character types differently based on team? 
-	for (var i = 0; i < p2charList.length; i++) {
-		var character = p2charList[i];
-		if (!isDead(character)) {
-			var ci = index[character.type];
-			ctx.drawImage(character.img, 
-				sXList[character.type][0], sYList[character.type][0],
-				widthList[character.type][0], heightList[character.type][0],
-				character.x*tileSize, character.y*tileSize,
-				tileSize, tileSize);
-		}
-		else {
-			//character is dead :(
-			ctx.drawImage(graveImg, 
-				character.x*tileSize, character.y*tileSize,
-				tileSize, tileSize);
-		}
-	}
 }
 
 function drawCursor() {	
