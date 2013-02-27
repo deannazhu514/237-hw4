@@ -1,0 +1,3 @@
+logo or something about the name.
+start Menu: have more clear information.... css hover to make it more reactive
+pickTeam: have user input team stats one by one rather by all at once..
