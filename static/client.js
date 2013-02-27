@@ -159,7 +159,9 @@ function refreshOpenGames(gamesAvailable) {
 }
 function refreshMyGames(gamesAvailable) {
 // display player's games on menu screen
+	gamenum = 0;
 	for (var gameID in myGameList) {
+		gamenum++;
 		var game = myGameList[gameID];
 		var listing = $("<li>")
 			.attr("id", gameID)
