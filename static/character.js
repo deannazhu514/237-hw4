@@ -28,12 +28,13 @@ function newCharacter(data) {
 	character.type = type; //used for animation purposes, i guess?
 	character.index = data.index;
 	
+	
 	if (type === "warrior") {
-		character.img = warriorImageM;
+		character.img = warriorImage[character.player-1];
 	} else if (type === "mage") {
-		character.img = mageImageM;
+		character.img = mageImage[character.player-1];
 	} else if (type === "archer") {
-		character.img = archerImageM;
+		character.img = archerImage[character.player-1];
 	} else {
 		character.img = "";
 	}

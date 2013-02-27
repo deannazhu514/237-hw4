@@ -110,7 +110,7 @@ input, a {
 	background-color: 
 }
 
-#createButton {
+#createButton, #createTeamButton {
 	background-color: #F00;
 	color: #FFF;
 	right: -63%;

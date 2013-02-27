@@ -7,14 +7,12 @@ function draw() {
 		//draw victory banner for p1 or p2
 		return; //stop drawing the rest of the crap
 	}
-	
 	ctx.clearRect(0,0,canvas.width,canvas.height);
 	drawMap();
 	drawCharacters();
 	drawCursor();
 	drawMenu();
 }
-
 
 function drawMap() {
 	//note: Assumes canvas width & height >= tileSize*map's width & height
@@ -48,11 +46,24 @@ function drawCharacters() {
 		var character = p1charList[i];
 		if (!isDead(character)) {
 			var ci = index[character.type];
+			if (playerFocus === "characterMenu" && animationFlag){
+				//draw move
+				index[character.type] = ci++;
+				console.log("draw move", movePath);
+				animationFlag = false;
+			}
+			else if (playerFocus === "viewing" && animationFlag){
+				//draw attack
+				console.log("draw attack");
+				animationFlag = false;
+			}
+			
 			ctx.drawImage(character.img, 
 				sXList[character.type][0], sYList[character.type][0],
-				widthList[character.type][0], heightList[character.type][0],
+				widthList[character.type][0], heightList[character.type][0],	
 				character.x*tileSize, character.y*tileSize,
 				tileSize, tileSize);
+				
 		}
 		else {
 			//character is dead :(

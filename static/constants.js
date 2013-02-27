@@ -53,6 +53,12 @@ var playerFocus;
 * -any other menu option
 */
 
+
+/* ANIMATION */
+var movePath;
+
+/* END ANIMATION */
+
 var currentChar;
 
 /*FLAGS HERE */
@@ -102,22 +108,35 @@ var index = {"warrior":0,
 				"mage":0
 			};
 
-var warriorImageM = new Image();
-warriorImageM.src = "images/human_male.png";
-var warriorImageF = new Image();
-warriorImageF.src = "images/human_female.png";
+var delay = {"warrior":5, 
+				"archer":5,
+				"mage":5
+			};
+						
+var warriorImage1 = new Image();
+warriorImage1.src = "images/human_male.png";
 
-var archerImageM = new Image();
-archerImageM.src = "images/elf_male.png";
+var warriorImage2 = new Image();
+warriorImage2.src = "images/human_male2.png";
 
-var archerImageF = new Image();
-archerImageF.src = "images/elf_female.png";
+var warriorImage = [warriorImage1, warriorImage2];
 
-var mageImageM = new Image();
-mageImageM.src = "images/zombie_female.png";
+var archerImage1 = new Image();
+archerImage1.src = "images/elf_male.png";
 
-var mageImageF = new Image();
-mageImageF.src = "images/zombie_male.png";
+var archerImage2 = new Image();
+archerImage2.src = "images/elf_male2.png";
+
+var archerImage = [archerImage1, archerImage2];
+
+var mageImage1 = new Image();
+mageImage1.src = "images/zombie_female.png";
+
+var mageImage2 = new Image();
+mageImage2.src = "images/zombie_female2.png";
+
+var mageImage = [mageImage1, mageImage2];
+
 
 /* END CHARACTER CONSTANTS*/
 

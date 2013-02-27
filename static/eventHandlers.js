@@ -38,8 +38,8 @@ function onKeyDownParser(e) {
 		keyDownStats(e);
 	} else if (playerFocus == "playerMenu") {
 		keyDownPlayerMenu(e);
-	} else if (playerFocus == "magicMenu") {
-		
+	} else if (playerFocus == "magic") {
+		keyDownMagicMenu(e);
 	}
 }
 
@@ -187,7 +187,7 @@ function processMenuSelection(item) {
 		playerFocus = "view stats";
 		generateStatsMenu();
 	} else if (item === "Magic") {
-		playerFocus = "menuMagic";
+		playerFocus = "magic";
 	} else if (item === "Wait") {
 		currentChar.hasMoved = true;
 		playerFocus = "viewing";
@@ -238,18 +238,27 @@ function keyDownMove(e) {
 			return;
 		}
 	} else if (e === 32) { //space
+		tuple = cursor.y + "," + cursor.x;
+		console.log(tuple, "tuplee");
+		listPath.push("" + y + "," + x);
+		currentChar.movePoints = currentChar.maxMovePoints;
 		for (var i = 1; i < listPath.length; i++) {
 			 var arrayTuple = listPath[i].split(",");
 			 tile = map[(arrayTuple[0] - 0)][(arrayTuple[1] - 0)]; // the - 0 just casts it to a number
 			 terrain = terrainDict[tile.type];
 			 currentChar.movePoints -= terrain.moveCost;
 		}
+		
 		map[currentChar.y][currentChar.x].character = null;
 		currentChar.x = cursor.x;
 		currentChar.y = cursor.y;
-		map[currentChar.y][currentChar.x].character = currentChar;
-		playerFocus = "characterMenu";
+		animationFlag = true;
+		//map[currentChar.y][currentChar.x].character = currentChar;
+		movePath = listPath;
 		listPath = [];
+		playerFocus = "characterMenu";
+		generateCharacterMenu();
+		
 		//THIS IS JUST PLACEHOLDER: WE SHOULD PUT IN ANIMATIONS	
 		return;
 	} else if (e === 27) { //ESC
@@ -281,7 +290,6 @@ function keyDownMove(e) {
 		if (isValidMove(tile)) {
 			listPath.push("" + y + "," + x);
 			currentChar.movePoints -= terrainDict[tile.type].moveCost;
-			lastMove = terrainDict[tile.type].moveCost;
 		} else {
 			console.log("invalid move");
 			cursor.x = x;
@@ -361,10 +369,10 @@ function keyDownAttack(e) {
 				hit = false;
 			}
 		}		
-		
 		currentChar.hasMoved = true;
 		attacked = true;
 		playerFocus = "viewing";
+		animationFlag = true;
 		return;
 	} else if (e === 27) { //escape
 		playerFocus = "characterMenu";
@@ -440,6 +448,13 @@ function processPlayerMenuSelection() {
 		endTurn();
 	} else if (item === "Main Menu") {
 		// return to main menu some how
+	}
+}
+
+function keyDownMagicMenu(e) {
+	if (e === 27) {
+		playerFocus = "characterMenu";
+		generateCharacterMenu();
 	}
 }
 
