@@ -54,33 +54,28 @@ function loadTitleScreen() {
 function refreshMenuScreen() {
 // refreshDOM while on menu screen
 // to do: add continue game functionality
+	var instructions = $("#instruction").html("instructions");
 	var container = $("#content");
 	container.html("");
 	
-	var title = $("#title");
-	title.html("<h1> Welcome to "+gametitle+"</h1>");
-	//title.css("font-size", "30px");
-	
-	var instructions = $("<div class = 'instructions'>");
-	instructions.html("[instructions]"); // load from text file on server?
 	
 	if (pageState.length === 1) 
 		pageState.push("openGames");
 	var availButton = $("<a>").html("Available Games");
 	availButton.addClass("roombut");
-	availButton.mousedown(
-				function(event) {
+	availButton.click(
+				function() {
 					pageState[1] = "openGames";
 					refreshDOM();
-					// getOpenGames();
+					//getOpenGames();
 				});
 	var currButton = $("<a>").html("Current Games");
 	currButton.addClass("roombut");
-	currButton.mousedown(
-				function(event) {
+	currButton.click(
+				function() {
 					pageState[1] = "myGames";
 					refreshDOM();
-					// getCurrentGames();
+					//getCurrentGames();
 				});
 
 	var rooms = $("<div>").addClass("rooms");
@@ -134,8 +129,10 @@ function refreshMenuScreen() {
 		});
 		
 	rooms.append(gamesAvailable);
+	
+	//adjust height of games box based on number of games
 	rooms.css("height", gamenum*20+10);
-	container.append(instructions,
+	container.append(
 				availButton, currButton,
 				rooms, createButton, joinButton);
 }
@@ -212,8 +209,6 @@ function selectGame(listing) {
 /* CREATE TEAM SCREEN FUNCTIONS */
 function refreshCreateTeamScreen() {
 // load the team create screen
-	$("#title").html("Create your team");
-	$(".instructions").html("instructions or class descriptions go here");
 	var container = $("#content");
 	container.html("");
 	var teamList = $("<div>").attr("id", "teamList");
@@ -325,6 +320,7 @@ function getCharImgSrc(currCharacter) {
 		src = mageImage1.src;
 	return src;
 }
+
 function getCharData() {
 // gets classes of characters and creates array of player's characters
 	var charList = Array(teamSize);

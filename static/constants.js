@@ -54,6 +54,10 @@ var playerFocus;
 */
 
 
+/* INSTRUCTION TEXT */
+var menuText = "Choose whether to join an open game, create a new game, or continue a saved game. Create a game with your desired map type and wait for a new player to join your game and fight against you. Join a game created by another player. Continue a game against another player that is currently in progress. Any time you quit a game, it will be automatically saved up to the last fully completed turn. "
+
+
 /* ANIMATION */
 var movePath = [];
 var anim_done = false;

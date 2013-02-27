@@ -258,7 +258,7 @@ function keyDownMove(e) {
 		currentChar.x = cursor.x;
 		currentChar.y = cursor.y;
 		animationFlag = true;
-		//map[currentChar.y][currentChar.x].character = currentChar;
+		map[currentChar.y][currentChar.x].character = currentChar;
 		movePath = movePath.concat(listPath);
 		console.log("movePath", movePath);
 		listPath = [];

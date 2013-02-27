@@ -15,10 +15,11 @@ body {
 	right: 0px;
 	
 	padding: 15px;
-	border: 2px solid #FAA;
+	border: 2px solid #0AF;
 	border-radius: 5px;
 	font-size: 64px;
 	z-index: 1;
+	
 }
 
 h1 {
@@ -26,6 +27,38 @@ h1 {
 	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	font-weight: bold;
 	text-align: center;
+}
+
+#titleImg1{
+	position: fixed;
+	top: 20px;
+	left: 0px;
+	right: 0px;
+	height: 80px;
+	
+	background-image:url(images/logo1.png);
+	
+	margin: -10px 0px;
+	background-repeat: no-repeat;
+	background-position: bottom left;
+	background-size: 80px 80px;
+	z-index: 1;
+}
+
+#titleImg2{
+	position: fixed;
+	top: 20px;
+	left: 0px;
+	right: 0px;
+	height: 80px;
+	
+	background-image:url(images/logo2.png);
+	
+	margin: -10px 0px;
+	background-repeat: no-repeat;
+	background-position: bottom right;
+	background-size: 80px 80px;
+	z-index: 1;
 }
 
 #content {
@@ -36,6 +69,11 @@ h1 {
 	width: 700px;
 	margin: 70px auto;
 	color: #FFF;
+}
+
+#credits {
+	position: relative;
+	top: 100px;
 }
 
 li
@@ -78,6 +116,10 @@ input, a {
 }
 
 .instructions {
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	position: relative;
+	text-align: center;
+	top: 20px;
 	color: #FF0;
 	padding: 20px;
 }
@@ -127,10 +169,10 @@ input, a {
 }
 
 #warriorM{
-	width: 10px;
-	height: 10px;
 	background-image:url(images/human_male.png);
-	
+	background-repeat: no-repeat;
+	background-position: bottom left;
+	background-size: 80px 80px;
 }
 
 .charStats {

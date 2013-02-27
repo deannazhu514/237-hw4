@@ -53,16 +53,16 @@ function drawCharacters() {
 				if (movePath.length <= 1) {
 					animationFlag = false;
 				} else {
-					var src = movePath[0].split(",");
+					animationFlag = false;
+				/*	var src = movePath[0].split(",");
 					var dest = movePath[1].split(",");
 					character.x = src[1]+(dest[1]-src[1]);
 					character.x = src[0]+(dest[0]-src[0]);
 								
 					movePath.splice(0, 1);
-				}
+				*/}
 				
-			}
-			else if (playerFocus === "viewing" && animationFlag){
+			} else if (playerFocus === "viewing" && animationFlag){
 				//draw attack
 				console.log("draw attack");
 				animationFlag = false;
