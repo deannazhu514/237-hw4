@@ -4,6 +4,7 @@ var timerDelay = 20;
 var key_pressed = {};
 var keyPressThreshhold = 5;
 var keyPressTickMod = 2;
+var maxMana = 100;
 
 var map;
 var canvasWidth = 1100; //0-800 for game, 800-1100 for menu
@@ -29,6 +30,7 @@ var menu = []; //don't know if this is needed
 var characterMenu = [];
 var playerMenu = [];
 var statMenu = [];
+var magciMenu = [];
 var menuIndex = 0;
 /*END MENU CONSTANTS*/
 

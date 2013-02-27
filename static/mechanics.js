@@ -12,15 +12,21 @@
 //before we return (before we do the hit animation)
 function calculateHit(attacker, defender) {
 	var hitChance = attacker.toHit - defender.dodgeChance;
+  console.log(attacker.toHit, defender.dodgeChance);
 	var tile = map[defender.y][defender.x];
 	var terrain = terrainDict[tile.type];
 	var h = Math.random();
 	hitChance -= terrain.dodgeModifier;
+  console.log(hitChance);
 	console.log(h, hitChance);
-	if (h > Math.abs(hitChance)) {
+	if (h > hitChance) {
 		return false;
 	}
-	damage = attacker.damage - terrain.damageModifier;
+	damage = attacker.damage - terrain.damageModifier - defender.defense;
+  h = Math.random();
+  if (h < attacker.critChance) {
+    damage = damage * 2;
+  }
 	defender.health -= damage;
 	return true;
 }

@@ -13,7 +13,7 @@ terrainDict.mountain = {
 };
 
 terrainDict.forest = {
-	dodgeModifier : 15,
+	dodgeModifier : .15,
 	moveCost : 2,
 	damageModifier : 1,
 };

@@ -179,32 +179,6 @@ function selectGame(listing) {
 	listing.addClass("selected");
 }
 
-// function getOpenGames() {
-	// $.ajax({
-		// type: "get",
-		// url: "/displayOpenGames/:" + playerName,
-		// success: function(data) {
-			// if (data.success === true) {
-				// openGameList = data.games;
-				// console.log("getopen");
-				// refreshDOM();
-			// }
-		// }
-	// });
-// }
-// function getCurrentGames() {
-	// $.ajax({
-		// type: "get",
-		// url: "/displayCurrentGames/:" + playerName,
-		// success: function(data) {
-			// if (data.success === true) {
-				// myGameList = data.games;
-				// console.log("getcurrent");
-				// refreshDOM();
-			// }
-		// }
-	// });
-// }
 
 
 /* CREATE TEAM SCREEN FUNCTIONS */
@@ -248,7 +222,8 @@ function refreshCreateTeamScreen() {
 			currentGame = new Object();
 			currentGame.player1 = playerName;
 			currentGame.name = $("#gameName").val();
-			currentGame.p1charList = currentTeam;
+			var tempdatalist = currentTeam;
+      currentGame.p1charList = init_characters(tempdatalist);
 			currentGame.map = 1; // default map number 
 			pageState[0] = "menu";
 			pageState[1] = "openGames";
@@ -259,7 +234,7 @@ function refreshCreateTeamScreen() {
 		// adds player to another player's game
 		// resets currentTeam for future team creations
 			currentGame.player2 = playerName;
-			currentGame.p2charList = currentTeam;
+			currentGame.p2charList = init_characters(currentTeam);
 			pageState[0] = "gameInPlay";
 			currentTeam = undefined;
 			joinGame();
@@ -357,148 +332,6 @@ function getRandom(charClass, stat) {
 	return Math.floor(min + Math.random()*(max-min));
 }
 
-
-/*function refreshCreateTeamScreen() {	
-// refreshDOM while on game start screen
-// create a team to join/create a game
-// if creating a new game, can choose map type
-	var container = $("#content");
-	container.html("");
-	
-	var charList = new Array(teamSize);
-	
-	var instructions = $("<div>").addClass("instructions");
-	instructions.html("Create Team [insert better description]");
-	container.append(instructions);
-	
-	if (pageState[0] === "createGame") {
-		var gameName = $("<li>").append(
-				$("<label>").html("Enter a game name: "),
-				$("<input id=gameName>")
-					.attr("name", "gameName")
-					.attr("type", "text")
-			);
-		var mapNumber = $("<li>").append(
-				$("<label>").html("Choose your map: "),
-				$("<input id=mapNumber>")
-					.attr("name", "mapNumber")
-					.attr("type", "number")
-			);	
-		container.append(gameName, mapNumber);
-	}
-	
-	var createTeam = $("<div>")
-				.attr("id", "teampick");
-	// show all characters on your team
-	for (var i=0; i< charList.length; i++) {
-		var currCharacter = $("<ul>")
-			.attr("id", "char"+i)
-			.addClass("charStats");		
-		// displays and sets stats of each character on team
-		// for now, user types it in, might make buttons/scrollbar later
-		var charType = $("<li>").append(
-			$("<label>").html("Class: "),
-			$("<input>").addClass("charInput")
-				.attr("id", i+"charType")
-				.attr("type", "text")
-		);		
-		var charXPos = $("<li>").append(
-			$("<label>").html("X Position: "),
-			$("<input>").addClass("charInput")
-				.attr("id", i+"charXPos")
-				.attr("type", "number")
-		);
-		var charYPos = $("<li>").append(
-			$("<label>").html("Y Position: "),
-			$("<input>").addClass("charInput")
-				.attr("id", i+"charYPos")
-				.attr("type", "number")
-		);
-		var charStrength = $("<li>").append(
-			$("<label>").html("Strength: "),
-			$("<input>").addClass("charInput")
-				.attr("id", i+"charStrength")
-				.attr("type", "number")
-		);
-		var charDexterity = $("<li>").append(
-			$("<label>").html("Dexterity: "),
-			$("<input>").addClass("charInput")
-				.attr("id", i+"charDexterity")
-				.attr("type", "number")
-		);
-		var charEndurance = $("<li>").append(
-			$("<label>").html("Endurance: "),
-			$("<input>").addClass("charInput")
-				.attr("id", i+"charEndurance")
-				.attr("type", "number")
-		);
-		var charAgility = $("<li>").append(
-			$("<label>").html("Agility: "),
-			$("<input>").addClass("charInput")
-				.attr("id", i+"charAgility")
-				.attr("type", "number")
-		);		
-		currCharacter.append(charType, charXPos, charYPos,
-							charStrength, charDexterity, 
-							charEndurance, charAgility);
-		createTeam.append(currCharacter);
-	}
-	container.append(createTeam);
-	
-	var startButton = $("<a id=createTeamButton>").addClass("menubut");
-	if (pageState[0] === "createGame") {		
-		startButton.html("Create Game");
-		startButton.click(function(){
-			pageState[0] = "menu";
-			pageState[1] = "openGames";
-			currentGame = new Object();
-			var datalist = getCharData();
-			currentGame.p1charList = datalist;
-			currentGame.name = $("#gameName").val();
-			currentGame.map = $("#mapNumber").val();
-			createGame();
-			// refreshDOM();
-		});
-	}
-	else if (pageState[0] === "joinGame") {
-		startButton.html("Join Game");
-		startButton.click(function(){
-			pageState[0] = "gameInPlay";
-			pageState[1] = "";
-			var datalist = getCharData();
-			currentGame.p1charList = datalist;
-			joinGame();
-			// refreshDOM();
-		});
-	}
-	
-	var backButton = $("<a id=joinButton>").html("Go Back").addClass("menubut");
-	backButton.click(function(){
-		pageState[0] = "menu";
-		pageState[1] = "openGames";
-		refreshMenuScreen();
-	});
-	container.append(backButton, startButton);
-}
-
-function getCharData() {
-	var charStats = $(".charStats");
-	var datalist = Array(charStats.length);
-	for (var i=0; i< charStats.length; i++) {
-		var data ={};
-		data.type = $("#"+i+"charType").val();
-		data.x = $("#"+i+"charXPos").val();
-		data.y = $("#"+i+"charYPos").val();
-		data.strength = $("#"+i+"charStrength").val();
-		data.dexterity = $("#"+i+"charDexterity").val();
-		data.endurance = $("#"+i+"charEndurance").val();
-		data.agility = $("#"+i+"charAgility").val();
-		data.player = playerName;
-		datalist[i] = data;
-	}
-	return datalist;
-}
-*/
 function createGame() {
 	$.ajax({
 		type: "post",
@@ -520,7 +353,7 @@ function joinGame() {
 		url: "/joinGame",
 		data: { "playerName": playerName, 
 				"gameID": currentGame.id,
-				"charList": currentGame.p2charList},
+				"charList": JSON.stringify(currentGame.p2charList)},
 		success: function(data) {
 			if (data.success === true){
 				console.log("game start");
@@ -528,7 +361,7 @@ function joinGame() {
 				//console.log(stringgame);
 				currentGame = data.game;
 				var playerNumber;
-				if (currentGame.player1 === "playerName") {
+				if (currentGame.player1 === playerName) {
 					playerNumber = 1;
 				} else {
 					playerNumber = 2;
@@ -536,7 +369,8 @@ function joinGame() {
 				refreshGameScreen();
 				init(playerNumber);
 			}	else { 
-				alert("Cannot join game.");
+				//alert("Cannot join game."); //calling alert doesn't work..........
+        console.log("Cannot join game.");
 				pageState[0] = "menu";
 				pageState[1] = "openGames";
 				refreshDOM();
@@ -565,7 +399,7 @@ function refreshGameScreen() {
 	var terrain = $("<script src = 'terrain.js'>");
 	var main = $("<script src = 'main.js'>");
 	container.append(character, draw,	eventHandlers, mechanics);
-	container.append(main);//implement maps and terrain later
+	container.append(main, terrain);//implement maps and terrain later
 }
 
 function updateGame() {

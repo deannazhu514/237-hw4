@@ -29,16 +29,11 @@ function newCharacter(data) {
 	character.index = data.index;
 	
 	
-	if (type === "warrior") {
-		character.img = warriorImage[character.player-1];
-	} else if (type === "mage") {
-		character.img = mageImage[character.player-1];
-	} else if (type === "archer") {
-		character.img = archerImage[character.player-1];
-	} else {
-		character.img = "";
-	}
-	
+  
+  if (character.type === "mage") {
+    character.mana = maxMana;
+  }
+  
 	var strength = data.strength;
 	var dexterity = data.dexterity;
 	var endurance = data.endurance;
@@ -63,10 +58,10 @@ function newCharacter(data) {
 	//note 5 not need be inside the floor function but we may want
 	//characters with fractional base movePoints so they benefit
 	//more from agility, so for consistency's sake i include it inside
-	
 	character.maxMovePoints = Math.floor(baseStats[type].movePoints + (agility * agilMov));
 	character.critChance = baseStats[type].critChance + (dexterity * dexCrit) + (strength * strCrit);
-	character.dodgeChance = baseStats[type].dodgeChance + (agility + agilDodge);
+	character.dodgeChance = baseStats[type].dodgeChance + (agility * agilDodge);
+	console.log("dodge: " + character.dodgeChance);
 	return character;
 }
 

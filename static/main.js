@@ -1,13 +1,18 @@
 function init(player) {
+  console.log("called init");
+  canvas = document.getElementById("myCanvas");
+  ctx = canvas.getContext("2d");
 	canvas.addEventListener('keyup', onKeyUp, false);
 	canvas.addEventListener('keydown', onKeyDown, false);
 	//canvas.addEventListener('mousemove', onMouseMove, false);
 
 	playerNumber = player;
 	init_map(currentGame.map);
-	p1charList = init_characters(currentGame.p1charList);
-	p2charList = init_characters(currentGame.p2charList);
-	
+	//p1charList = init_characters(currentGame.p1charList);
+	//p2charList = init_characters(currentGame.p2charList);
+	p1charList = currentGame.p1charList;
+  p2charList = currentGame.p2charList;
+  init_char_images();
 	cursor.x = Math.floor(width/2);
 	cursor.y = height-1;
 	playerFocus = "viewing";
@@ -29,12 +34,34 @@ function init(player) {
 	intervalId = setInterval(update, timerDelay);
 }
 
-//ASSUMING GIVEN TWO LISTS WITH DATA OBJECTS
-//DATA HAS 
-/*CHAR TYPE (CLASS/RACE)
-* PLAYER (1 or 2)
-* x and y coordinates
-*/
+function init_char_images() {
+
+  for (var i = 0; i < p1charList.length; i++) {
+    var type = p1charList[i].type;
+    if (type === "warrior") {
+      p1charList[i].img = warriorImage[0];
+    } else if (type === "mage") {
+      p1charList[i].img = mageImage[0];
+    } else if (type === "archer") {
+      p1charList[i].img = archerImage[0];
+    } else {
+      p1charList[i].img = "";
+    }
+	}
+  for (var i = 0; i < p2charList.length; i++) {
+    var type = p2charList[i].type;
+    if (type === "warrior") {
+      p2charList[i].img = warriorImage[1];
+    } else if (type === "mage") {
+      p2charList[i].img = mageImage[1];
+    } else if (type === "archer") {
+      p2charList[i].img = archerImage[1];
+    } else {
+      p2charList[i].img = "";
+    }
+	}
+}
+
 function init_characters(datalist) { 
 	var charlist = [];
 	var newchar;
@@ -61,8 +88,8 @@ function init_map (mapNum) {
 				var tile = {};
 				tile.type = tileType[Math.floor(Math.random()*3)];
 				tile.character = null;
-				if (((i === height/2) || (i === ((height/2) - 1)))
-					&& ((j === width/2) || (j === ((width/2) - 1)))) {
+				if ((i === 5) || (i === 4)
+					&& ((j === 5) || (j === 4))) {
 					tile.special = "scorespot";
 				} else { 
 					tile.special = "";
@@ -77,28 +104,6 @@ function init_map (mapNum) {
 		//third map type etc
 	}
 }
-
-/*
-function terrain_factory(type) {
-	var tile;
-	if (type == "p") { //Plain: default terrain type
-		tile.dodgeModifier = 0; //gives bonus to dodge (positive is better)
-		tile.moveAmount = 1; //move points required to cross the tile
-		tile.damageModifier = 0;
-		tile.character = "";
-	} else if (type == "m") { //mountain: impassable
-		tile.dodgeModifier = 0; //dummy value
-		tile.moveAmount = 1000; //effectively impassable terrain
-		tile.damageModifier = 0; //dummy value
-		tile.character = "";
-	} else if (type == "f") { //forest: defensive benefits, difficult to traverse
-		tile.dodgeModifier = 15;
-		tile.moveAmount = 2;
-		tile.damageModifier = 1;
-		tile.character = "";
-	}
-}*/
-
 
 function checkVictory() {
 	//god this function should be split into 
@@ -174,7 +179,6 @@ function checkKeyPressed() {
 }
 
 function update() {
-	
 	var cList;
 	for (var i = 0; i < p1charList.length; i++) {
 			map[p1charList[i].y][p1charList[i].x].character = p1charList[i];
@@ -182,13 +186,13 @@ function update() {
 	for (var i = 0; i < p2charList.length; i++) {
 			map[p2charList[i].y][p2charList[i].x].character = p2charList[i];
 	}	
-	if ((playerNumber === 1) && (currentGame.status === "p1turn")) {
+	if ((playerNumber == 1) && (currentGame.status === "p1turn")) {
 		cList = p1charList;
-	} else if ((playerNumber === 2) && (currentGame.status === "p2turn")) {
+	} else if ((playerNumber == 2) && (currentGame.status === "p2turn")) {
 		cList = p2charList;
 	} else { //it isn't your turn, whichever player you are...
 		isMyTurn();
-		// return;
+		 return;
 	}
 	
 	draw();
@@ -247,9 +251,10 @@ function endTurn() {
 	//but i'm not sure thats the case so here's some possibly
 	//redundant code lool fml
 	
+  
 	currentGame.p1charList = p1charList;
 	currentGame.p2charList = p2charList;
-	
+	remove_char_images();
 	if (currentGame.status === "p1turn") {
 		currentGame.status = "p2turn";
 	} else {
@@ -257,6 +262,15 @@ function endTurn() {
 	}
 	
 	update();
+}
+
+function remove_char_images() {
+  for (var i = 0; i < currentGame.p1charList; i++) {
+    delete currentGame.p1charList[i].img;
+  }
+  for (var i = 0; i < p2charList; i++) {
+    delete currentGame.p2charList[i].img;
+	}
 }
 
 
