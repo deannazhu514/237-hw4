@@ -12,7 +12,7 @@ function draw() {
 	drawMap();
 	drawCharacters();
 	drawCursor();
-  drawMenu();
+	drawMenu();
 	displayTerrainStats();
 }
 
@@ -54,19 +54,19 @@ function displayTerrainStats() {
       var terrainInfo = terrain[key];
       ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
       if (terrainInfo !== 0) {
-        ctx.fillRect(menuX+10,menuY+(i+1)*offset+310, menuWidth-20, 30);
+        ctx.fillRect(menuX+10,menuY+(i+1)*offset+210, menuWidth-20, 30);
         ctx.fillStyle = "red";
-        ctx.fillText(key + ": " + terrainInfo, menuX+20, menuY+(i+1)*offset+330);
+        ctx.fillText(key + ": " + terrainInfo, menuX+20, menuY+(i+1)*offset+230);
         i++;
       }
     }
     if (tile.special === "scorespot") {
       ctx.fillRect(menuX+10,menuY+(i+1)*offset+310, menuWidth-20, 30);
-      ctx.fillStyle = "red";
+      ctx.fillStyle = "white";
       ctx.fillText("scoring space", menuX+20, menuY+(i+1)*offset+330);
     }
-  }
-  else {
+	
+  } else {
     var viewchar = tile.character;
     var dchance = terrain.dodgeModifier.toFixed(2);
     var dstring = "";
@@ -97,9 +97,9 @@ function displayTerrainStats() {
     for (var j = 0; j < templist.length; j++) {
       ctx.font="20px Courier New";
       ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
-      ctx.fillRect(menuX+10,menuY+(j+1)*offset+310, menuWidth-20, 30);
+      ctx.fillRect(menuX+10,menuY+(j+1)*offset+20, menuWidth-20, 30);
       ctx.fillStyle = "red";
-      ctx.fillText(templist[j], menuX+20, menuY+(j+1)*offset+330);
+      ctx.fillText(templist[j], menuX+20, menuY+(j+1)*offset+35);
       
     }
   }
@@ -201,7 +201,9 @@ function drawMenu() {
 
 	ctx.font="20px Courier New";
 	ctx.fillStyle = "#0FF";
-	ctx.fillText("[ESC] to return", menuX+20, 500);
+	ctx.fillText("[space] to select", menuX+20, 520);
+	ctx.fillText("[ESC] to return", menuX+20, 550);
+	//var instructions = "[space] to select";	
 	
 	if (!turnEnd) {
 		if (playerFocus === "viewing") {
@@ -214,10 +216,7 @@ function drawMenu() {
 				ctx.fillStyle = "#0FF";
 				ctx.fillText("Missed!", menuX+20, 200);
 			} else {
-				var instructions = "[space] to select character";
-				ctx.font="12px Courier New";
-				ctx.fillStyle = "#0FF";
-				ctx.fillText(instructions, menuX+20, 200);	
+				
 			}
 		} else if (playerFocus == "moving") {
 				ctx.font="30px Courier New";
