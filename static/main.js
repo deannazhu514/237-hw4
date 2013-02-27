@@ -1,11 +1,15 @@
 function init(player) {
-  console.log("called init");
-  canvas = document.getElementById("myCanvas");
-  ctx = canvas.getContext("2d");
-	canvas.addEventListener('keyup', onKeyUp, false);
-	canvas.addEventListener('keydown', onKeyDown, false);
+  console.log("called init: " + currentGame.status);
+  if (typeof(canvas) === 'undefined') {
+    canvas = document.getElementById("myCanvas");
+    ctx = canvas.getContext("2d");
+    canvas.addEventListener('keyup', onKeyUp, false);
+    canvas.addEventListener('keydown', onKeyDown, false);
+    canvas.setAttribute('tabindex','0');
+	canvas.focus();
+  }
 	//canvas.addEventListener('mousemove', onMouseMove, false);
-
+  turnEnd = false;
 	playerNumber = player;
 	init_map(currentGame.map);
 	p1charList = currentGame.p1charList;
@@ -25,10 +29,9 @@ function init(player) {
 	key_pressed["left"] = false;
 	key_pressed["up"] = false;
 	key_pressed["down"] = false;
-	gameEndFlag = false;
+	gameEndFlag;
 	
-	canvas.setAttribute('tabindex','0');
-	canvas.focus();
+	
 	
 	intervalId = setInterval(update, timerDelay);
 }
@@ -49,6 +52,9 @@ function recast_char_stats() {
     character.critChance -= 0;
     character.dodgeChance -= 0;
     character.player -= 0;
+    if (character.hasMoved == 'false') {
+      character.hasMoved = false;
+    } else { character.hasMoved = true; }
     p1charList[i] = character;
 	}
   for (var i = 0; i < p2charList.length; i++) {
@@ -65,6 +71,10 @@ function recast_char_stats() {
     character.maxMovePoints -= 0;
     character.critChance -= 0;
     character.dodgeChance -= 0;
+      if (character.hasMoved == 'false') {
+        character.hasMoved = false;
+      } else if (character.hasMoved == 'true') { character.hasMoved = true; }
+    
     p2charList[i] = character;
 	}
 }
@@ -141,11 +151,8 @@ function init_map (mapNum) {
 }
 
 function checkVictory() {
-	//god this function should be split into 
-	//multiple helper functions but im so tired
-	//so inelegant sigh
 	var i = 0;
-	if (playerNumber === 1) {
+	if (playerNumber == 1) {
 		while (i < p2charList.length) {
 			if (!isDead(p2charList[i])) {
 				break;
@@ -158,11 +165,13 @@ function checkVictory() {
 			//display victory animation
 			gameEndFlag = true;
 			endTurn();
+      window.clearInterval(intervalId);
 		}
 		if (currentGame.p1points >= 100) {
 			currentGame.status = "p1Victory";
 			gameEndFlag = true;
 			endTurn();
+      window.clearInterval(intervalId);
 		}
 	} else {
 		while (i < p1charList.length) {
@@ -176,11 +185,13 @@ function checkVictory() {
 			//display victory animation
 			gameEndFlag = true;
 			endTurn();
+      window.clearInterval(intervalId);
 		}
 		if (currentGame.p2points >= pointGoal) {
 			currentGame.status = "p2Victory";
 			gameEndFlag = true;
 			endTurn();
+      window.clearInterval(intervalId);
 		}
 	}
 }
@@ -221,12 +232,17 @@ function update() {
 	for (var i = 0; i < p2charList.length; i++) {
 			map[p2charList[i].y][p2charList[i].x].character = p2charList[i];
 	}	
+  
 	if ((playerNumber == 1) && (currentGame.status === "p1turn")) {
 		cList = p1charList;
 	} else if ((playerNumber == 2) && (currentGame.status === "p2turn")) {
 		cList = p2charList;
 	} else { //it isn't your turn, whichever player you are...
+    if (waitCounter++ > 200) {
+     waitCounter = 0;
+    console.log('checkturn');
 		 isMyTurn();
+     }
 		 return;
 	}
 	
@@ -246,8 +262,9 @@ function update() {
 		}
 	}
 	
+  console.log("ending your turn");
 	//only reaches endturn if all characters have moved or are dead
-	endTurn();
+	endTurn();  
 }
 
 function endTurn() {
@@ -263,7 +280,10 @@ function endTurn() {
 	}
 	for (var i = 0; i < pList.length; i++) {
 		pList[i].movePoints = pList[i].maxMovePoints;
+    pList[i].hasMoved = false;
 	}
+  console.log(p1charList[0].movePoints);
+  console.log(p2charList[1].movePoints);
 	
 	//so you only get points after one full turn: that is,
 	//after your opponent finishes his turn. 
@@ -280,6 +300,7 @@ function endTurn() {
 				currentGame.p1points = currentGame.p1points + pointGain;
 			}
 		}
+    opList[i].hasMoved = false;
 	}
 	//i'm assuming p1charlist etc are just references to
 	//game.p1charlist rather than modifying a different copy
@@ -290,6 +311,7 @@ function endTurn() {
 	remove_char_images();
 	currentGame.p1charList = p1charList;
 	currentGame.p2charList = p2charList;
+  console.log("status : " + currentGame.status);
 	if (currentGame.status === "p1turn") {
 		currentGame.status = "p2turn";
 	} else {

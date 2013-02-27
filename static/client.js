@@ -429,8 +429,7 @@ function isMyTurn() {
 	//the server to see if the turn changes
 	//ask the server if its my turn
 	
-	//to be implemented
-	
+	console.log('calling ismyturn');
 	$.ajax({
 		type: "get",
 		url: "/isYourTurn/"+playerName+"/"+(currentGame.id),
@@ -442,6 +441,7 @@ function isMyTurn() {
 				//this should have a new status 
 				//which will cause ismyturn to not be
 				//called anymore in update
+        currentGame.status = "p"+playerNumber+"turn";
         window.clearInterval(intervalId);
         init(playerNumber);
 			}

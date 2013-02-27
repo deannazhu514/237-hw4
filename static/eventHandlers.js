@@ -110,7 +110,7 @@ function falsifyKeyPress() {
 
 function generateCharacterMenu() {
 	characterMenu = [];
-	if (playerNumber === currentChar.player && !currentChar.hasMoved) {
+	if (playerNumber == currentChar.player && !currentChar.hasMoved) {
 		characterMenu.push("Move: "+currentChar.movePoints+" left");
 		characterMenu.push("Attack");
 		if (currentChar.type === "mage") {
