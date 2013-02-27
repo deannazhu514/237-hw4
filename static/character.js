@@ -28,12 +28,9 @@ function newCharacter(data) {
 	character.type = type; //used for animation purposes, i guess?
 	character.index = data.index;
 	
-	
-  
   if (character.type === "mage") {
     character.mana = maxMana;
   }
-  
 	var strength = data.strength;
 	var dexterity = data.dexterity;
 	var endurance = data.endurance;
@@ -51,8 +48,7 @@ function newCharacter(data) {
 	character.range = baseStats[type].range;
 	character.defense = baseStats[type].defense + (endurance * endDef); 
 	//DEFENSE IS AN OPTIONAL STAT. DO NOT KNOW IF WE WANT TO IMPLEMENT
-	
-	
+		
 	character.movePoints = Math.floor(baseStats[type].movePoints + (agility * agilMov)); 
 	//note 5 not need be inside the floor function but we may want
 	//characters with fractional base movePoints so they benefit

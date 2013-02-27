@@ -23,8 +23,9 @@ function onKeyDown(event) {
 }
 
 function onKeyDownParser(e) {
-	if (animationFlag) { 
+
 	//don't allow player to input commands while animations are playing
+	if (animationFlag) { 
 		return;
 	}
 	
@@ -44,12 +45,13 @@ function onKeyDownParser(e) {
 	} else if (playerFocus == "magic") {
 		keyDownMagicMenu(e);
 	} else if (playerFocus == "use magic") {
-    keyDownMagicTarget(e);
+		keyDownMagicTarget(e);
   }
 }
 
 function keyDownView(e) {
 	console.log("viewing", cursor.x, cursor.y);
+	statMenu = [];
 	if (!gameEndFlag) {
 		attacked = false;
 		hit = false;
@@ -98,7 +100,8 @@ function keyDownView(e) {
 		playerFocus = "playerMenu";
 		generatePlayerMenu();
 	}
-	console.log(playerFocus, cursor.x, cursor.y);
+	
+	generateStatMenu();
 }
 
 function falsifyKeyPress() {
@@ -106,6 +109,60 @@ function falsifyKeyPress() {
 	key_pressed["right"] = false;
 	key_pressed["up"] = false;
 	key_pressed["down"] = false;
+}
+
+function generateStatMenu() {
+	statMenu = [];
+	var tile  = map[cursor.y][cursor.x];
+	var terrain = terrainDict[tile.type];
+	var i = 0;
+	var offset = 30;
+	if (tile.character === null) {
+		for (var key in terrain) {
+		  var terrainInfo = terrain[key];
+		  if (terrainInfo !== 0) {
+			statMenu.push(key+": "+terrainInfo);
+			i++;
+		  }
+		}
+		if (tile.special === "scorespot") {
+			statMenu.push("scoring space");
+		}
+	} else {
+		var viewchar = tile.character;
+		var dchance = terrain.dodgeModifier.toFixed(2);
+		var dstring = "";
+		
+		if (dchance > 0) {
+		  dstring = " + " + dchance;
+		} else if (dchance < 0) {
+		  dstring = " - " + Math.abs(dchance);
+		}
+		
+		var defMod = terrain.damageModifier;
+		var type = tile.type;
+		var defstring = "";
+		if (defMod > 0) {
+		  defstring = " + " + defMod + "("+type+")";
+		} else if (defMod < 0) {
+		  defstring = " - " + Math.abs(defMod) + "("+type+")";
+		}
+		
+		templist = [];
+		templist.push("Class: "+viewchar.type);
+		templist.push("Health: "+viewchar.health+"/"+viewchar.maxHealth);
+		if (viewchar.type === "mage") {
+		  templist.push("Mana: " + viewchar.mana + "/" + maxMana);
+		}
+		templist.push("Damage: "+viewchar.damage);
+		templist.push("Range: "+viewchar.range);
+		templist.push("Defense: "+viewchar.defense + defstring);
+		templist.push("toHit: "+(viewchar.toHit.toFixed(2)));
+		templist.push("Critical Chance: " + (viewchar.critChance.toFixed(2)));
+		templist.push("Dodge: "+(viewchar.dodgeChance.toFixed(2)) + dstring);
+	
+		statMenu = templist;
+	}
 }
 
 function generateCharacterMenu() {
@@ -199,7 +256,6 @@ function processMenuSelection(item) {
 		currentChar.hasMoved = true;
 		playerFocus = "viewing";
 	}
-	console.log(item);
 }
 
 function keyDownMove(e) {
@@ -247,23 +303,18 @@ function keyDownMove(e) {
 		}
 	} else if (e === 32) { //space
 
-		
 		map[currentChar.y][currentChar.x].character = null;
 		currentChar.x = cursor.x;
 		currentChar.y = cursor.y;
 		//animationFlag = true;
 		map[currentChar.y][currentChar.x].character = currentChar;
-		// movePath = movePath.concat(listPath);
-		// console.log("movePath", movePath);
-		 listPath = [];
+		listPath = [];
 		playerFocus = "characterMenu";
 		generateCharacterMenu();
 		
-		//THIS IS JUST PLACEHOLDER: WE SHOULD PUT IN ANIMATIONS	
 		return;
 	} else if (e === 27) { //ESC
 		listPath = [];
-		//currentChar.movePoints = currentChar.maxMovePoints;
 		playerFocus = "characterMenu";
 		generateCharacterMenu();
     cursor.x = currentChar.x;
@@ -279,35 +330,21 @@ function keyDownMove(e) {
 	//check if reversing a move
 	if (i !== -1) {
 		console.log("i is : " + i);
-    var templist = listPath.slice(i+1, listPath.length);
+		var templist = listPath.slice(i+1, listPath.length);
 		listPath.splice(i+1,(listPath.length - i));
-    console.log(templist);
-    for (var j = 0; j < templist.length; j++) {
-      var arrayTuple = templist[j].split(",");
-       var tx = arrayTuple[1] - 0;
-       var ty = arrayTuple[0] - 0;
-       tile = map[ty][tx]; // the - 0 just casts it to a number
-			 terrain = terrainDict[tile.type];
-			 currentChar.movePoints += terrain.moveCost;
-       console.log(terrain.moveCost);
-    }
-    
-		//currentChar.movePoints = currentChar.maxMovePoints;
-		 /*for (var i = 0; i < listPath.length; i++) {
-			 var arrayTuple = listPath[i].split(",");
-       var tx = arrayTuple[1] - 0;
-       var ty = arrayTuple[0] - 0;
-       if (ty !== currentChar.y || (tx !== currentChar.x)) {
-        tile = map[ty][tx]; // the - 0 just casts it to a number
-			 terrain = terrainDict[tile.type];
-			 currentChar.movePoints -= terrain.moveCost;
-       }
-		 } */
+		console.log(templist);
+		for (var j = 0; j < templist.length; j++) {
+			var arrayTuple = templist[j].split(",");
+			var tx = arrayTuple[1] - 0;
+			var ty = arrayTuple[0] - 0;
+			tile = map[ty][tx]; // the - 0 just casts it to a number
+			terrain = terrainDict[tile.type];
+			currentChar.movePoints += terrain.moveCost;
+		}
 	} else {
 		tile = map[cursor.y][cursor.x];
 		if (isValidMove(tile)) {
 			listPath.push("" + cursor.y + "," + cursor.x);
-			//listPath.push(tuple);
 			currentChar.movePoints -= terrainDict[tile.type].moveCost;
 		} else {
 			console.log("invalid move");
@@ -451,15 +488,15 @@ function generateStatsMenu(){
   } else if (defMod < 0) {
     defstring = " - " + Math.abs(defMod);
   }
+  
 	statMenu = [];
 	statMenu.push("Class: "+currentChar.type);
-  console.log("type: " + typeof(currentChar.toHit));
 	statMenu.push("toHit: "+(currentChar.toHit.toFixed(2)));
 	statMenu.push("damage: "+currentChar.damage);
 	statMenu.push("Health: "+currentChar.health+"/"+currentChar.maxHealth);
 	statMenu.push("Range: "+currentChar.range);
-  statMenu.push("Critical Chance: " + currentChar.critChance.toFixed(2));
-  statMenu.push("Dodge: "+(currentChar.dodgeChance).toFixed(2) + dstring);
+	statMenu.push("Critical Chance: " + currentChar.critChance.toFixed(2));
+	statMenu.push("Dodge: "+(currentChar.dodgeChance).toFixed(2) + dstring);
 	statMenu.push("Defense: "+currentChar.defense + defstring);
 }
 
@@ -472,12 +509,12 @@ function keyDownStats(e) {
 
 function generatePlayerMenu() {
 	playerMenu = [];
-	playerMenu.push("Main Menu");
 	
 	if (!gameEndFlag) {
 		playerMenu.push("End Turn");
 		playerMenu.push("Surrender");
 	}
+	playerMenu.push("Main Menu");
 	menuIndex = 0;
 }
 
@@ -491,7 +528,7 @@ function processPlayerMenuSelection() {
 		gameEndFlag = true;
 		endTurn();
 	} else if (item === "Main Menu") {
-		// return to main menu some how
+		
 	}
 }
 

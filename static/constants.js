@@ -9,7 +9,7 @@ var maxMana = 100;
 var map;
 var canvasWidth = 1100; //0-800 for game, 800-1100 for menu
 var canvasHeight = 600;
-var tileSize = 60;
+var tileSize = 50;
 
 var width = Math.floor((canvasWidth-300)/tileSize);
 var height = Math.floor(canvasHeight/tileSize);
