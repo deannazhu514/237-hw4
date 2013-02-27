@@ -238,9 +238,9 @@ function keyDownMove(e) {
 			return;
 		}
 	} else if (e === 32) { //space
-		tuple = cursor.y + "," + cursor.x;
+		//tuple = cursor.y + "," + cursor.x;
 		console.log(tuple, "tuplee");
-		listPath.push("" + y + "," + x);
+		//listPath.push("" + y + "," + x);
 		currentChar.movePoints = currentChar.maxMovePoints;
 		for (var i = 1; i < listPath.length; i++) {
 			 var arrayTuple = listPath[i].split(",");
@@ -254,7 +254,8 @@ function keyDownMove(e) {
 		currentChar.y = cursor.y;
 		animationFlag = true;
 		//map[currentChar.y][currentChar.x].character = currentChar;
-		movePath = listPath;
+		movePath = movePath.concat(listPath);
+		console.log("movePath", movePath);
 		listPath = [];
 		playerFocus = "characterMenu";
 		generateCharacterMenu();
@@ -288,7 +289,7 @@ function keyDownMove(e) {
 	} else {
 		tile = map[cursor.y][cursor.x];
 		if (isValidMove(tile)) {
-			listPath.push("" + y + "," + x);
+			listPath.push(tuple);
 			currentChar.movePoints -= terrainDict[tile.type].moveCost;
 		} else {
 			console.log("invalid move");

@@ -50,7 +50,17 @@ function drawCharacters() {
 				//draw move
 				index[character.type] = ci++;
 				console.log("draw move", movePath);
-				animationFlag = false;
+				if (movePath.length <= 1) {
+					animationFlag = false;
+				} else {
+					var src = movePath[0].split(",");
+					var dest = movePath[1].split(",");
+					character.x = src[1]+(dest[1]-src[1]);
+					character.x = src[0]+(dest[0]-src[0]);
+								
+					movePath.splice(0, 1);
+				}
+				
 			}
 			else if (playerFocus === "viewing" && animationFlag){
 				//draw attack
@@ -63,7 +73,7 @@ function drawCharacters() {
 				widthList[character.type][0], heightList[character.type][0],	
 				character.x*tileSize, character.y*tileSize,
 				tileSize, tileSize);
-				
+			p1charList[i] = character;	
 		}
 		else {
 			//character is dead :(

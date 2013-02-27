@@ -55,8 +55,8 @@ var playerFocus;
 
 
 /* ANIMATION */
-var movePath;
-
+var movePath = [];
+var anim_done = false;
 /* END ANIMATION */
 
 var currentChar;
