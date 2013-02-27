@@ -105,7 +105,7 @@ function falsifyKeyPress() {
 
 function generateCharacterMenu() {
 	characterMenu = [];
-	if (playerNumber === currentChar.player) {
+	if (playerNumber === currentChar.player && !currentChar.hasMoved) {
 		characterMenu.push("Move: "+currentChar.movePoints+" left");
 		characterMenu.push("Attack");
 		if (currentChar.type === "mage") {
@@ -242,11 +242,16 @@ function keyDownMove(e) {
 		console.log(tuple, "tuplee");
 		//listPath.push("" + y + "," + x);
 		currentChar.movePoints = currentChar.maxMovePoints;
-		for (var i = 1; i < listPath.length; i++) {
+		for (var i = 0; i < listPath.length; i++) {
+        
 			 var arrayTuple = listPath[i].split(",");
-			 tile = map[(arrayTuple[0] - 0)][(arrayTuple[1] - 0)]; // the - 0 just casts it to a number
-			 terrain = terrainDict[tile.type];
-			 currentChar.movePoints -= terrain.moveCost;
+       var tx = arrayTuple[1] - 0;
+       var ty = arrayTuple[0] - 0;
+       if (currentChar.x != tx || currentChar.y != ty) {
+         tile = map[(ty)][(tx)]; // the - 0 just casts it to a number
+         terrain = terrainDict[tile.type];
+         currentChar.movePoints -= terrain.moveCost;
+       }
 		}
 		
 		map[currentChar.y][currentChar.x].character = null;
@@ -267,6 +272,8 @@ function keyDownMove(e) {
 		currentChar.movePoints = currentChar.maxMovePoints;
 		playerFocus = "characterMenu";
 		generateCharacterMenu();
+    cursor.x = currentChar.x;
+    cursor.y = currentChar.y;
 		return;
 	} else {
 		return;
@@ -278,13 +285,17 @@ function keyDownMove(e) {
 	//check if reversing a move
 	if (i !== -1) {
 		console.log("reverse");
-		listPath.splice(i+1,(listPath.length - i+1));
+		listPath.splice(i+1,(listPath.length - i));
 		currentChar.movePoints = currentChar.maxMovePoints;
-		 for (var i = 1; i < listPath.length; i++) {
+		 for (var i = 0; i < listPath.length; i++) {
 			 var arrayTuple = listPath[i].split(",");
-			 tile = map[(arrayTuple[0] - 0)][(arrayTuple[1] - 0)]; // the - 0 just casts it to a number
+       var tx = arrayTuple[1] - 0;
+       var ty = arrayTuple[0] - 0;
+       if (ty !== currentChar.y || (tx !== currentChar.x)) {
+        tile = map[ty][tx]; // the - 0 just casts it to a number
 			 terrain = terrainDict[tile.type];
 			 currentChar.movePoints -= terrain.moveCost;
+       }
 		 }
 	} else {
 		tile = map[cursor.y][cursor.x];

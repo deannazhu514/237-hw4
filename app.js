@@ -67,17 +67,16 @@ app.post("/joinGame", function(req,res){
 	var playerID = req.body.playerName;
 	var charList = req.body.charList;
 	var game = gameList[gameID];
-	if (game.player2 !== "") {
+	if (game.player2 === "") { //why was this !== ?
 		game.player2 = playerID;
-		game.status = "p2turn";
+		game.status = "p2turn"; //what if p1 hasn't done anything for their turn yet?
 		game.p2charList = charList;
 		gameList[gameID] = game; //is this line necessary?
 		writeFile("games.txt", JSON.stringify(gameList));
 		res.send( {
-			"game" : game,
+			game : game,
 			success : true });
 	} else {
-		alert("cannot join game");
 		res.send ( {success: false});
 	}
 });

@@ -6,6 +6,7 @@ var openGameList = {};	//array of objects, containing joinable games
 var myGameList = {}; //array of objects, containing games player is currently in	
 var pageState = []; //what screens to load on page 
 var teamSize = 3; //default size of your team
+var currentTeam; //array of character objects player is creating
 
 
 function refreshDOM() {	
@@ -23,9 +24,6 @@ function refreshDOM() {
 					 (pageState[0] === "joinGame")) {
 		refreshCreateTeamScreen();
 	}	
-	else if (pageState[0] === "confirmScreen") {
-		refreshConfirmScreen();
-	}
 	else if (pageState[0] === "gameInPlay") {
 		refreshGameScreen();
 	}
@@ -116,7 +114,7 @@ function refreshMenuScreen() {
 			else if ((currentGame!==undefined)	&& (pageState[1]==="myGames")) {	
 				for (var gameID in myGameList) {
 					if (currentGame.id==gameID) {
-						pageState[0] = "joinGame";
+						pageState[0] = "gameInPlay";
 						pageState[1] = "myGames";
 						refreshDOM();
 						return;
@@ -218,10 +216,12 @@ function refreshCreateTeamScreen() {
 	$(".instructions").html("instructions or class descriptions go here");
 	var container = $("#content");
 	container.html("");
-	var charList = Array(teamSize);
 	var teamList = $("<div>").attr("id", "teamList");
+	if (currentTeam === undefined)
+		currentTeam = new Array(teamSize);
 	
 	if (pageState[0] === "createGame") {
+	// if creating a new game, need to create game name
 		var gameName = $("<div>").append(
 				$("<label>").html("Enter a game name: "),
 				$("<input id=gameName>")
@@ -231,81 +231,104 @@ function refreshCreateTeamScreen() {
 		container.append(gameName);
 	}
 	
-	for (var i=0; i<charList.length; i++) {
-		var currCharacter = $("<div>")
+	for (var i=0; i<currentTeam.length; i++) {
+		var	currCharacter = $("<div>")
 			.attr("id", "char"+i)
-			.addClass("charInput")
-			.addClass(baseStats[0]); //set default character class
-		var classOptions = $("<ul>").addClass("classOptions");
-		for (var className in baseStats) {
-			var currOption = $("<li>")
-				.html(className)
-				.click(function() {
-					var selectedChar = $(this).parent(".charInput");
-					selectedChar.addClass(className);
-					refreshDOM();
-				});
-			classOptions.append(currOption);
-		}
-		var charImageSrc = getCharImgSrc(currCharacter);
-		var charImage = $("<img>").attr("src", charImageSrc);
-		var charDescription = $("<div>")
-			.addClass("charDescription")
-			.html("class description");
-		currCharacter.append(charImage, classOptions, charDescription);
+			.addClass("charInput");
+		refreshNewCharacter(currCharacter, i);
 		teamList.append(currCharacter);
 	}
 	container.append(teamList);
 	
 	// goes to confirmation screen
 	var continueButton = $("<a id=continueButton>")
-		.html("continue")
+		.html("Continue")
 		.addClass("menubut");
 	continueButton.click(function() {
 		// add verification stuff
-		charList = inputCharData();
+		currentTeam = getCharData();
 		if (pageState[0] === "createGame") {
 		// creates new game object
 			currentGame = new Object();
 			currentGame.player1 = playerName;
 			currentGame.name = $("#gameName").val();
-			currentGame.p1charList = charList;
+			currentGame.p1charList = currentTeam;
 			currentGame.map = 1; // default map number 
+			pageState[0] = "menu";
+			pageState[1] = "openGames";
+			alert("Game created!");
+			createGame();
 		}
 		else {
 		// adds player to another player's game
+		// resets currentTeam for future team creations
 			currentGame.player2 = playerName;
-			currentGame.p2charList = charList;
+			currentGame.p2charList = currentTeam;
+			pageState[0] = "gameInPlay";
+			currentTeam = undefined;
+			joinGame();
 		}
-		pageState[0] = "confirmScreen";
-		refreshDOM();
+		// refreshDOM();
 	});	
 	// go back to menu screen
 	var backButton = $("<a id=joinButton>").html("Go Back").addClass("menubut");
 	backButton.click(function(){
 		pageState[0] = "menu";
 		pageState[1] = "openGames";
+		currentGame = undefined;
+		currentTeam = undefined;
 		refreshDOM();
 	});
 	container.append(continueButton, backButton);
 }
-
+// helper functions
+function refreshNewCharacter(currCharacter, i) {
+// function to only refresh one team member element in the DOM	
+	if (currentTeam[i] === undefined) {
+		currCharacter.addClass("warrior"); //set default character class
+		currentTeam[i] = new Object;
+		currentTeam[i].type = "warrior";
+	}
+	else {
+		currCharacter.addClass(currentTeam[i].type);
+	}
+	var classOptions = $("<ul>").addClass("classOptions");
+	for (var className in baseStats) {
+		var currOption = $("<li>").html(className);
+		currOption.click(function() {
+			selectClass($(this), i);
+			refreshCreateTeamScreen();
+		});
+		classOptions.append(currOption);
+	}		
+	var charImageSrc = getCharImgSrc(currCharacter);
+	var charImage = $("<img>").attr("src", charImageSrc);
+	var charDescription = $("<div>")
+		.addClass("charDescription")
+		.html("class description");
+	currCharacter.append(charImage, classOptions, charDescription);
+}
+function selectClass(classOption, i) {
+	var selectedChar = classOption.parents(".charInput");
+	var className = classOption.html();
+	currentTeam[i].type = className;
+	selectedChar.attr("class", "charInput "+className);
+}
 function getCharImgSrc(currCharacter) {
 // helper function to get appropriate image for character
-	var src = "";
+	var src;
 	if (currCharacter.hasClass("warrior"))
-		src = warriorImageM.src;
+		src = warriorImage1.src;
 	else if (currCharacter.hasClass("archer"))
-		src = archerImageM.src;
+		src = archerImage1.src;
 	else if (currCharacter.hasClass("mage"))
-		src = mageImageM.src;
+		src = mageImage1.src;
 	return src;
 }
-function inputCharData() {
+function getCharData() {
 // gets classes of characters and creates array of player's characters
-	var teamList = $("#teamList");
-	var charList = Array(teamList.length);
-	for (var i=0; i< teamList.length; i++) {
+	var charList = Array(teamSize);
+	for (var i=0; i< charList.length; i++) {
 		var currChar = $("#char"+i);
 		var data = new Object();
 		if (currChar.hasClass("warrior"))
@@ -314,10 +337,9 @@ function inputCharData() {
 			data.type = "archer";
 		else if (currChar.hasClass("mage"))
 			data.type = "mage";
-		else
-			data.type = "warrior";
-		data.x = i; // figure out what the default starting points are
-		data.y = i; // and put them here in a variable later
+		data.x = i+1; // figure out what the default starting points are
+		data.y = i+1; // and put them here in a variable later
+								// make sure no one has same starting point
 		data.strength = getRandom(data.type, "strength");
 		data.dexterity = getRandom(data.type, "dexterity");
 		data.endurance = getRandom(data.type, "endurance");
@@ -329,16 +351,11 @@ function inputCharData() {
 }
 function getRandom(charClass, stat) {
 // helper function to generate random character stats
-	var min = classStats[charClass][stat][1];
+	var min = classStats[charClass][stat][0]; // base stat
 	var max = classStats[charClass][stat][2];
 	return Math.floor(min + Math.random()*(max-min));
 }
 
-
-function refreshConfirmScreen() {
-// shows your team and game info before playing game
-	refreshGameScreen();
-}
 
 /*function refreshCreateTeamScreen() {	
 // refreshDOM while on game start screen
@@ -504,19 +521,25 @@ function joinGame() {
 				"gameID": currentGame.id,
 				"charList": currentGame.p2charList},
 		success: function(data) {
-			console.log("game start");
-			//var stringgame = data.game;
-			//console.log(stringgame);
-			currentGame = data.game;
-			refreshDOM();
-			var playerNumber;
-			if (currentGame.player1 === "playerName") {
-				playerNumber = 1;
-			} else {
-				playerNumber = 2;
+			if (data.success === true){
+				console.log("game start");
+				//var stringgame = data.game;
+				//console.log(stringgame);
+				currentGame = data.game;
+				var playerNumber;
+				if (currentGame.player1 === "playerName") {
+					playerNumber = 1;
+				} else {
+					playerNumber = 2;
+				}
+				refreshGameScreen();
+				init(playerNumber);
+			}	else { 
+				alert("Cannot join game.");
+				pageState[0] = "menu";
+				pageState[1] = "openGames";
+				refreshDOM();
 			}
-			refreshGameScreen();
-			init(playerNumber);
 		}
 	});
 }
