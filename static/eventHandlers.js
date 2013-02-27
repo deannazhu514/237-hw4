@@ -455,7 +455,8 @@ function processPlayerMenuSelection() {
 	if (item === "End Turn") {
 		endTurn();
 	} else if (item === "Surrender") {
-		currentGame.status = "p"+playerNumber+"Victory"; //lol this is so hacky
+    var victPlayer = (playerNumber % 2) + 1;
+		currentGame.status = "p"+victPlayer+"Victory"; //lol this is so hacky
 		gameEndFlag = true;
 		endTurn();
 	} else if (item === "Main Menu") {
