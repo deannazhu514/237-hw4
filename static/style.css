@@ -154,7 +154,7 @@ input, a {
 	background-color: 
 }
 
-#createButton, #createTeamButton {
+#createButton, #createTeamButton, #continueButton {
 	background-color: #F00;
 	color: #FFF;
 	right: -63%;
@@ -225,6 +225,12 @@ input, a {
 	text-align: center;
 }
 
+.charDescription {
+	margin-top: 5px;
+	font-size: 15px;
+	color: #55A;
+}
+
 .charInput {
 	top: 0;
 	margin: 10px;
@@ -245,12 +251,13 @@ input, a {
 	vertical-align: middle;
 	padding: 5px;
 	margin-left: auto ;
-  margin-right: auto ;
+	margin-right: auto ;
 }
 
 .classOptions {
 	border-radius: 5px;
-	color: #000000;
+	color: #11A;
+	font-weight: bold;
 	background-color: #AAA;
 }
 
@@ -260,9 +267,4 @@ input, a {
 }
 .classOptions li:hover {
 	background-color: #333333;
-}
-
-.charDescription {
-	font-size: 15px;
-	color: #000000;
 }

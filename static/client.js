@@ -281,7 +281,7 @@ function refreshNewCharacter(currCharacter, i) {
 	}		
 	var charDescription = $("<div>")
 		.addClass("charDescription")
-		.html("class description");
+		.html(classDescrip[currentTeam[i].type]);
 	var charImage = $("<div>")
 		.append(getCharImage(currCharacter))
 		.addClass("charImage");
@@ -293,6 +293,7 @@ function selectClass(classOption, i) {
 	currentTeam[i].type = className;
 	selectedChar.attr("class", "charInput "+className);
 }
+
 function getCharImage(currCharacter) {
 // helper function to load appropriate image for character
 	var img, sx, sy, width, height;
