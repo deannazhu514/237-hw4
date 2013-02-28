@@ -16,6 +16,8 @@ var height = Math.floor(canvasHeight/tileSize);
 var p1charList;
 var p2charList;
 var pointGoal = 100;
+var waitCounter = 0;
+
 
 var playerNumber;
 
@@ -39,7 +41,8 @@ var listPath = [];
 var hit = false;
 var attacked = false;
 var damage = -1;
-var turnEnd = false;
+var turnEnd;
+
 /*END GAMEPLAY VARIABLES*/
 
 var pointGain = 20;
@@ -77,8 +80,8 @@ var currentChar;
 var isDrawingPathFlag;
 var animationFlag;
 var attack_flag = 0;
+var gameEndFlag = false;
 var animation = ""; //"attack", "fireball", "lightning", "victory"
-var gameEndFlag;
 /*END FLAGS*/
 
 /*TILE CONSTANTS*/

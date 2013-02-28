@@ -83,7 +83,7 @@ function keyDownView(e) {
 			if (cursor.y < height - 1) {
 				++cursor.y;
 			}
-		} else if (e === 32) { //spacebar: select button
+		} else if (e === 13) { //spacebar: select button
 			var sel_char = map[cursor.y][cursor.x].character;
 			if (sel_char !== null) {
 				currentChar = sel_char;
@@ -166,7 +166,7 @@ function generateStatMenu() {
 
 function generateCharacterMenu() {
 	characterMenu = [];
-	if (playerNumber === currentChar.player && !currentChar.hasMoved) {
+	if (playerNumber == currentChar.player && !currentChar.hasMoved) {
 		characterMenu.push("Move: "+currentChar.movePoints+" left");
 		characterMenu.push("Attack");
 		if (currentChar.type === "mage") {
@@ -232,7 +232,7 @@ function keyDownCharacterMenu(e) {
 			menuIndex = -1;
 		}
 		menuIndex++;
-	} else if (e === 32) {
+	} else if (e === 13) {
 		processMenuSelection(characterMenu[menuIndex]);
 	} else if (e === 27) {
 		playerFocus = "viewing";
@@ -304,7 +304,7 @@ function keyDownMove(e) {
 		} else {
 			return;
 		}
-	} else if (e === 32) { //space
+	} else if (e === 13) { //space
 		currentChar.direction = dir;
 		map[currentChar.y][currentChar.x].character = null;
 		currentChar.x = cursor.x;
@@ -409,7 +409,7 @@ function keyDownAttack(e) {
 		} else { 
 			return; 
 		}
-	} else if (e === 32) {//spacebar: select button
+	} else if (e === 13) {//spacebar: select button
 		var enemy_char = map[cursor.y][cursor.x].character;
 		if ((enemy_char !== null) 
 			&& (enemy_char.player !== currentChar.player)
@@ -453,7 +453,7 @@ function keyDownAttack(e) {
 }
 
 function keyDownPlayerMenu(e) {
-	if (e === 32) {
+	if (e === 13) {
 		processPlayerMenuSelection();
 		playerMenu = [];
 		playerFocus = "viewing";
@@ -562,7 +562,7 @@ function keyDownMagicMenu(e) {
 		menuIndex--;
 		if (menuIndex < 0) 
 			menuIndex = magicMenu.length -1;
-	} else if (e === 32) {
+	} else if (e === 13) {
 		if (canCast(magicMenu[menuIndex])) {
 		  magicMenu = [];
 		  playerFocus = "use magic";
@@ -631,7 +631,7 @@ function keyDownMagicTarget(e) {
 		} else {
 			return;
 		}
-	} else if (e === 32) {
+	} else if (e === 13) {
 		if (castSpell(cursor.x, cursor.y)) {
 			currentChar.hasMoved = true;
 			animationFlag = true;
