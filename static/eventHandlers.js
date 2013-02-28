@@ -534,7 +534,7 @@ function processPlayerMenuSelection() {
 		gameEndFlag = true;
 		endTurn();
 	} else if (item === "Main Menu") {
-		
+		location.reload();
 	}
 }
 

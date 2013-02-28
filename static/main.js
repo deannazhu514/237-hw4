@@ -14,6 +14,7 @@ function init(player) {
 	init_map(currentGame.map);
 	p1charList = currentGame.p1charList;
 	p2charList = currentGame.p2charList;
+  console.log(p1charList);
 	recast_char_stats();
 	init_char_images();
 	cursor.x = Math.floor(width/2);
@@ -78,6 +79,8 @@ function recast_char_stats() {
     
     p2charList[i] = character;
 	}
+  currentGame.p1points -= 0;
+  currentGame.p2points -= 0;
 }
 
 function init_char_images() {
@@ -132,12 +135,15 @@ function init_map (mapNum) {
 		for (var i = 0; i < height; i++) {
 			for (var j = 0; j < width; j++) {
 				var tile = {};
-				tile.type = tileType[Math.floor(Math.random()*3)];
+				tile.type = "plain";
 				tile.character = null;
-				if ((i === 5) || (i === 4)
-					&& ((j === 5) || (j === 4))) {
+				if (((i === 5) || (i === 6))
+					&& ((j === 7) || (j === 8))) {
 					tile.special = "scorespot";
-				} else { 
+				} else if (((i === 5) && (j== 0)) ||
+        ((i == 6) && (j==width-1))){ 
+          tile.special = "scorespot";
+        } else {
 					tile.special = "";
 				}
 				map[i][j] = tile;
