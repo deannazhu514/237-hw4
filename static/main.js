@@ -257,6 +257,7 @@ function update() {
 	checkKeyPressed();
 	checkVictory();
 	if (gameEndFlag == true) {
+    endTurn();
 		return;
 	}
 	
