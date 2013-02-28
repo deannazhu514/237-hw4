@@ -69,6 +69,12 @@ var terrainText = "TERRAIN: Desert: No modifiers. Valley (low ground): penalty t
 
 var winText = "WINNING THE GAME. There are a few “score spots” in the middle of the map. Every turn that you have a character on one of these tiles, you earn a certain number of points. The first to 100 wins! Be careful however, these spots often provide defensive penalties, and another victory condition is simply killing all the enemy units! "
 
+var classDescriptions = {
+	"warrior": "Warriors are excellent melee fighters, capable of doing great damage. Slow but sturdy.",
+	"archer": "Archers utilize their extensive range to attack safely from behind the front lines.",
+	"mage": "Mages are physically fragile, but can use their powerful spells to decimate their opponents."
+};
+
 /* ANIMATION */
 var movePath = [];
 var anim_done = false;

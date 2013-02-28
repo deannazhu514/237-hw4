@@ -3,7 +3,7 @@ body {
 }
 
 #menu {
-	width: 700px;
+	width: 900px;
 	margin: 70px auto 0;
 }
 
@@ -66,7 +66,7 @@ h1 {
 	position: relative;
 	top: 100px;
 	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-	width: 700px;
+	width: 900px;
 	margin: 70px auto;
 	color: #FFF;
 }
@@ -122,7 +122,6 @@ input, a {
 	top: 0px;
 	color: #FF0;
 	padding: 20px;
-	opacity: 0.6
 }
 
 .roombut{
@@ -226,14 +225,16 @@ input, a {
 }
 
 .charInput {
+	font-family: 'Asap', sans-serif;
 	top: 0;
 	margin: 10px;
 	padding: 10px 15px;
 	display: inline-block;
 	text-align: center;
-	width: 150px;
-	height: 200px;
-	background-color: #CC0;
+	width: 200px;
+	height: 250px;
+	background-color: #004469;
+	#0C240E;
 	border-radius: 5px;
 
 }
@@ -246,23 +247,36 @@ input, a {
 	padding: 5px;
 	margin-left: auto ;
   margin-right: auto ;
+	opacity: 1;
 }
 
 .classOptions {
-	border-radius: 5px;
+	font-size: 18px;
+	font-weight: bold;
 	color: #000000;
 	background-color: #AAA;
 }
 
 .classOptions li{
-	border: 1px;
-	border-color: #000000;
+	padding: 5px 0;
 }
 .classOptions li:hover {
-	background-color: #333333;
+	background-color: #DDD;
 }
 
 .charDescription {
-	font-size: 15px;
+	height: 80px;
+	width: 200px;
+	vertical-align: middle;
+	margin-top: 15px;
 	color: #000000;
+	font-size: 15px;
+	font-weight: bold;
+	padding: 5px;
+	margin-left: auto ;
+  margin-right: auto ;
+}
+
+.classSelected {
+	background-color: #EEE;
 }
