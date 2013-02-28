@@ -22,11 +22,11 @@ function drawMap() {
 			var tile = map[i][j];
 			var img = getTileImage(tile.type);
 			if (tile.special === "scorespot") {
-				ctx.globalAlpha = 1;
+				ctx.globalAlpha = 0.7;
 				ctx.drawImage(img, j*tileSize, i*tileSize);
 			}
 			else {
-				ctx.globalAlpha = 0.8;
+				ctx.globalAlpha = 0.5;
 				ctx.drawImage(img, j*tileSize, i*tileSize);
 			}
 		}
@@ -82,7 +82,7 @@ function drawCharacters() {
 					heightList[character.type][0],	
 					character.x*tileSize, character.y*tileSize,
 					tileSize, tileSize);
-
+					
 			if (animationFlag){
 				if (animation === "fireball") {
 					if (spell_flag < 100) {
@@ -94,25 +94,50 @@ function drawCharacters() {
 						spell_x*tileSize, spell_y*tileSize,
 						tileSize, tileSize);
 						spell_flag++;
-					}
-					else {
+					} else {
 						spell_flag = 0;
 						animationFlag = false;		
 					}
 				} else if (animation === "lightning") {
 					if (spell_flag < 100) {
+						ctx.save();
+						if (angle != 0)
+							ctx.rotate(angle);
+						console.log("rotate?", angle, dir);
 						ctx.drawImage(lightningImg, 
-						lightningsX[3], lightningsY[3],
-						lightningWidth[3], lightningHeight[3],	
+						lightningsX[dir], lightningsY[dir],
+						lightningWidth[dir], lightningHeight[dir],	
 						spell_x*tileSize, (spell_y+1)*tileSize,
 						tileSize, (character.y-spell_y-1)*tileSize);
 						spell_flag++;
-					}
-					else {
+						ctx.restore();
+					} else {
 						spell_flag = 0;
 						animationFlag = false;		
-					}
-				} 
+						angle = 0;
+					} 
+				} /*else if (animation === "attack") {
+					if (attack_flag < 100) {
+						if (currentChar.type == "archer") {
+								ctx.drawImage(arrowImg, 
+								arrowsX[dir], arrowsY[dir],
+								arrowWidth[dir], arrowHeight[dir],	
+								attack_x*tileSize, (attack_y+1)*tileSize,
+								tileSize, (character.y-attack_y-1)*tileSize);
+						} else if (currentChar.type == "warrior") {
+								ctx.drawImage(swordImg, 
+								swordsX[dir], swordsY[dir],
+								swordWidth[dir], swordHeight[dir],	
+								attack_x*tileSize, (attack_y+1)*tileSize,
+								tileSize, (character.y-spell_y-1)*tileSize);
+						}
+						attack_flag++;
+					} else {
+						attack_flag = 0;
+						animationFlag = false;		
+						angle = 0;
+					} 	
+				}*/					
 			}
 		} else {
 			//character is dead :(
@@ -165,6 +190,18 @@ function drawMenu() {
 		}
 	
 		if (playerFocus === "viewing") {
+				menu = statMenu;
+				offset = 30;
+				if (map[cursor.y][cursor.x].character !== null) {
+					ctx.font="18px Courier New"
+					ctx.fillStyle = "#0FF";
+					ctx.fillText("[SPACE] to view team", menuX, 520);
+				}
+		} else if (playerFocus == "moving") {
+				ctx.font="30px Courier New";
+				ctx.fillStyle = "#0FF";
+				ctx.fillText("Moves Left: "+currentChar.movePoints, menuX+20, 200);			
+		} else if (playerFocus === "characterMenu") {
 			if (hit) {
 				ctx.font="40px Courier New";
 				ctx.fillStyle = "#0FF";
@@ -174,34 +211,24 @@ function drawMenu() {
 				ctx.fillStyle = "#0FF";
 				ctx.fillText("Missed!", menuX+20, 200);
 			} else {
-				menu = statMenu;
 				offset = 30;
-				if (map[cursor.y][cursor.x].character !== null) {
-					ctx.font="18px Courier New"
-					ctx.fillStyle = "#0FF";
-					ctx.fillText("[SPACE] to view team", menuX, 520);
-				}
-			}
-		} else if (playerFocus == "moving") {
-				ctx.font="30px Courier New";
+				menu = characterMenu;
+				var character = currentChar;
+				ctx.drawImage(character.img, 
+						sXList[character.type][1], sYList[character.type][0],
+						widthList[character.type][1], heightList[character.type][0],
+						menuX+90, menuY+7*30,
+						tileSize*2, tileSize*2);
 				ctx.fillStyle = "#0FF";
-				ctx.fillText("Moves Left: "+currentChar.movePoints, menuX+20, 200);			} else if (playerFocus === "characterMenu") {
-			offset = 30;
-			menu = characterMenu;
-			var character = currentChar;
-			ctx.drawImage(character.img, 
-					sXList[character.type][1], sYList[character.type][0],
-					widthList[character.type][1], heightList[character.type][0],
-					menuX+90, menuY+7*30,
-					tileSize*2, tileSize*2);
-			ctx.fillStyle = "#0FF";
-			ctx.font="18px Courier New"
-			ctx.fillStyle = "#0FF";
-			ctx.fillText("[SPACE] to select action", menuX, 520);		
-			if (character.hasMoved) {
-				ctx.font="40px Courier New";
-				ctx.fillStyle = "#0F0";
-				ctx.fillText("Move Made", menuX+30, 350);
+				ctx.font="18px Courier New"
+				ctx.fillStyle = "#0FF";
+				ctx.fillText("[SPACE] to select action", menuX, 520);	
+								
+				if (character.hasMoved) {
+					ctx.font="40px Courier New";
+					ctx.fillStyle = "#0F0";
+					ctx.fillText("Move Made", menuX+30, 350);
+				}
 			}
 		} else if (playerFocus === "attacking") {
 			ctx.font="40px Courier New";
@@ -222,7 +249,6 @@ function drawMenu() {
 			ctx.fillStyle = "#F0F";
 			ctx.fillText("Casting spell!", menuX+20, 300);
 		} else if (playerFocus === "playerMenu") {
-			console.log(menu);
 			menu = playerMenu;
 			offset = 100;		
 		}

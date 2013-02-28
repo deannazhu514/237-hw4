@@ -181,6 +181,8 @@ function generateCharacterMenu() {
 }
 
 function keyDownCharacterMenu(e) {
+	attacked = false;
+	hit = false;
 	var index = currentChar.index;
 	var player = currentChar.player;
 	var charList;
@@ -369,6 +371,7 @@ function isValidMove(tile) {
 function keyDownAttack(e) {
 	var x = cursor.x;
 	var y = cursor.y;
+	var dir;
 	
 	if (e === 65) { //a
 		falsifyKeyPress();
@@ -414,11 +417,11 @@ function keyDownAttack(e) {
 			if (calculateHit(currentChar, enemy_char)) {
 			//look at calculate hit: we might want to 
 			//an extra effect upon critical hit
+				animation = "attack";
+				animationFlag = false;
 				hit = true;
-				ctx.font="40px Courier New";
-				ctx.fillStyle = "#0FF";
-				ctx.fillText("Hit!", menuX+20, 200);
 				console.log("hit", hit, damage);
+				
 				if (isDead(enemy_char)) {
 					map[enemy_char.y][enemy_char.x].character = null;
 					//display death animation	
@@ -432,7 +435,6 @@ function keyDownAttack(e) {
 		attacked = true;
 		playerFocus = "characterMenu";
 		generateCharacterMenu();
-		//animationFlag = true;
 		return;
 	} else if (e === 27) { //escape
 		playerFocus = "characterMenu";
@@ -663,6 +665,17 @@ function castSpell(x, y) {
 		  spell = mageSpells.lightning;
 		  spell.cast(x,y);
 		  currentChar.mana -= spell.cost;
+		  if (spell_x == currentChar.x) {
+			if (spell_y > currentChar.y) dir = 0;
+			else dir = 3;
+		  } else if (spell_y == currentChar.y) {
+			if (spell_x > currentChar.x) dir = 2;
+			else dir = 1;
+		  } else {
+			dir = 3;
+			angle = Math.atan2((currentChar.y-spell_y),(currentChar.x-spell_x));
+			//angle = (Math.PI+angle)%Math.PI;
+		  }
 		  return true;
 		}
   }
