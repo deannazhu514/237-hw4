@@ -534,6 +534,7 @@ function processPlayerMenuSelection() {
 		var victPlayer = (playerNumber % 2) + 1;
 		currentGame.status = "p"+victPlayer+"Victory"; //lol this is so hacky
 		gameEndFlag = true;
+		endTurn();
 	} else if (item === "Main Menu") {
 		location.reload();
 	}

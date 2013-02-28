@@ -114,28 +114,7 @@ function drawCharacters() {
 						animationFlag = false;		
 						angle = 0;
 					} 
-				} /*else if (animation === "attack") {
-					if (attack_flag < 100) {
-						if (currentChar.type == "archer") {
-								ctx.drawImage(arrowImg, 
-								arrowsX[dir], arrowsY[dir],
-								arrowWidth[dir], arrowHeight[dir],	
-								attack_x*tileSize, (attack_y+1)*tileSize,
-								tileSize, (character.y-attack_y-1)*tileSize);
-						} else if (currentChar.type == "warrior") {
-								ctx.drawImage(swordImg, 
-								swordsX[dir], swordsY[dir],
-								swordWidth[dir], swordHeight[dir],	
-								attack_x*tileSize, (attack_y+1)*tileSize,
-								tileSize, (character.y-spell_y-1)*tileSize);
-						}
-						attack_flag++;
-					} else {
-						attack_flag = 0;
-						animationFlag = false;		
-						angle = 0;
-					} 	
-				}*/					
+				} 				
 			}
 		} else {
 			//character is dead :(
