@@ -226,18 +226,40 @@ input, a {
 }
 
 .charInput {
+	top: 0;
 	margin: 10px;
 	padding: 10px 15px;
 	display: inline-block;
 	text-align: center;
+	width: 150px;
+	height: 200px;
 	background-color: #CC0;
 	border-radius: 5px;
+
+}
+
+.charImage {	
+	height: 60px;
+	width: 60px;
+	display: block; 
+	vertical-align: middle;
+	padding: 5px;
+	margin-left: auto ;
+  margin-right: auto ;
 }
 
 .classOptions {
 	border-radius: 5px;
 	color: #000000;
 	background-color: #AAA;
+}
+
+.classOptions li{
+	border: 1px;
+	border-color: #000000;
+}
+.classOptions li:hover {
+	background-color: #333333;
 }
 
 .charDescription {

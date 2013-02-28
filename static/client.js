@@ -282,7 +282,9 @@ function refreshNewCharacter(currCharacter, i) {
 	var charDescription = $("<div>")
 		.addClass("charDescription")
 		.html("class description");
-	var charImage = getCharImage(currCharacter);
+	var charImage = $("<div>")
+		.append(getCharImage(currCharacter))
+		.addClass("charImage");
 	currCharacter.append(charImage, classOptions, charDescription);
 }
 function selectClass(classOption, i) {
