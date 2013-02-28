@@ -386,9 +386,6 @@ function joinGame() {
 				"charList": JSON.stringify(currentGame.p2charList)},
 		success: function(data) {
 			if (data.success === true){
-				console.log("game start");
-				//var stringgame = data.game;
-				//console.log(stringgame);
 				currentGame = data.game;
 				var playerNumber;
 				if (currentGame.player1 === playerName) {
@@ -400,7 +397,6 @@ function joinGame() {
 				init(playerNumber);
 			}	else { 
 				//alert("Cannot join game."); //calling alert doesn't work..........
-        console.log("Cannot join game.");
 				pageState[0] = "menu";
 				pageState[1] = "openGames";
 				refreshDOM();
@@ -436,7 +432,6 @@ function updateGame() {
 	//send: gameID, character lists, player points
 	//see update game in app.js
   
-	console.log(currentGame);
 	$.ajax({
 		type: "post",
 		url: "/updateGame",
@@ -464,12 +459,14 @@ function isMyTurn() {
 				//this should have a new status 
 				//which will cause ismyturn to not be
 				//called anymore in update
-        currentGame.status = "p"+playerNumber+"turn";
-        window.clearInterval(intervalId);
-        init(playerNumber);
+				currentGame.status = "p"+playerNumber+"turn";
+				window.clearInterval(intervalId);
+				init(playerNumber);
 			}
-			else console.log("no");
-			// refreshGameScreen();
+			else {
+				alert("Not your turn yet!");
+				location.reload();
+			}
 		}
 	});
 }

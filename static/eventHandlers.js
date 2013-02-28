@@ -531,9 +531,10 @@ function processPlayerMenuSelection() {
 	if (item === "End Turn") {
 		endTurn();
 	} else if (item === "Surrender") {
-    var victPlayer = (playerNumber % 2) + 1;
+		var victPlayer = (playerNumber % 2) + 1;
 		currentGame.status = "p"+victPlayer+"Victory"; //lol this is so hacky
 		gameEndFlag = true;
+		console.log("surrnder1");
 		endTurn();
 	} else if (item === "Main Menu") {
 		location.reload();

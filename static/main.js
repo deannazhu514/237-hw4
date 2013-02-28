@@ -31,7 +31,6 @@ function init(player) {
 	key_pressed["down"] = false;
 	gameEndFlag;
 	
-	
 	playerFocus = "viewing";
 	generateStatMenu();
 	
@@ -84,7 +83,6 @@ function recast_char_stats() {
 }
 
 function init_char_images() {
-
   for (var i = 0; i < p1charList.length; i++) {
     var type = p1charList[i].type;
     if (type === "warrior") {
@@ -158,6 +156,7 @@ function init_map (mapNum) {
 }
 
 function checkVictory() {
+	console.log("checkVictory");
 	var i = 0;
 	if (playerNumber == 1) {
 		while (i < p2charList.length) {
@@ -168,17 +167,15 @@ function checkVictory() {
 		}
 		if (i === p2charList.length) { //never broke out of the loop
 			currentGame.status = "p1Victory"; //have not yet implemented anything server side to deal with victories and ending games
-			//this is a placeholder
-			//display victory animation
 			gameEndFlag = true;
 			endTurn();
-      window.clearInterval(intervalId);
+			window.clearInterval(intervalId);
 		}
 		if (currentGame.p1points >= 100) {
 			currentGame.status = "p1Victory";
 			gameEndFlag = true;
 			endTurn();
-      window.clearInterval(intervalId);
+			window.clearInterval(intervalId);
 		}
 	} else {
 		while (i < p1charList.length) {
@@ -192,13 +189,13 @@ function checkVictory() {
 			//display victory animation
 			gameEndFlag = true;
 			endTurn();
-      window.clearInterval(intervalId);
+			window.clearInterval(intervalId);
 		}
 		if (currentGame.p2points >= pointGoal) {
 			currentGame.status = "p2Victory";
 			gameEndFlag = true;
 			endTurn();
-      window.clearInterval(intervalId);
+			window.clearInterval(intervalId);
 		}
 	}
 }
@@ -256,7 +253,9 @@ function update() {
 	draw();
 	checkKeyPressed();
 	checkVictory();
+	console.log("here");
 	if (gameEndFlag == true) {
+		console.log("game end");
 		return;
 	}
 	
@@ -267,6 +266,8 @@ function update() {
 		if (!cList[i].hasMoved && !isDead(cList[i])) {
 			return;
 		}
+		else
+			console.log("dead");
 	}
 	
 	console.log("ending your turn");
@@ -278,6 +279,10 @@ function endTurn() {
 	var pList; //player's list
 	var opList; //opponent's list
 	turnEnd = true;
+	
+	if (gameEndFlag)
+		draw();
+	
 	if (playerNumber === 1) {
 		pList = p1charList;
 		opList = p2charList;
@@ -287,10 +292,11 @@ function endTurn() {
 	}
 	for (var i = 0; i < pList.length; i++) {
 		pList[i].movePoints = pList[i].maxMovePoints;
-    pList[i].hasMoved = false;
+		pList[i].hasMoved = false;
 	}
-  console.log(p1charList[0].movePoints);
-  console.log(p2charList[1].movePoints);
+	  
+	console.log(p1charList[0].movePoints);
+	console.log(p2charList[1].movePoints);
 	
 	//so you only get points after one full turn: that is,
 	//after your opponent finishes his turn. 
@@ -314,11 +320,10 @@ function endTurn() {
 	//but i'm not sure thats the case so here's some possibly
 	//redundant code lool fml
 	
-  
 	remove_char_images();
 	currentGame.p1charList = p1charList;
 	currentGame.p2charList = p2charList;
-  console.log("status : " + currentGame.status);
+	console.log("status : " + currentGame.status);
 	if (currentGame.status === "p1turn") {
 		currentGame.status = "p2turn";
 	} else {

@@ -2,17 +2,17 @@ var canvas
 var ctx;
 
 function draw() {
-  
 	if (gameEndFlag) {
 		drawVictory();
-		//draw victory banner for p1 or p2
-		return; //stop drawing the rest of the crap
+		return;
 	}
+	
 	ctx.clearRect(0,0,canvas.width,canvas.height);
 	drawMap();
 	drawCharacters();
 	drawCursor();
 	drawMenu();
+	
 }
 
 function drawMap() {
@@ -30,8 +30,8 @@ function drawMap() {
 				ctx.drawImage(img, j*tileSize, i*tileSize);
 			}
 		}
+		ctx.globalAlpha = 1;
 	}
-	ctx.globalAlpha = 1;
 }
 
 function getTileImage(type) {
@@ -178,7 +178,7 @@ function drawMenu() {
 	var menu = [];
 	var offset;
 	
-	//var instructions = "[space] to select";	
+	//var instructions = "[ENTER] to select";	
 	
 	if (!turnEnd) {
 		ctx.font="20px Courier New";
@@ -195,7 +195,7 @@ function drawMenu() {
 				if (map[cursor.y][cursor.x].character !== null) {
 					ctx.font="18px Courier New"
 					ctx.fillStyle = "#0FF";
-					ctx.fillText("[SPACE] to view team", menuX, 520);
+					ctx.fillText("[ENTER] to view team", menuX, 520);
 				}
 		} else if (playerFocus == "moving") {
 				ctx.font="30px Courier New";
@@ -222,7 +222,7 @@ function drawMenu() {
 				ctx.fillStyle = "#0FF";
 				ctx.font="18px Courier New"
 				ctx.fillStyle = "#0FF";
-				ctx.fillText("[SPACE] to select action", menuX, 520);	
+				ctx.fillText("[ENTER] to select action", menuX, 520);	
 								
 				if (character.hasMoved) {
 					ctx.font="40px Courier New";
@@ -237,13 +237,13 @@ function drawMenu() {
 			ctx.fillStyle = "#0FF";
 			ctx.font="18px Courier New"
 			ctx.fillStyle = "#0FF";
-			ctx.fillText("[SPACE] to attack", menuX, 520);		
+			ctx.fillText("[ENTER] to attack", menuX, 520);		
 		} else if (playerFocus === "magic") {
 			menu = magicMenu;
 			offset = 100;
 			ctx.font="18px Courier New"
 			ctx.fillStyle = "#0FF";
-			ctx.fillText("[SPACE] to cast spell", menuX, 520);	
+			ctx.fillText("[ENTER] to cast spell", menuX, 520);	
 		}  else if (playerFocus === "use magic") {
 			ctx.font="30px Courier New";
 			ctx.fillStyle = "#F0F";
@@ -285,7 +285,11 @@ function drawMenu() {
 }
 
 function drawVictory(){
+	ctx.globalAlpha = 1;
 	ctx.font="40px Courier New";
-	ctx.fillStyle = "black";
-	ctx.fillText("CONGRATULATIONS, YOU WON!", 200, 200);
+	ctx.fillStyle = "red";
+	if (currentGame.status.indexOf(playerNumber) != -1)
+		ctx.fillText("CONGRATULATIONS PLAYER"+playerNumber+", YOU WON!", 200, 200);
+	else	
+		ctx.fillText("SORRY, YOU LOST", 200, 200);
 }
