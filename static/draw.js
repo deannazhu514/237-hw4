@@ -22,11 +22,9 @@ function drawMap() {
 			var tile = map[i][j];
 			var img = getTileImage(tile.type);
 			if (tile.special === "scorespot") {
-				ctx.globalAlpha = 0.7;
 				ctx.drawImage(img, j*tileSize, i*tileSize);
 			}
 			else {
-				ctx.globalAlpha = 0.5;
 				ctx.drawImage(img, j*tileSize, i*tileSize);
 			}
 		}

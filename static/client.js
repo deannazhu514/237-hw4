@@ -191,21 +191,29 @@ function selectGame(listing) {
 /* CREATE TEAM SCREEN FUNCTIONS */
 function refreshCreateTeamScreen() {
 // load the team create screen
-	var container = $("#content");
-	container.html("");
+var container = $("#content");
+	var instructions = $("<div>").addClass("instructions");
 	var teamList = $("<div>").attr("id", "teamList");
 	if (currentTeam === undefined)
 		currentTeam = new Array(teamSize);
+	if (currentGame === undefined) {
+		currentGame = new Object();
+	} 
 	
+	container.html("");
+	instructions.html("Create your team of characters! Choose from a variety of different classes:");
+	container.append(instructions);
 	if (pageState[0] === "createGame") {
 	// if creating a new game, need to create game name
 		var gameName = $("<div>").append(
-				$("<label>").html("Enter a game name: "),
+				$("<label>").html("Your game's name: "),
 				$("<input id=gameName>")
 					.attr("name", "gameName")
 					.attr("type", "text")
 			);
-		container.append(gameName);
+		instructions.append(gameName);
+		if ((currentGame !== undefined) && (currentGame.name !== undefined))
+			$("#gameName").val(currentGame.name);
 	}
 	
 	for (var i=0; i<currentTeam.length; i++) {
@@ -217,7 +225,7 @@ function refreshCreateTeamScreen() {
 	}
 	container.append(teamList);
 	
-	// goes to confirmation screen
+	// goes back to menu, if creating game, or to game screen
 	var continueButton = $("<a id=continueButton>")
 		.html("Continue")
 		.addClass("menubut");
@@ -226,7 +234,6 @@ function refreshCreateTeamScreen() {
 		currentTeam = getCharData();
 		if (pageState[0] === "createGame") {
 		// creates new game object
-			currentGame = new Object();
 			currentGame.player1 = playerName;
 			currentGame.name = $("#gameName").val();
 			var tempdatalist = currentTeam;
@@ -246,7 +253,6 @@ function refreshCreateTeamScreen() {
 			currentTeam = undefined;
 			joinGame();
 		}
-		// refreshDOM();
 	});	
 	// go back to menu screen
 	var backButton = $("<a id=joinButton>").html("Go Back").addClass("menubut");
@@ -272,16 +278,27 @@ function refreshNewCharacter(currCharacter, i) {
 	}
 	var classOptions = $("<ul>").addClass("classOptions");
 	for (var className in baseStats) {
-		var currOption = $("<li>").html(className);
+		var classText;
+		if (className === "warrior")
+			classText = "Warrior";
+		else if (className === "archer")
+			classText = "Archer";
+		else if (className === "mage")
+			classText = "Mage";
+		var currOption = $("<li>").html(classText);
+		if (className === currentTeam[i].type) {
+			currOption.addClass("classSelected")
+		}
 		currOption.click(function() {
 			selectClass($(this), i);
+			currentGame.name = $("#gameName").val();
 			refreshCreateTeamScreen();
 		});
 		classOptions.append(currOption);
 	}		
 	var charDescription = $("<div>")
 		.addClass("charDescription")
-		.html(classDescrip[currentTeam[i].type]);
+		.html(classDescriptions[currentTeam[i].type]);
 	var charImage = $("<div>")
 		.append(getCharImage(currCharacter))
 		.addClass("charImage");
@@ -289,7 +306,13 @@ function refreshNewCharacter(currCharacter, i) {
 }
 function selectClass(classOption, i) {
 	var selectedChar = classOption.parents(".charInput");
-	var className = classOption.html();
+	var className;
+	if (classOption.html() === "Warrior") 
+		className = "warrior";
+	else if (classOption.html() === "Archer") 
+		className = "archer";
+	else if (classOption.html() === "Mage") 
+		className = "mage";
 	currentTeam[i].type = className;
 	selectedChar.attr("class", "charInput "+className);
 }

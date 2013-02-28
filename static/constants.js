@@ -61,10 +61,6 @@ var playerFocus;
 /* INSTRUCTION TEXT */
 var menuText = "Join an open game, create a new game, or continue a saved game. Create a game with your desired map type and wait for a new player to join your game and fight against you. Join a game created by another player. Continue a game against another player that is currently in progress. Any time you quit a game, it will be automatically saved up to the last fully completed turn."
 
-var warriorText = "Warriors are strong melee fighters."
-var archerText = "Archers are a little more fragile but can attack from a safe range, and are great back line support."
-var mageText = "Mages are physically weak but are temporarily capable of great power."
-var classDescrip = {"warrior": warriorText, "archer": archerText, "mage":mageText};
 
 var gameText = "Every character has a certain number of movepoints to travel across the map. You cannot travel through other characters, enemy or otherwise.  If an enemy is in range, you can attempt to attack them. Your chance to hit is based on your character’s toHit stat and your enemy’s dodge chance. Once you attack, that character’s turn is over even if you have move points remaining. Once all your character’s turns are over, your turn is over and you must wait for your opponent to finish his turn. Your characters are automatically placed on the game map. Different terrain types are harder/easier to move through and while on them you may receive a defensive penalty or bonus."
 
@@ -72,6 +68,12 @@ var terrainText = "TERRAIN: Desert: No modifiers. Valley (low ground): penalty t
 
 var winText = "WINNING THE GAME. There are a few “score spots” in the middle of the map. Every turn that you have a character on one of these tiles, you earn a certain number of points. The first to 100 wins! Be careful however, these spots often provide defensive penalties, and another victory condition is simply killing all the enemy units! "
 
+
+var classDescriptions = {
+	"warrior": "Warriors are excellent melee fighters, capable of doing great damage. Slow but sturdy.",
+	"archer": "Archers utilize their extensive range to attack safely from behind the front lines.",
+	"mage": "Mages are physically fragile, but can use their powerful spells to decimate their opponents."
+};
 
 /* ANIMATION */
 var movePath = [];

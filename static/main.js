@@ -256,6 +256,7 @@ function update() {
 	console.log("here");
 	if (gameEndFlag == true) {
 		console.log("game end");
+		endTurn();
 		return;
 	}
 	
