@@ -79,6 +79,7 @@ var currentChar;
 /*FLAGS HERE */
 var isDrawingPathFlag;
 var animationFlag;
+var attack_flag = 0;
 var gameEndFlag = false;
 var animation = ""; //"attack", "fireball", "lightning", "victory"
 /*END FLAGS*/
@@ -149,7 +150,27 @@ var cursorImg;
 cursorImg = new Image();
 cursorImg.src = "images/cursor.png";
 var cursor={};
-/*END CURSOR*/
+/* END CURSOR */
+
+/* ATTACK IMAGE */
+var attack_x;
+var attack_y;
+var swordImg;
+swordImg = new Image();
+swordImg.src = "images/sword.png";
+var swordsX = [0,15,55,95];
+var swordsY = [0,0,0,0];
+var swordWidth = [15, 37, 37, 15];
+var swordHeight = [36, 60, 60, 36];
+
+var arrowImg;
+arrowImg = new Image();
+arrowImg.src = "images/arrow.png";
+var arrowsX = [0,10,45,80];
+var arrowsY = [0, 15,15,0];
+var arrowWidth = [15, 35, 35, 15];
+var arrowHeight = [35, 15, 15, 35];
+/* END ATTACK IMAGE */
 
 /*BASE STAT DICTIONARY*/
 //ALL STATS ARE THE PRETTY MUCH THE SAME FOR NOW, WHO REALLY CARES ABOUT THIS
@@ -228,6 +249,7 @@ var endDef = 0; //NOT SURE YET IF WANT TO INCLUDE DEFENSE AS CORE STAT
 /* MAGIC CONSTANTS */
 var spell_x;
 var spell_y;
+var angle = 0;
 var spell_flag = 0;
 var mageSpells = {};
 var fireballImg;
@@ -245,6 +267,5 @@ var lightningsX = [0,60,175,290];
 var lightningsY = [0,5,5,0];
 var lightningWidth = [60, 115, 115, 60];
 var lightningHeight = [115, 60, 60, 115];
-
 
 /* END MAGIC CONSTANTS */

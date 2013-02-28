@@ -83,7 +83,7 @@ function keyDownView(e) {
 			if (cursor.y < height - 1) {
 				++cursor.y;
 			}
-		} else if (e === 32) { //spacebar: select button
+		} else if (e === 13) { //spacebar: select button
 			var sel_char = map[cursor.y][cursor.x].character;
 			if (sel_char !== null) {
 				currentChar = sel_char;
@@ -181,6 +181,8 @@ function generateCharacterMenu() {
 }
 
 function keyDownCharacterMenu(e) {
+	attacked = false;
+	hit = false;
 	var index = currentChar.index;
 	var player = currentChar.player;
 	var charList;
@@ -230,7 +232,7 @@ function keyDownCharacterMenu(e) {
 			menuIndex = -1;
 		}
 		menuIndex++;
-	} else if (e === 32) {
+	} else if (e === 13) {
 		processMenuSelection(characterMenu[menuIndex]);
 	} else if (e === 27) {
 		playerFocus = "viewing";
@@ -302,7 +304,7 @@ function keyDownMove(e) {
 		} else {
 			return;
 		}
-	} else if (e === 32) { //space
+	} else if (e === 13) { //space
 		currentChar.direction = dir;
 		map[currentChar.y][currentChar.x].character = null;
 		currentChar.x = cursor.x;
@@ -369,6 +371,7 @@ function isValidMove(tile) {
 function keyDownAttack(e) {
 	var x = cursor.x;
 	var y = cursor.y;
+	var dir;
 	
 	if (e === 65) { //a
 		falsifyKeyPress();
@@ -406,7 +409,7 @@ function keyDownAttack(e) {
 		} else { 
 			return; 
 		}
-	} else if (e === 32) {//spacebar: select button
+	} else if (e === 13) {//spacebar: select button
 		var enemy_char = map[cursor.y][cursor.x].character;
 		if ((enemy_char !== null) 
 			&& (enemy_char.player !== currentChar.player)
@@ -414,11 +417,11 @@ function keyDownAttack(e) {
 			if (calculateHit(currentChar, enemy_char)) {
 			//look at calculate hit: we might want to 
 			//an extra effect upon critical hit
+				animation = "attack";
+				animationFlag = false;
 				hit = true;
-				ctx.font="40px Courier New";
-				ctx.fillStyle = "#0FF";
-				ctx.fillText("Hit!", menuX+20, 200);
 				console.log("hit", hit, damage);
+				
 				if (isDead(enemy_char)) {
 					map[enemy_char.y][enemy_char.x].character = null;
 					//display death animation	
@@ -432,7 +435,6 @@ function keyDownAttack(e) {
 		attacked = true;
 		playerFocus = "characterMenu";
 		generateCharacterMenu();
-		//animationFlag = true;
 		return;
 	} else if (e === 27) { //escape
 		playerFocus = "characterMenu";
@@ -451,7 +453,7 @@ function keyDownAttack(e) {
 }
 
 function keyDownPlayerMenu(e) {
-	if (e === 32) {
+	if (e === 13) {
 		processPlayerMenuSelection();
 		playerMenu = [];
 		playerFocus = "viewing";
@@ -560,7 +562,7 @@ function keyDownMagicMenu(e) {
 		menuIndex--;
 		if (menuIndex < 0) 
 			menuIndex = magicMenu.length -1;
-	} else if (e === 32) {
+	} else if (e === 13) {
 		if (canCast(magicMenu[menuIndex])) {
 		  magicMenu = [];
 		  playerFocus = "use magic";
@@ -629,7 +631,7 @@ function keyDownMagicTarget(e) {
 		} else {
 			return;
 		}
-	} else if (e === 32) {
+	} else if (e === 13) {
 		if (castSpell(cursor.x, cursor.y)) {
 			currentChar.hasMoved = true;
 			animationFlag = true;
@@ -663,6 +665,17 @@ function castSpell(x, y) {
 		  spell = mageSpells.lightning;
 		  spell.cast(x,y);
 		  currentChar.mana -= spell.cost;
+		  if (spell_x == currentChar.x) {
+			if (spell_y > currentChar.y) dir = 0;
+			else dir = 3;
+		  } else if (spell_y == currentChar.y) {
+			if (spell_x > currentChar.x) dir = 2;
+			else dir = 1;
+		  } else {
+			dir = 3;
+			angle = Math.atan2((currentChar.y-spell_y),(currentChar.x-spell_x));
+			//angle = (Math.PI+angle)%Math.PI;
+		  }
 		  return true;
 		}
   }

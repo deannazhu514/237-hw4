@@ -246,8 +246,8 @@ function update() {
 		cList = p2charList;
 	} else { //it isn't your turn, whichever player you are...
     if (waitCounter++ > 200) {
-     waitCounter = 0;
-    console.log('checkturn');
+		waitCounter = 0;
+		console.log('checkturn');
 		 isMyTurn();
      }
 		 return;
@@ -269,7 +269,7 @@ function update() {
 		}
 	}
 	
-  console.log("ending your turn");
+	console.log("ending your turn");
 	//only reaches endturn if all characters have moved or are dead
 	endTurn();  
 }
@@ -324,7 +324,7 @@ function endTurn() {
 	} else {
 		currentGame.status = "p1turn";
 	}
-  updateGame();
+	updateGame();
 }
 
 function remove_char_images() {
