@@ -54,9 +54,9 @@ function recast_char_stats() {
     character.critChance -= 0;
     character.dodgeChance -= 0;
     character.player -= 0;
-    if (character.hasMoved == 'false') {
-      character.hasMoved = false;
-    } else { character.hasMoved = true; }
+      if (character.hasMoved == 'false') {
+        character.hasMoved = false;
+      } else if (character.hasMoved == 'true') { character.hasMoved = true; }
     p1charList[i] = character;
 	}
   for (var i = 0; i < p2charList.length; i++) {
